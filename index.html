@@ -15,8 +15,7 @@
   --red:#c43a1a;--red-light:#fceee9;
   --purple:#4a3fb5;--purple-light:#eeedf8;
   --blue:#1a4a8a;--blue-light:#e8eef8;
-  --gold:#d4a843;
-  --r:12px;--r-sm:8px;--r-lg:16px;
+  --gold:#d4a843;--r:12px;--r-sm:8px;--r-lg:16px;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
 h1,h2,h3{font-family:'DM Serif Display',serif}
@@ -24,122 +23,186 @@ h1,h2,h3{font-family:'DM Serif Display',serif}
 .screen{display:none;animation:fadeIn .4s ease}
 .screen.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* INTRO */
 .intro-hero{text-align:center;padding:48px 24px 32px}
 .intro-logo{width:56px;height:56px;background:var(--ink);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:24px}
-.intro-logo svg{width:28px;height:28px;fill:var(--gold)}
-.intro-hero h1{font-size:clamp(28px,5vw,42px);line-height:1.15;margin-bottom:16px;color:var(--ink)}
+.intro-hero h1{font-size:clamp(28px,5vw,42px);line-height:1.15;margin-bottom:16px}
 .intro-hero h1 em{font-style:italic;color:var(--green)}
 .intro-hero p{font-size:15px;color:var(--ink2);line-height:1.7;max-width:480px;margin:0 auto 32px}
 .features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px}
 .feature{background:white;border-radius:var(--r);padding:16px;border:1px solid var(--cream3);text-align:center}
 .feature-icon{font-size:20px;margin-bottom:8px}
-.feature-title{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:4px}
+.feature-title{font-size:13px;font-weight:500;margin-bottom:4px}
 .feature-desc{font-size:12px;color:var(--ink3);line-height:1.5}
 .disclaimer{font-size:11px;color:var(--ink3);background:var(--cream2);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:24px;line-height:1.6}
+
+/* BUTTONS */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;border-radius:var(--r);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;border:none;width:100%}
-.btn-primary{background:var(--ink);color:var(--cream);letter-spacing:.01em}
+.btn-primary{background:var(--ink);color:var(--cream)}
 .btn-primary:hover{background:#2d2d28;transform:translateY(-1px)}
 .btn-secondary{background:white;color:var(--ink);border:1.5px solid var(--cream3)}
 .btn-secondary:hover{border-color:var(--ink3)}
 .btn-green{background:var(--green);color:white}
-.btn-green:hover{background:var(--green-mid)}
 .btn-sm{padding:9px 18px;font-size:13px}
+
+/* PROGRESS */
 .progress-wrap{margin-bottom:24px}
 .progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .progress-label{font-size:12px;color:var(--ink3)}
 .progress-step{font-size:12px;font-weight:500;color:var(--ink2)}
 .progress-bar{height:4px;background:var(--cream3);border-radius:2px;overflow:hidden}
 .progress-fill{height:100%;background:var(--ink);border-radius:2px;transition:width .4s ease}
+
+/* SECTION HEADER */
 .section-header{margin-bottom:24px}
-.section-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:4px 12px;border-radius:20px;margin-bottom:12px}
+.section-badge{display:inline-flex;align-items:center;font-size:12px;font-weight:500;padding:4px 12px;border-radius:20px;margin-bottom:12px}
 .section-header h2{font-size:22px;line-height:1.25;margin-bottom:6px}
 .section-header p{font-size:13px;color:var(--ink3);line-height:1.6}
+
+/* QUESTION */
 .q-block{margin-bottom:20px}
 .q-label{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:10px;line-height:1.5;display:block}
-.q-note{font-size:12px;color:var(--ink3);margin-bottom:8px}
+.q-note{font-size:12px;color:var(--ink3);margin-bottom:8px;display:block}
 .pills{display:flex;flex-wrap:wrap;gap:8px}
-.pill{font-size:13px;padding:8px 16px;border-radius:24px;border:1.5px solid var(--cream3);color:var(--ink2);cursor:pointer;background:white;transition:all .15s;font-family:'DM Sans',sans-serif}
+.pill{font-size:13px;padding:8px 16px;border-radius:24px;border:1.5px solid var(--cream3);color:var(--ink2);cursor:pointer;background:white;transition:all .15s;font-family:'DM Sans',sans-serif;user-select:none}
 .pill:hover{border-color:var(--ink3);color:var(--ink)}
 .pill.sel{background:var(--ink);border-color:var(--ink);color:white}
-.pill.multi.sel{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.pill.sel-multi{background:var(--green-light);border-color:var(--green);color:var(--green)}
 .divider{border:none;border-top:1px solid var(--cream3);margin:20px 0}
+
+/* SLIDER */
+.slider-wrap{margin-bottom:4px}
+.slider-display{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.slider-value{font-size:24px;font-weight:600;color:var(--ink)}
+.slider-unit{font-size:14px;color:var(--ink3);margin-left:4px}
+.slider-max-note{font-size:12px;color:var(--ink3)}
+input[type=range]{width:100%;height:6px;border-radius:3px;appearance:none;-webkit-appearance:none;background:var(--cream3);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--ink);cursor:pointer;border:3px solid white;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--ink);cursor:pointer;border:3px solid white}
+.slider-ticks{display:flex;justify-content:space-between;margin-top:6px}
+.slider-tick{font-size:11px;color:var(--ink3)}
+
+/* GOAL CARDS */
+.goal-card{background:white;border:1.5px solid var(--cream3);border-radius:var(--r);padding:14px;margin-bottom:8px;transition:border-color .2s}
+.goal-card.selected{border-color:var(--green);background:var(--green-light)}
+.goal-card-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.goal-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--cream3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;transition:all .15s}
+.goal-card.selected .goal-check{background:var(--green);border-color:var(--green);color:white}
+.goal-card-title{font-size:13px;font-weight:500;flex:1}
+.goal-card-emoji{font-size:16px}
+.goal-detail{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--cream3)}
+.goal-card.selected .goal-detail{display:block}
+.goal-detail-label{font-size:12px;color:var(--ink3);margin-bottom:8px}
+.goal-amounts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.goal-amount-pill{font-size:12px;padding:5px 12px;border-radius:16px;border:1px solid var(--cream3);color:var(--ink2);cursor:pointer;background:white;transition:all .15s}
+.goal-amount-pill.sel{background:var(--green);border-color:var(--green);color:white}
+.goal-name-input{width:100%;font-size:13px;padding:7px 10px;border:1px solid var(--cream3);border-radius:var(--r-sm);background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;margin-top:6px}
+.goal-name-input:focus{outline:none;border-color:var(--green)}
+
+/* CARD */
 .card{background:white;border-radius:var(--r-lg);border:1px solid var(--cream3);padding:20px;margin-bottom:12px}
-.card-title{font-size:15px;font-weight:500;margin-bottom:4px}
-.card-sub{font-size:13px;color:var(--ink3);margin-bottom:16px;line-height:1.5}
+
+/* STATUS */
 .status-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
 .status-item{border-radius:var(--r-sm);padding:12px;text-align:center;border:1.5px solid transparent}
 .status-item.ok{background:var(--green-light);border-color:#9FE1CB}
 .status-item.warn{background:var(--amber-light);border-color:#FAC775}
 .status-item.bad{background:var(--red-light);border-color:#F5C4B3}
 .status-icon{font-size:18px;margin-bottom:4px}
-.status-label{font-size:11px;font-weight:500}
 .status-item.ok .status-label{color:var(--green)}
 .status-item.warn .status-label{color:var(--amber)}
 .status-item.bad .status-label{color:var(--red)}
+.status-label{font-size:11px;font-weight:500}
 .status-val{font-size:13px;font-weight:600;margin-top:2px}
 .status-item.ok .status-val{color:var(--green)}
 .status-item.warn .status-val{color:var(--amber)}
 .status-item.bad .status-val{color:var(--red)}
+
+/* METRICS */
 .metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
 .metric{background:var(--cream);border-radius:var(--r-sm);padding:14px}
 .metric-label{font-size:11px;color:var(--ink3);margin-bottom:4px}
 .metric-value{font-size:20px;font-weight:600;color:var(--ink)}
 .metric-sub{font-size:11px;color:var(--ink3);margin-top:2px}
+
+/* SCENARIO BARS */
 .scenario{margin-bottom:10px}
 .scenario-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
-.scenario-name{color:var(--ink2)}
-.scenario-amount{font-weight:600;color:var(--ink)}
 .bar-track{height:10px;background:var(--cream2);border-radius:5px;overflow:hidden}
 .bar-fill{height:100%;border-radius:5px;transition:width 1s ease}
+
+/* STEPS */
 .step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start}
 .step-num{width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--cream);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
 .step-title{font-size:14px;font-weight:600;margin-bottom:3px}
 .step-desc{font-size:13px;color:var(--ink2);line-height:1.6}
+
+/* ALLOC */
 .alloc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
 .alloc-card{border-radius:var(--r-sm);padding:12px;border:1.5px solid}
 .alloc-horizon{font-size:11px;font-weight:500;margin-bottom:4px}
 .alloc-amount{font-size:17px;font-weight:600;margin-bottom:2px}
 .alloc-product{font-size:11px;opacity:.75;line-height:1.4}
 .alloc-return{font-size:12px;font-weight:500;margin-top:6px}
+
+/* RATIO */
 .ratio-bar{height:32px;border-radius:var(--r-sm);overflow:hidden;display:flex;margin:12px 0}
 .ratio-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;transition:width .5s ease}
+
+/* GOALS IN REPORT */
+.goal-report-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--cream);border-radius:var(--r-sm);margin-bottom:6px}
+.goal-report-emoji{font-size:18px;flex-shrink:0}
+.goal-report-info{flex:1}
+.goal-report-name{font-size:13px;font-weight:500;border:none;background:transparent;font-family:'DM Sans',sans-serif;color:var(--ink);width:100%;padding:0;cursor:text}
+.goal-report-name:focus{outline:2px solid var(--green);border-radius:4px;padding:2px 4px}
+.goal-report-meta{font-size:12px;color:var(--ink3);margin-top:2px}
+.goal-edit-hint{font-size:11px;color:var(--ink3);font-style:italic;margin-top:2px}
+
+/* CTA */
 .cta-section{background:var(--ink);border-radius:var(--r-lg);padding:24px;margin-top:16px;text-align:center}
 .cta-section h3{font-family:'DM Serif Display',serif;color:var(--gold);font-size:22px;margin-bottom:8px}
 .cta-section p{color:rgba(255,255,255,.7);font-size:13px;margin-bottom:20px;line-height:1.7}
 .cta-meta{font-size:12px;color:rgba(255,255,255,.4);margin-top:10px}
+
+/* REFINE */
 .refine-card{background:white;border:1.5px solid var(--cream3);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;cursor:pointer;transition:border-color .2s}
 .refine-card:hover{border-color:var(--ink3)}
 .refine-header{display:flex;align-items:center;gap:10px}
 .refine-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
 .refine-info{flex:1}
 .refine-title{font-size:13px;font-weight:500}
-.refine-arrow{font-size:14px;color:var(--ink3)}
+.vrstva2-body{display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--cream3)}
+.vrstva2-body.open{display:block}
 .report-section-title{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+
+/* PROCESSING */
 .processing{text-align:center;padding:80px 24px}
 .processing h2{font-size:24px;margin-bottom:12px}
-.processing p{font-size:14px;color:var(--ink3)}
 .spinner{width:48px;height:48px;border:3px solid var(--cream3);border-top-color:var(--ink);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 24px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .processing-steps{list-style:none;margin-top:24px;text-align:left;max-width:280px;margin-left:auto;margin-right:auto}
 .processing-steps li{font-size:13px;color:var(--ink3);padding:6px 0;display:flex;align-items:center;gap:8px}
 .processing-steps li.done{color:var(--green)}
 .processing-steps li .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+
 canvas{display:block;width:100%!important}
-.vrstva2-body{display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--cream3)}
-.vrstva2-body.open{display:block}
 .nav-row{display:flex;gap:10px;margin-top:24px}
 .nav-row .btn{flex:1}
 .back-btn{background:none;border:none;font-size:13px;color:var(--ink3);cursor:pointer;padding:0;margin-bottom:16px;display:flex;align-items:center;gap:4px;font-family:'DM Sans',sans-serif}
 .back-btn:hover{color:var(--ink)}
+.tag{display:inline-block;font-size:11px;font-weight:500;padding:2px 8px;border-radius:8px}
+.tag-multi{background:var(--green-light);color:var(--green);margin-left:6px;font-size:10px}
 </style>
 </head>
 <body>
 <div id="app">
 
+<!-- INTRO -->
 <div id="s-intro" class="screen active">
   <div class="intro-hero">
     <div class="intro-logo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentStyle" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#d4a843" stroke-width="2" width="28" height="28"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     </div>
     <h1>Zjisti kde jsi<br>a <em>kam můžeš dojít</em></h1>
     <p>Bezplatný finanční plán na míru. 3 minuty, žádné zbytečné otázky — jen jasný výstup o tvé situaci a konkrétní kroky vpřed.</p>
@@ -153,6 +216,7 @@ canvas{display:block;width:100%!important}
   </div>
 </div>
 
+<!-- QUESTIONNAIRE -->
 <div id="s-quest" class="screen">
   <button class="back-btn" onclick="goBack()">← Zpět</button>
   <div class="progress-wrap">
@@ -164,11 +228,12 @@ canvas{display:block;width:100%!important}
   </div>
   <div id="q-content"></div>
   <div class="nav-row">
-    <button class="btn btn-secondary" id="btn-back-q" onclick="prevStep()">← Zpět</button>
+    <button class="btn btn-secondary" id="btn-back-q" style="display:none" onclick="prevStep()">← Zpět</button>
     <button class="btn btn-primary" id="btn-next-q" onclick="nextStep()">Pokračovat →</button>
   </div>
 </div>
 
+<!-- PROCESSING -->
 <div id="s-processing" class="screen">
   <div class="processing">
     <div class="spinner"></div>
@@ -184,20 +249,21 @@ canvas{display:block;width:100%!important}
   </div>
 </div>
 
+<!-- REPORT -->
 <div id="s-report" class="screen">
   <button class="back-btn" onclick="showScreen('s-quest')">← Upravit odpovědi</button>
   <div class="card"><p class="report-section-title">Přehled situace</p><div class="status-row" id="rep-status"></div><div id="rep-pasiva-text"></div></div>
   <div class="card"><p class="report-section-title">Kde teď jsi</p><div class="metric-row" id="rep-metrics"></div><div id="rep-ratio-bar"></div><div id="rep-ratio-text" style="font-size:12px;color:var(--ink3);margin-top:6px;line-height:1.6"></div></div>
   <div class="card"><p class="report-section-title">Vývoj majetku</p><div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;font-size:12px;color:var(--ink3)"><span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:3px;background:#c8c4bc;display:inline-block;border-radius:2px"></span>Bez akce</span><span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:3px;background:#2d9467;display:inline-block;border-radius:2px"></span>S vlastním plánem</span><span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:3px;background:#4a3fb5;display:inline-block;border-radius:2px"></span>S poradcem</span></div><canvas id="wealth-chart" height="200"></canvas></div>
   <div class="card"><p class="report-section-title">Za 20 let — srovnání scénářů</p><div id="rep-scenarios"></div><div style="font-size:12px;color:var(--ink3);margin-top:10px;line-height:1.6;padding:10px;background:var(--cream);border-radius:var(--r-sm)">Rozdíl „s poradcem" vychází z behavioral gap — průměrný investor zaostává za trhem o 1,7 % ročně díky emočním rozhodnutím.</div></div>
-  <div class="card"><p class="report-section-title">Návrh alokace investic</p><div class="card-sub" id="rep-alloc-sub"></div><div class="alloc-grid" id="rep-alloc"></div><div style="font-size:12px;color:var(--ink3);line-height:1.6;padding:10px;background:var(--cream);border-radius:var(--r-sm)">Každý horizont dostane vždy alespoň 15 % z investovatelné částky.</div></div>
+  <div class="card"><p class="report-section-title">Návrh alokace investic</p><p style="font-size:13px;color:var(--ink3);margin-bottom:14px" id="rep-alloc-sub"></p><div class="alloc-grid" id="rep-alloc"></div><div style="font-size:12px;color:var(--ink3);line-height:1.6;padding:10px;background:var(--cream);border-radius:var(--r-sm)">Každý horizont dostane vždy alespoň 15 % z investovatelné částky — čas pracuje pro tebe i s malou částkou.</div></div>
+  <div class="card"><p class="report-section-title">Tvoje cíle</p><p style="font-size:12px;color:var(--ink3);margin-bottom:12px">Názvy cílů můžeš kliknutím upravit ✏️</p><div id="rep-goals"></div></div>
   <div class="card"><p class="report-section-title">Tvoje 3 konkrétní kroky</p><div id="rep-steps"></div></div>
   <div class="card"><p class="report-section-title">Co to udělá kdybysi zlepšil poměr aktiv</p><div id="rep-motivation"></div></div>
   <div class="card"><p class="report-section-title">Chceš přesnější výsledky?</p><p style="font-size:13px;color:var(--ink3);margin-bottom:14px;line-height:1.6">Odpověz na pár doplňujících otázek — plán se zpřesní.</p><div id="rep-refine"></div></div>
   <div class="cta-section">
     <h3>Chceš plán dotáhnout do konkrétních čísel?</h3>
     <p>Toto je orientační přehled. Společně ho za 45 minut převedeme do přesného plánu — s konkrétními produkty, termíny a čísly pro tvoji situaci.</p>
-    <!-- UPRAV: vlož odkaz na svůj kalendář -->
     <button class="btn btn-green" onclick="window.open('https://calendly.com/tvoje-jmeno','_blank')">Rezervovat bezplatnou konzultaci →</button>
     <div class="cta-meta">45 minut · online nebo osobně · bez závazku</div>
   </div>
@@ -206,42 +272,557 @@ canvas{display:block;width:100%!important}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-const STEPS=[{id:'income',label:'Příjmy a výdaje',badge:{text:'💰 Příjmy',bg:'#e8f4ee',color:'#1a6b4a'},title:'Jak vypadají tvoje příjmy a výdaje?',desc:'Pomůže nám zjistit kolik prostoru máš pro budování majetku.',questions:[{id:'incomeType',label:'Jak pracuješ?',multi:false,opts:['Zaměstnanec (HPP)','OSVČ / podnikatel','Kombinace HPP + OSVČ','Na mateřské / RD']},{id:'income',label:'Čistý měsíční příjem domácnosti',multi:false,opts:['Do 30 000 Kč','30–50 000 Kč','50–80 000 Kč','80–120 000 Kč','Nad 120 000 Kč']},{id:'leftover',label:'Co ti zbyde na konci měsíce po všech výdajích?',multi:false,opts:['Nic nezbyde','Do 5 000 Kč','5–15 000 Kč','15–30 000 Kč','Nad 30 000 Kč']}]},{id:'liabilities',label:'Závazky',badge:{text:'📋 Závazky',bg:'#fceee9',color:'#c43a1a'},title:'Jaké máš závazky?',desc:'Hypotéky a úvěry přímo ovlivňují tvůj finanční prostor.',questions:[{id:'mortgage',label:'Máš hypotéku?',multi:false,opts:['Ne','Ano, splácím','Plánuji vzít']},{id:'loans',label:'Máš jiné úvěry nebo leasing?',multi:false,opts:['Ne','Ano — auto/leasing','Ano — spotřebitelský úvěr','Více různých úvěrů']}]},{id:'assets',label:'Majetek a úspory',badge:{text:'🏦 Majetek',bg:'#e8eef8',color:'#1a4a8a'},title:'Jaký máš majetek a úspory?',desc:'Zjistíme výchozí bod pro tvorbu plánu.',questions:[{id:'reserve',label:'Likvidní rezerva na spořicím účtu',note:'Kolik měsíčních příjmů máš stranou pro případ nouze?',multi:false,opts:['Žádnou','Méně než 1 měsíc','1–2 měsíce','3–6 měsíců','Nad 6 měsíců']},{id:'property',label:'Vlastníš nemovitost?',multi:false,opts:['Ne','Ano, bydlím v ní','Ano, pronajímám','Více nemovitostí']},{id:'investments',label:'Celková výše investic a úspor',multi:false,opts:['Do 100 000 Kč','100–500 000 Kč','500 k – 2 mil. Kč','Nad 2 mil. Kč']}]},{id:'products',label:'Finanční produkty',badge:{text:'📁 Produkty',bg:'#fdf3e3',color:'#c47a1a'},title:'Jaké finanční produkty aktuálně máš?',desc:'Pomůže nám identifikovat mezery v ochraně.',questions:[{id:'hasLife',label:'Pojistná ochrana',multi:false,opts:['Mám životní pojistku','Nemám životní pojistku','Nevím / potřebuji zkontrolovat']},{id:'hasProperty',label:'Pojištění majetku',multi:false,opts:['Mám pojištění bytu/domu','Nemám pojištění majetku']},{id:'currentProducts',label:'Investice a spoření (vyber vše co máš)',multi:true,opts:['Spořicí účet','Stavební spoření','Penzijní spoření / DPS','Podílové fondy','ETF / akcie','Nic z výše uvedeného']}]},{id:'goals',label:'Cíle a horizont',badge:{text:'🎯 Cíle',bg:'#eeedf8',color:'#4a3fb5'},title:'Co chceš finančně dosáhnout?',desc:'Cíle rozdělujeme do časových pásem.',questions:[{id:'family',label:'Rodinná situace',multi:false,opts:['Single','Partner bez dětí','1 dítě','2 děti','3+ děti']},{id:'goal13',label:'Cíl do 1–3 let',multi:false,opts:['Vytvořit rezervu','Splatit dluhy','Nové auto','Rekonstrukce','Nic konkrétního']},{id:'goal35',label:'Cíl do 3–5 let',multi:false,opts:['Koupit nemovitost','Nastartovat investice','Rozjet byznys','Dítě / rodina','Nic konkrétního']},{id:'goal615',label:'Cíl za 6–15 let',multi:false,opts:['Splatit hypotéku','Zajistit děti','Vybudovat portfolio','Koupit další nemovitost','Nic konkrétního']},{id:'goalRetire',label:'Důchod / renta (15+ let)',multi:false,opts:['Státní důchod mi stačí','Chci vlastní rentu navíc','Chci odejít dřív než v 65','Finanční nezávislost (FIRE)']},{id:'risk',label:'Portfolio klesne o 20 %. Co uděláš?',multi:false,opts:['Prodám — nechci riskovat víc','Počkám až se to zlepší','Dokoupím — je to příležitost']}]}];
-const INCOME_MAP={'Do 30 000 Kč':25000,'30–50 000 Kč':40000,'50–80 000 Kč':65000,'80–120 000 Kč':100000,'Nad 120 000 Kč':135000};
-const LEFTOVER_MAP={'Nic nezbyde':0,'Do 5 000 Kč':4000,'5–15 000 Kč':10000,'15–30 000 Kč':22000,'Nad 30 000 Kč':35000};
-const RESERVE_MAP={'Žádnou':0,'Méně než 1 měsíc':0.5,'1–2 měsíce':1.5,'3–6 měsíců':4,'Nad 6 měsíců':7};
-const INVEST_MAP={'Do 100 000 Kč':50000,'100–500 000 Kč':300000,'500 k – 2 mil. Kč':1250000,'Nad 2 mil. Kč':3000000};
-let answers={},currentStep=0,wealthChart=null;
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+// ─── GOAL DEFINITIONS ────────────────────────────────────────────────────────
+const GOAL_DEFS = {
+  '1-3': [
+    {id:'rezerva',emoji:'🛡️',title:'Vytvořit rezervu'},
+    {id:'dluh',emoji:'📉',title:'Splatit dluhy'},
+    {id:'auto',emoji:'🚗',title:'Nové auto'},
+    {id:'rekonstrukce',emoji:'🔨',title:'Rekonstrukce'},
+    {id:'custom13',emoji:'⭐',title:'Vlastní cíl',custom:true},
+  ],
+  '3-5': [
+    {id:'nemovitost',emoji:'🏠',title:'Koupit nemovitost'},
+    {id:'investice',emoji:'📈',title:'Nastartovat investice'},
+    {id:'byznys',emoji:'💼',title:'Rozjet byznys'},
+    {id:'dite',emoji:'👶',title:'Dítě / rodina'},
+    {id:'custom35',emoji:'⭐',title:'Vlastní cíl',custom:true},
+  ],
+  '6-15': [
+    {id:'hypoteka',emoji:'🏦',title:'Splatit hypotéku'},
+    {id:'deti',emoji:'🎓',title:'Zajistit děti'},
+    {id:'portfolio',emoji:'📊',title:'Vybudovat portfolio'},
+    {id:'dalsinemovitost',emoji:'🏘️',title:'Koupit další nemovitost'},
+    {id:'custom615',emoji:'⭐',title:'Vlastní cíl',custom:true},
+  ],
+  '15+': [
+    {id:'renta',emoji:'🌅',title:'Vlastní renta navíc'},
+    {id:'driv',emoji:'⏰',title:'Odejít dřív než v 65'},
+    {id:'fire',emoji:'🔥',title:'Finanční nezávislost (FIRE)'},
+    {id:'statni',emoji:'🏛️',title:'Státní důchod mi stačí'},
+    {id:'custom15',emoji:'⭐',title:'Vlastní cíl',custom:true},
+  ]
+};
+
+const AMOUNT_OPTS = ['Do 100 tis.','100–500 tis.','500 tis.–1 mil.','1–3 mil.','3–5 mil.','5+ mil.'];
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let answers = {
+  incomeType: null,
+  income: 50000,
+  expenses: 30000,
+  mortgage: null,
+  loans: [],
+  reserve: null,
+  property: null,
+  investments: null,
+  hasInsurance: [],
+  currentProducts: [],
+  family: null,
+  goals: { '1-3': [], '3-5': [], '6-15': [], '15+': [] },
+  goalAmounts: {},
+  goalNames: {},
+  risk: null
+};
+let currentStep = 0;
+let wealthChart = null;
+
+// ─── STEPS CONFIG ─────────────────────────────────────────────────────────────
+const STEP_IDS = ['income','liabilities','assets','products','goals'];
+const STEP_LABELS = ['Příjmy a výdaje','Závazky','Majetek a úspory','Finanční produkty','Cíle a horizont'];
+const STEP_BADGES = [
+  {text:'💰 Příjmy',bg:'#e8f4ee',color:'#1a6b4a'},
+  {text:'📋 Závazky',bg:'#fceee9',color:'#c43a1a'},
+  {text:'🏦 Majetek',bg:'#e8eef8',color:'#1a4a8a'},
+  {text:'📁 Produkty',bg:'#fdf3e3',color:'#c47a1a'},
+  {text:'🎯 Cíle',bg:'#eeedf8',color:'#4a3fb5'},
+];
+
+// ─── NAVIGATION ───────────────────────────────────────────────────────────────
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 function startQuestionnaire(){currentStep=0;renderStep();showScreen('s-quest');}
 function goBack(){showScreen('s-intro');}
 function prevStep(){if(currentStep>0){currentStep--;renderStep();}else showScreen('s-intro');}
-function nextStep(){const step=STEPS[currentStep];for(const q of step.questions){if(!q.multi&&!answers[q.id]){alert('Prosím vyber odpověď na všechny otázky.');return;}}if(currentStep<STEPS.length-1){currentStep++;renderStep();}else{processAndShowReport();}}
-function renderStep(){const step=STEPS[currentStep];const pct=((currentStep+1)/STEPS.length*100).toFixed(0);document.getElementById('q-section-label').textContent=`Sekce ${currentStep+1} z ${STEPS.length}`;document.getElementById('q-step-label').textContent=step.label;document.getElementById('q-progress').style.width=pct+'%';document.getElementById('btn-back-q').style.display=currentStep===0?'none':'';let html=`<div class="section-header"><span class="section-badge" style="background:${step.badge.bg};color:${step.badge.color}">${step.badge.text}</span><h2>${step.title}</h2><p>${step.desc}</p></div>`;step.questions.forEach((q,i)=>{html+=`<div class="q-block"><span class="q-label">${q.label}</span>${q.note?`<span class="q-note">${q.note}</span>`:''}<div class="pills">`;q.opts.forEach(opt=>{const sel=q.multi?(answers[q.id]&&answers[q.id].includes(opt)?'sel multi':''):(answers[q.id]===opt?'sel':'');html+=`<span class="pill ${sel}" data-qid="${q.id}" data-val="${opt.replace(/"/g,'&quot;')}" data-multi="${q.multi}" onclick="pickAnswer(this)">${opt}</span>`;});html+=`</div></div>`;if(i<step.questions.length-1)html+=`<hr class="divider">`;});document.getElementById('q-content').innerHTML=html;document.getElementById('btn-next-q').textContent=currentStep===STEPS.length-1?'Vygenerovat plán →':'Pokračovat →';}
-function pickAnswer(el){const qid=el.dataset.qid,val=el.dataset.val,multi=el.dataset.multi==='true';if(multi){if(!answers[qid])answers[qid]=[];const idx=answers[qid].indexOf(val);if(idx>-1)answers[qid].splice(idx,1);else answers[qid].push(val);}else{answers[qid]=val;}renderStep();}
-function calcFV(monthly,years,rate){const r=rate/12,n=years*12;return r>0?monthly*((Math.pow(1+r,n)-1)/r):monthly*n;}
-function computeReport(){const income=INCOME_MAP[answers.income]||50000;const leftover=LEFTOVER_MAP[answers.leftover]||5000;const pasivaPct=Math.round((1-leftover/income)*100);const aktivaPct=100-pasivaPct;const reserveMonths=RESERVE_MAP[answers.reserve]||0;const targetReserve=income*3;const currentReserve=income*reserveMonths;const hasLife=answers.hasLife==='Mám životní pojistku';const hasProperty=answers.hasProperty==='Mám pojištění bytu/domu';const isOsvc=answers.incomeType&&answers.incomeType.includes('OSVČ');const existingInvest=INVEST_MAP[answers.investments]||50000;const insurancePct=0.05;const liquidReservePct=0.05;const investPct=Math.max(0,aktivaPct/100-insurancePct-liquidReservePct);const monthlyInvest=income*investPct;const hasShortGoal=answers.goal13&&answers.goal13!=='Nic konkrétního';const hasMidGoal=answers.goal35&&answers.goal35!=='Nic konkrétního';const retire=answers.goalRetire;const wantsRetire=retire&&retire!=='Státní důchod mi stačí';let w1=0.4,w2=0.35,w3=0.25;if(hasShortGoal&&!hasMidGoal){w1=0.55;w2=0.30;w3=0.15}if(!hasShortGoal&&wantsRetire){w1=0.15;w2=0.30;w3=0.55}if(!hasShortGoal&&!hasMidGoal&&wantsRetire){w1=0.15;w2=0.25;w3=0.60}const a1=monthlyInvest*w1;const a2=monthlyInvest*w2;const a3=monthlyInvest*w3;return{income,leftover,pasivaPct,aktivaPct,reserveMonths,targetReserve,currentReserve,hasLife,hasProperty,isOsvc,monthlyInvest,a1,a2,a3,existingInvest};}
-function fmt(n){if(n>=1000000)return(n/1000000).toFixed(1)+' mil. Kč';if(n>=1000)return Math.round(n/1000)+' tis. Kč';return Math.round(n).toLocaleString('cs-CZ')+' Kč';}
-function processAndShowReport(){showScreen('s-processing');const steps=document.querySelectorAll('#proc-steps li');let i=0;const interval=setInterval(()=>{if(i<steps.length){steps[i].classList.add('done');i++;}else{clearInterval(interval);renderReport();showScreen('s-report');}},400);}
-function renderReport(){const r=computeReport();const pasivaStatus=r.pasivaPct>80?'bad':r.pasivaPct>70?'warn':'ok';const reserveStatus=r.reserveMonths<1?'bad':r.reserveMonths<3?'warn':'ok';const insuranceStatus=(r.hasLife&&r.hasProperty)?'ok':(!r.hasLife&&!r.hasProperty)?'bad':'warn';const icons={ok:'✓',warn:'!',bad:'✕'};document.getElementById('rep-status').innerHTML=`<div class="status-item ${pasivaStatus}"><div class="status-icon">${icons[pasivaStatus]}</div><div class="status-label">Pasiva</div><div class="status-val">${r.pasivaPct} %</div></div><div class="status-item ${reserveStatus}"><div class="status-icon">${icons[reserveStatus]}</div><div class="status-label">Rezerva</div><div class="status-val">${r.reserveMonths<1?'Chybí':r.reserveMonths+'× příjem'}</div></div><div class="status-item ${insuranceStatus}"><div class="status-icon">${icons[insuranceStatus]}</div><div class="status-label">Ochrana</div><div class="status-val">${insuranceStatus==='ok'?'OK':insuranceStatus==='warn'?'Částečná':'Chybí'}</div></div>`;
-let pasivaText='';if(r.pasivaPct>80)pasivaText=`<div style="background:var(--red-light);border:1px solid #F5C4B3;border-radius:var(--r-sm);padding:12px;font-size:13px;color:#712B13;line-height:1.65;margin-top:4px">Tvoje pasiva tvoří <strong>${r.pasivaPct} %</strong> příjmu — jsi nad hranicí 80 %. Dokud je nesníříš pod 70 %, jakékoliv spoření bude jen záplata.</div>`;else if(r.pasivaPct>70)pasivaText=`<div style="background:var(--amber-light);border:1px solid #FAC775;border-radius:var(--r-sm);padding:12px;font-size:13px;color:#633806;line-height:1.65;margin-top:4px">Pasiva jsou na <strong>${r.pasivaPct} %</strong> — mírně nad doporučenou hranicí 70 %. Investovat lze, ale prostor je úzký.</div>`;else pasivaText=`<div style="background:var(--green-light);border:1px solid #9FE1CB;border-radius:var(--r-sm);padding:12px;font-size:13px;color:#085041;line-height:1.65;margin-top:4px">Pasiva jsou na <strong>${r.pasivaPct} %</strong> — jsi pod hranicí 70 %. Dobrý základ pro budování majetku.</div>`;
-document.getElementById('rep-pasiva-text').innerHTML=pasivaText;
-document.getElementById('rep-metrics').innerHTML=`<div class="metric"><div class="metric-label">Čistý příjem</div><div class="metric-value">${fmt(r.income)}</div><div class="metric-sub">měsíčně</div></div><div class="metric"><div class="metric-label">Volné prostředky</div><div class="metric-value">${fmt(r.leftover)}</div><div class="metric-sub">po výdajích</div></div><div class="metric"><div class="metric-label">Na investice</div><div class="metric-value">${fmt(r.monthlyInvest)}</div><div class="metric-sub">měsíčně</div></div>`;
-const p=r.pasivaPct,a=r.aktivaPct;document.getElementById('rep-ratio-bar').innerHTML=`<div style="margin-top:12px;margin-bottom:4px;font-size:12px;color:var(--ink3);display:flex;justify-content:space-between"><span>Pasiva ${p} %</span><span>Aktiva ${a} %</span></div><div class="ratio-bar"><div class="ratio-seg" style="width:${p}%;background:#F5C4B3;color:#712B13">${p>20?p+'%':''}</div><div class="ratio-seg" style="width:${a}%;background:#9FE1CB;color:#085041">${a>10?a+'%':''}</div></div>`;
-const idealDiff=30-a;document.getElementById('rep-ratio-text').textContent=idealDiff>0?`Ideální poměr je 70:30. Tvůj rozdíl oproti ideálu: ${idealDiff} % příjmu = ${fmt(r.income*idealDiff/100)} měsíčně.`:`Jsi na nebo nad doporučeným poměrem aktiv. Skvělá výchozí pozice.`;
-if(wealthChart)wealthChart.destroy();
-const labels=['Dnes','5 let','10 let','15 let','20 let'];const yrs=[0,5,10,15,20];
-const none=yrs.map(y=>Math.round(calcFV(r.monthlyInvest*0.3,y,0.02)+r.existingInvest*Math.pow(1.02,y)));
-const plan=yrs.map(y=>Math.round(calcFV(r.monthlyInvest,y,0.085)+r.existingInvest*Math.pow(1.06,y)));
-const adv=plan.map(v=>Math.round(v*1.30));
-const dark=matchMedia('(prefers-color-scheme:dark)').matches;const tc=dark?'#9a9890':'#8a8a82';const gc=dark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';
-wealthChart=new Chart(document.getElementById('wealth-chart'),{type:'line',data:{labels,datasets:[{label:'Bez akce',data:none,borderColor:'#c8c4bc',borderWidth:2,pointRadius:3,tension:.4,fill:false},{label:'S plánem',data:plan,borderColor:'#2d9467',borderWidth:2,pointRadius:3,tension:.4,fill:false},{label:'S poradcem',data:adv,borderColor:'#4a3fb5',borderWidth:2.5,pointRadius:3,tension:.4,fill:false}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.parsed.y)}}},scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:11}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:11},callback:v=>fmt(v)}}}}});
-const maxW=adv[4];document.getElementById('rep-scenarios').innerHTML=[{name:'Bez akce',val:none[4],color:'#c8c4bc'},{name:'S vlastním plánem',val:plan[4],color:'#2d9467'},{name:`S poradcem <span style="background:#e8f4ee;color:#1a6b4a;font-size:11px;font-weight:500;padding:2px 7px;border-radius:8px;margin-left:4px">+${Math.round((adv[4]/plan[4]-1)*100)} %</span>`,val:adv[4],color:'#4a3fb5'}].map(s=>`<div class="scenario"><div class="scenario-top"><span class="scenario-name">${s.name}</span><span class="scenario-amount" style="color:${s.color}">${fmt(s.val)}</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(s.val/maxW*100)}%;background:${s.color}"></div></div></div>`).join('');
-document.getElementById('rep-alloc-sub').textContent=`${fmt(r.monthlyInvest)} měsíčně rozděleno podle tvých cílů`;document.getElementById('rep-alloc').innerHTML=[{horizon:'3–5 let',amount:r.a1,product:'Dluhopisy + nem. fondy',ret:'3–6,5 % p.a.',bg:'#e8f4ee',border:'#9FE1CB',tc:'#1a6b4a'},{horizon:'5–15 let',amount:r.a2,product:'Akciové portfolio',ret:'8–12 % p.a.',bg:'#eeedf8',border:'#AFA9EC',tc:'#4a3fb5'},{horizon:'15+ let',amount:r.a3,product:'Rentea / dyn. fondy',ret:'12–14 % p.a.',bg:'#fceee9',border:'#F5C4B3',tc:'#c43a1a'}].map(a=>`<div class="alloc-card" style="background:${a.bg};border-color:${a.border}"><div class="alloc-horizon" style="color:${a.tc}">${a.horizon}</div><div class="alloc-amount" style="color:${a.tc}">${fmt(a.amount)}/měs.</div><div class="alloc-product" style="color:${a.tc}">${a.product}</div><div class="alloc-return" style="color:${a.tc}">${a.ret}</div></div>`).join('');
-const steps3=[];if(r.reserveMonths<3)steps3.push({title:'Postav si finanční rezervu',desc:`Cíl: 3× měsíční příjem na spořáku (${fmt(r.targetReserve)}). Aktuálně máš ${fmt(r.currentReserve)}. Dokud rezervu nemáš naplněnou, jsou investice předčasné.`});if(!r.hasLife||!r.hasProperty)steps3.push({title:'Zajisti pojistnou ochranu',desc:`${!r.hasLife?'Chybí životní pojistka. ':''}${!r.hasProperty?'Chybí pojištění majetku. ':''}Buduješ majetek bez záchranné sítě.`});steps3.push({title:'Nastav pravidelnou investici',desc:`Z volných prostředků investuj ${fmt(r.monthlyInvest)} měsíčně do tří horizontů. Klíčem je pravidelnost.`});if(steps3.length<3)steps3.push({title:'Optimalizuj poměr aktiv a pasiv',desc:`Cíl je dostat pasiva pod 70 %. Každý ušetřený tisíc navíc do investic za 20 let přinese ${fmt(calcFV(1000,20,0.085))} Kč.`});document.getElementById('rep-steps').innerHTML=steps3.slice(0,3).map((s,i)=>`<div class="step"><div class="step-num">${i+1}</div><div><div class="step-title">${s.title}</div><div class="step-desc">${s.desc}</div></div></div>`).join('');
-const curr_pct=r.aktivaPct-10;const ideal_pct=20;const diff_pct=Math.max(0,ideal_pct-curr_pct);const monthly_diff=r.income*diff_pct/100;const wealth_diff=calcFV(monthly_diff,20,0.085);const mc=r.pasivaPct>80?'var(--red-light)':r.pasivaPct>70?'var(--amber-light)':'var(--green-light)';const mb=r.pasivaPct>80?'#F5C4B3':r.pasivaPct>70?'#FAC775':'#9FE1CB';const mt=r.pasivaPct>80?'#712B13':r.pasivaPct>70?'#633806':'#085041';document.getElementById('rep-motivation').innerHTML=`<div style="background:${mc};border:1px solid ${mb};border-radius:var(--r-sm);padding:16px;color:${mt}"><div style="font-size:13px;line-height:1.7;margin-bottom:12px">${r.pasivaPct>70?`Snížením pasiv o <strong>${diff_pct} %</strong> příjmu (= ${fmt(monthly_diff)}/měs.) bys za 20 let měl o <strong>${fmt(wealth_diff)} navíc</strong>. To může znamenat odchod do důchodu o <strong>3–7 let dřív</strong>.`:`Jsi na dobré cestě. Každé další procento do investic přidá za 20 let přibližně <strong>${fmt(calcFV(r.income*0.01,20,0.085))}</strong>.`}</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${[{label:'Aktuální investice',val:fmt(r.monthlyInvest)+'/měs.'},{label:'Při ideálu 20 %',val:fmt(r.income*0.20)+'/měs.'},{label:'Rozdíl za 20 let',val:'+'+fmt(wealth_diff)}].map(m=>`<div style="background:rgba(255,255,255,.5);border-radius:var(--r-sm);padding:10px;text-align:center"><div style="font-size:11px;margin-bottom:3px;opacity:.75">${m.label}</div><div style="font-size:14px;font-weight:600">${m.val}</div></div>`).join('')}</div></div>`;
-document.getElementById('rep-refine').innerHTML=[{id:'r1',icon:'💰',title:'Příjmy a výdaje',text:'Upřesnit strukturu příjmů a výdajů',color:'#1a6b4a',bg:'#e8f4ee'},{id:'r2',icon:'📋',title:'Závazky',text:'Doplnit výši hypotéky a fixaci',color:'#c43a1a',bg:'#fceee9'},{id:'r3',icon:'🏦',title:'Majetek',text:'Upřesnit hodnotu nemovitostí a úspor',color:'#1a4a8a',bg:'#e8eef8'},{id:'r4',icon:'📁',title:'Finanční produkty',text:'Doplnit výše pravidelných odvodů',color:'#c47a1a',bg:'#fdf3e3'},{id:'r5',icon:'🎯',title:'Cíle',text:'Upřesnit časový horizont a výši renty',color:'#4a3fb5',bg:'#eeedf8'}].map(s=>`<div class="refine-card" onclick="toggleRefine('${s.id}')"><div class="refine-header"><div class="refine-icon" style="background:${s.bg}">${s.icon}</div><div class="refine-info"><div class="refine-title">${s.title}</div><div style="color:${s.color};font-size:12px">${s.text}</div></div><span class="refine-arrow">›</span></div><div class="vrstva2-body" id="${s.id}"><p style="font-size:13px;color:var(--ink3);line-height:1.7">Doplňující otázky pro sekci <strong>${s.title}</strong> — po zodpovězení se plán zpřesní.</p><button class="btn btn-secondary btn-sm" style="margin-top:10px" onclick="event.stopPropagation();alert('V plné verzi zde budou doplňující otázky.')">Přejít na doplňující otázky →</button></div></div>`).join('');
+function nextStep(){
+  if(!validateStep()){return;}
+  if(currentStep<STEP_IDS.length-1){currentStep++;renderStep();}
+  else{processAndShowReport();}
 }
+
+// ─── VALIDATION ───────────────────────────────────────────────────────────────
+function validateStep(){
+  const id=STEP_IDS[currentStep];
+  if(id==='income'){
+    if(!answers.incomeType){alert('Prosím vyber typ pracovního vztahu.');return false;}
+  }
+  if(id==='liabilities'){
+    if(!answers.mortgage){alert('Prosím vyber možnost u hypotéky.');return false;}
+  }
+  if(id==='assets'){
+    if(!answers.reserve){alert('Prosím vyber výši rezervy.');return false;}
+    if(!answers.property){alert('Prosím vyber možnost u nemovitosti.');return false;}
+    if(!answers.investments){alert('Prosím vyber výši investic a úspor.');return false;}
+  }
+  if(id==='products'){
+    if(!answers.risk){alert('Prosím vyber reakci na pokles portfolia.');return false;}
+  }
+  return true;
+}
+
+// ─── RENDER STEP ──────────────────────────────────────────────────────────────
+function renderStep(){
+  const id=STEP_IDS[currentStep];
+  const pct=((currentStep+1)/STEP_IDS.length*100).toFixed(0);
+  document.getElementById('q-section-label').textContent=`Sekce ${currentStep+1} z ${STEP_IDS.length}`;
+  document.getElementById('q-step-label').textContent=STEP_LABELS[currentStep];
+  document.getElementById('q-progress').style.width=pct+'%';
+  document.getElementById('btn-back-q').style.display=currentStep===0?'none':'flex';
+  document.getElementById('btn-next-q').textContent=currentStep===STEP_IDS.length-1?'Vygenerovat plán →':'Pokračovat →';
+
+  const b=STEP_BADGES[currentStep];
+  let html=`<div class="section-header"><span class="section-badge" style="background:${b.bg};color:${b.color}">${b.text}</span>`;
+
+  if(id==='income') html+=renderIncome();
+  else if(id==='liabilities') html+=renderLiabilities();
+  else if(id==='assets') html+=renderAssets();
+  else if(id==='products') html+=renderProducts();
+  else if(id==='goals') html+=renderGoals();
+
+  document.getElementById('q-content').innerHTML=html;
+
+  // attach slider events after render
+  if(id==='income'){
+    attachSlider('sl-income','sl-income-val','sl-income-note',1000,300000,5000,answers.income,'income');
+    attachSlider('sl-expenses','sl-expenses-val','sl-expenses-note',0,150000,2000,answers.expenses,'expenses');
+  }
+  // attach goal events
+  if(id==='goals'){
+    attachGoalEvents();
+  }
+}
+
+// ─── INCOME STEP ──────────────────────────────────────────────────────────────
+function renderIncome(){
+  const types=['Zaměstnanec (HPP)','OSVČ / podnikatel','Kombinace HPP + OSVČ','Na mateřské / RD'];
+  let html=`<h2>Jak vypadají tvoje příjmy a výdaje?</h2><p>Pomůže nám zjistit kolik prostoru máš pro budování majetku.</p></div>`;
+  html+=`<div class="q-block"><span class="q-label">Jak pracuješ?</span><div class="pills">`;
+  types.forEach(t=>{
+    const sel=answers.incomeType===t?'sel':'';
+    html+=`<span class="pill ${sel}" data-qid="incomeType" data-val="${t}" onclick="pickSingle(this)">${t}</span>`;
+  });
+  html+=`</div></div><hr class="divider">`;
+
+  // Income slider
+  const incVal=answers.income;
+  const incAtMax=incVal>=300000;
+  html+=`<div class="q-block">
+    <span class="q-label">Čistý měsíční příjem domácnosti</span>
+    <div class="slider-display">
+      <div><span class="slider-value" id="sl-income-val">${fmtSlider(incVal)}</span><span class="slider-unit">Kč / měs.</span></div>
+      <span class="slider-max-note" id="sl-income-note">${incAtMax?'300 000 Kč a více':''}</span>
+    </div>
+    <div class="slider-wrap">
+      <input type="range" id="sl-income" min="5000" max="300000" step="5000" value="${incVal}">
+      <div class="slider-ticks"><span class="slider-tick">5 000</span><span class="slider-tick">100 000</span><span class="slider-tick">200 000</span><span class="slider-tick">300 000+</span></div>
+    </div>
+  </div><hr class="divider">`;
+
+  // Expenses slider
+  const expVal=answers.expenses;
+  html+=`<div class="q-block">
+    <span class="q-label">Měsíční výdaje celkem</span>
+    <span class="q-note">Nájem / hypotéka + splátky + životní náklady</span>
+    <div class="slider-display">
+      <div><span class="slider-value" id="sl-expenses-val">${fmtSlider(expVal)}</span><span class="slider-unit">Kč / měs.</span></div>
+      <span class="slider-max-note" id="sl-expenses-note">${expVal>=150000?'150 000 Kč a více':''}</span>
+    </div>
+    <div class="slider-wrap">
+      <input type="range" id="sl-expenses" min="0" max="150000" step="2000" value="${expVal}">
+      <div class="slider-ticks"><span class="slider-tick">0</span><span class="slider-tick">50 000</span><span class="slider-tick">100 000</span><span class="slider-tick">150 000+</span></div>
+    </div>
+  </div>`;
+  return html;
+}
+
+function attachSlider(slId,valId,noteId,min,max,step,initVal,key){
+  const sl=document.getElementById(slId);
+  const valEl=document.getElementById(valId);
+  const noteEl=document.getElementById(noteId);
+  if(!sl) return;
+  const update=()=>{
+    const v=parseInt(sl.value);
+    answers[key]=v;
+    valEl.textContent=fmtSlider(v);
+    noteEl.textContent=v>=max?`${fmtSlider(max)} a více`:'';
+  };
+  sl.addEventListener('input',update);
+}
+
+function fmtSlider(v){
+  if(v>=1000) return (v/1000).toFixed(0)+' 000';
+  return v.toString();
+}
+
+// ─── LIABILITIES STEP ────────────────────────────────────────────────────────
+function renderLiabilities(){
+  let html=`<h2>Jaké máš závazky?</h2><p>Hypotéky a úvěry přímo ovlivňují tvůj finanční prostor.</p></div>`;
+  const mortOpts=['Ne','Ano, splácím','Plánuji vzít'];
+  html+=`<div class="q-block"><span class="q-label">Máš hypotéku?</span><div class="pills">`;
+  mortOpts.forEach(o=>{
+    html+=`<span class="pill ${answers.mortgage===o?'sel':''}" data-qid="mortgage" data-val="${o}" onclick="pickSingle(this)">${o}</span>`;
+  });
+  html+=`</div></div><hr class="divider">`;
+
+  const loanOpts=['Žádné','Auto / leasing','Spotřebitelský úvěr','Kreditní karta','Půjčka od rodiny'];
+  html+=`<div class="q-block"><span class="q-label">Jiné úvěry nebo závazky <span class="tag tag-multi">více možností</span></span><span class="q-note">Vyber vše co platí</span><div class="pills">`;
+  loanOpts.forEach(o=>{
+    const sel=answers.loans.includes(o)?'sel-multi':'';
+    html+=`<span class="pill ${sel}" data-val="${o}" onclick="pickMulti(this,'loans')">${o}</span>`;
+  });
+  html+=`</div></div>`;
+  return html;
+}
+
+// ─── ASSETS STEP ─────────────────────────────────────────────────────────────
+function renderAssets(){
+  let html=`<h2>Jaký máš majetek a úspory?</h2><p>Zjistíme výchozí bod pro tvorbu plánu.</p></div>`;
+  const reserveOpts=['Žádnou','Méně než 1 měsíc','1–2 měsíce','3–6 měsíců','Nad 6 měsíců'];
+  html+=`<div class="q-block"><span class="q-label">Likvidní rezerva na spořicím účtu</span><span class="q-note">Kolik měsíčních příjmů máš stranou pro případ nouze?</span><div class="pills">`;
+  reserveOpts.forEach(o=>{
+    html+=`<span class="pill ${answers.reserve===o?'sel':''}" data-qid="reserve" data-val="${o}" onclick="pickSingle(this)">${o}</span>`;
+  });
+  html+=`</div></div><hr class="divider">`;
+
+  const propOpts=['Ne','Ano, bydlím v ní','Ano, pronajímám','Více nemovitostí'];
+  html+=`<div class="q-block"><span class="q-label">Vlastníš nemovitost?</span><div class="pills">`;
+  propOpts.forEach(o=>{
+    html+=`<span class="pill ${answers.property===o?'sel':''}" data-qid="property" data-val="${o}" onclick="pickSingle(this)">${o}</span>`;
+  });
+  html+=`</div></div><hr class="divider">`;
+
+  const invOpts=['Do 100 000 Kč','100–500 000 Kč','500 k – 2 mil.','Nad 2 mil.'];
+  html+=`<div class="q-block"><span class="q-label">Celková výše investic a úspor</span><div class="pills">`;
+  invOpts.forEach(o=>{
+    html+=`<span class="pill ${answers.investments===o?'sel':''}" data-qid="investments" data-val="${o}" onclick="pickSingle(this)">${o}</span>`;
+  });
+  html+=`</div></div>`;
+  return html;
+}
+
+// ─── PRODUCTS STEP ───────────────────────────────────────────────────────────
+function renderProducts(){
+  let html=`<h2>Finanční produkty a ochrana</h2><p>Pomůže nám identifikovat mezery v ochraně a investicích.</p></div>`;
+
+  const insOpts=['Životní pojistka','Pojištění bytu/domu','Pojištění vozidla','Úrazové pojištění','Žádné pojistky'];
+  html+=`<div class="q-block"><span class="q-label">Jaké pojistky máš? <span class="tag tag-multi">více možností</span></span><div class="pills">`;
+  insOpts.forEach(o=>{
+    const sel=answers.hasInsurance.includes(o)?'sel-multi':'';
+    html+=`<span class="pill ${sel}" data-val="${o}" onclick="pickMulti(this,'hasInsurance')">${o}</span>`;
+  });
+  html+=`</div></div><hr class="divider">`;
+
+  const prodOpts=['Spořicí účet','Stavební spoření','Penzijní spoření / DPS','Podílové fondy','ETF / akcie','Nemovitostní fond','Nic z výše'];
+  html+=`<div class="q-block"><span class="q-label">Investice a spoření <span class="tag tag-multi">více možností</span></span><div class="pills">`;
+  prodOpts.forEach(o=>{
+    const sel=answers.currentProducts.includes(o)?'sel-multi':'';
+    html+=`<span class="pill ${sel}" data-val="${o}" onclick="pickMulti(this,'currentProducts')">${o}</span>`;
+  });
+  html+=`</div></div><hr class="divider">`;
+
+  const familyOpts=['Single','Partner bez dětí','1 dítě','2 děti','3+ děti'];
+  html+=`<div class="q-block"><span class="q-label">Rodinná situace</span><div class="pills">`;
+  familyOpts.forEach(o=>{
+    html+=`<span class="pill ${answers.family===o?'sel':''}" data-qid="family" data-val="${o}" onclick="pickSingle(this)">${o}</span>`;
+  });
+  html+=`</div></div><hr class="divider">`;
+
+  const riskOpts=['Prodám — nechci riskovat víc','Počkám až se to zlepší','Dokoupím — je to příležitost'];
+  html+=`<div class="q-block"><span class="q-label">Portfolio klesne o 20 %. Co uděláš?</span><div class="pills">`;
+  riskOpts.forEach(o=>{
+    html+=`<span class="pill ${answers.risk===o?'sel':''}" data-qid="risk" data-val="${o}" onclick="pickSingle(this)">${o}</span>`;
+  });
+  html+=`</div></div>`;
+  return html;
+}
+
+// ─── GOALS STEP ──────────────────────────────────────────────────────────────
+function renderGoals(){
+  let html=`<h2>Co chceš finančně dosáhnout?</h2><p>Vyber cíle v každém časovém pásmu. U každého cíle si nastav orientační částku.</p></div>`;
+
+  const horizons=[
+    {key:'1-3',label:'Do 1–3 let',color:'#1a6b4a',bg:'#e8f4ee'},
+    {key:'3-5',label:'Do 3–5 let',color:'#1a4a8a',bg:'#e8eef8'},
+    {key:'6-15',label:'Za 6–15 let',color:'#c47a1a',bg:'#fdf3e3'},
+    {key:'15+',label:'15 let a více — důchod / renta',color:'#c43a1a',bg:'#fceee9'},
+  ];
+
+  horizons.forEach(h=>{
+    html+=`<div class="q-block">
+      <span class="q-label" style="color:${h.color}">${h.label} <span class="tag tag-multi">více možností</span></span>
+      <div id="goals-${h.key}">`;
+    GOAL_DEFS[h.key].forEach(g=>{
+      const isSelected=answers.goals[h.key].includes(g.id);
+      const customName=answers.goalNames[g.id]||'';
+      const selAmount=answers.goalAmounts[g.id]||'';
+      html+=`<div class="goal-card ${isSelected?'selected':''}" id="gc-${g.id}">
+        <div class="goal-card-header" onclick="toggleGoal('${h.key}','${g.id}')">
+          <div class="goal-check">${isSelected?'✓':''}</div>
+          <span class="goal-card-emoji">${g.emoji}</span>
+          <span class="goal-card-title">${g.title}</span>
+        </div>
+        <div class="goal-detail">
+          <div class="goal-detail-label">Orientační částka:</div>
+          <div class="goal-amounts">`;
+      AMOUNT_OPTS.forEach(a=>{
+        html+=`<span class="goal-amount-pill ${selAmount===a?'sel':''}" onclick="pickGoalAmount('${g.id}','${a}',this)">${a}</span>`;
+      });
+      html+=`</div>`;
+      if(g.custom){
+        html+=`<input class="goal-name-input" type="text" placeholder="Pojmenuj svůj cíl..." value="${customName}" oninput="saveGoalName('${g.id}',this.value)">`;
+      }
+      html+=`</div></div>`;
+    });
+    html+=`</div></div><hr class="divider">`;
+  });
+  return html;
+}
+
+function attachGoalEvents(){}
+
+function toggleGoal(horizon,goalId){
+  const arr=answers.goals[horizon];
+  const idx=arr.indexOf(goalId);
+  if(idx>-1) arr.splice(idx,1); else arr.push(goalId);
+  renderStep();
+  // scroll to keep position
+}
+
+function pickGoalAmount(goalId,amount,el){
+  answers.goalAmounts[goalId]=amount;
+  el.closest('.goal-amounts').querySelectorAll('.goal-amount-pill').forEach(p=>p.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function saveGoalName(goalId,val){
+  answers.goalNames[goalId]=val;
+}
+
+// ─── PILL HELPERS ─────────────────────────────────────────────────────────────
+function pickSingle(el){
+  const qid=el.dataset.qid, val=el.dataset.val;
+  answers[qid]=val;
+  el.closest('.pills').querySelectorAll('.pill').forEach(p=>p.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function pickMulti(el,key){
+  const val=el.dataset.val;
+  if(!answers[key]) answers[key]=[];
+  // If "Žádné" / "Nic" selected, clear others
+  if(val.startsWith('Žádné')||val.startsWith('Nic')){
+    answers[key]=[val];
+  } else {
+    answers[key]=answers[key].filter(v=>!v.startsWith('Žádné')&&!v.startsWith('Nic'));
+    const idx=answers[key].indexOf(val);
+    if(idx>-1) answers[key].splice(idx,1); else answers[key].push(val);
+  }
+  renderStep();
+}
+
+// ─── CALCULATIONS ─────────────────────────────────────────────────────────────
+function calcFV(monthly,years,rate){
+  const r=rate/12,n=years*12;
+  return r>0?monthly*((Math.pow(1+r,n)-1)/r):monthly*n;
+}
+
+const INVEST_MAP={'Do 100 000 Kč':50000,'100–500 000 Kč':300000,'500 k – 2 mil.':1250000,'Nad 2 mil.':3000000};
+const RESERVE_MAP={'Žádnou':0,'Méně než 1 měsíc':0.5,'1–2 měsíce':1.5,'3–6 měsíců':4,'Nad 6 měsíců':7};
+
+function computeReport(){
+  const income=answers.income||50000;
+  const expenses=answers.expenses||30000;
+  const leftover=Math.max(0,income-expenses);
+  const pasivaPct=Math.round(Math.min(100,expenses/income*100));
+  const aktivaPct=100-pasivaPct;
+  const reserveMonths=RESERVE_MAP[answers.reserve]||0;
+  const targetReserve=income*3;
+  const currentReserve=income*reserveMonths;
+  const hasLife=answers.hasInsurance.includes('Životní pojistka');
+  const hasProperty=answers.hasInsurance.includes('Pojištění bytu/domu');
+  const isOsvc=answers.incomeType&&answers.incomeType.includes('OSVČ');
+  const existingInvest=INVEST_MAP[answers.investments]||50000;
+  const investPct=Math.max(0,aktivaPct/100-0.10);
+  const monthlyInvest=income*investPct;
+
+  // Goal-based allocation
+  const allGoals=[...answers.goals['1-3'],...answers.goals['3-5'],...answers.goals['6-15'],...answers.goals['15+']];
+  const hasShort=answers.goals['1-3'].length>0;
+  const hasMid=answers.goals['3-5'].length>0;
+  const hasLong=answers.goals['15+'].length>0;
+  let w1=0.35,w2=0.35,w3=0.30;
+  if(hasShort&&!hasMid){w1=0.50;w2=0.30;w3=0.20}
+  if(!hasShort&&hasLong){w1=0.20;w2=0.30;w3=0.50}
+  if(!hasShort&&!hasMid&&hasLong){w1=0.15;w2=0.25;w3=0.60}
+  const a1=monthlyInvest*w1,a2=monthlyInvest*w2,a3=monthlyInvest*w3;
+
+  const none=y=>Math.round(calcFV(monthlyInvest*0.3,y,0.02)+existingInvest*Math.pow(1.02,y));
+  const plan=y=>Math.round(calcFV(monthlyInvest,y,0.085)+existingInvest*Math.pow(1.06,y));
+  const adv=y=>Math.round(plan(y)*1.30);
+
+  return{income,expenses,leftover,pasivaPct,aktivaPct,reserveMonths,targetReserve,currentReserve,
+    hasLife,hasProperty,isOsvc,monthlyInvest,a1,a2,a3,existingInvest,allGoals,
+    w_none:none(20),w_plan:plan(20),w_adv:adv(20),
+    chartData:{none:[0,5,10,15,20].map(none),plan:[0,5,10,15,20].map(plan),adv:[0,5,10,15,20].map(adv)}};
+}
+
+// ─── FORMAT ───────────────────────────────────────────────────────────────────
+function fmt(n){
+  if(n>=1000000)return(n/1000000).toFixed(1)+' mil. Kč';
+  if(n>=1000)return Math.round(n/1000)+' tis. Kč';
+  return Math.round(n).toLocaleString('cs-CZ')+' Kč';
+}
+
+// ─── PROCESSING + REPORT ─────────────────────────────────────────────────────
+function processAndShowReport(){
+  showScreen('s-processing');
+  const steps=document.querySelectorAll('#proc-steps li');
+  let i=0;
+  const iv=setInterval(()=>{
+    if(i<steps.length){steps[i].classList.add('done');i++;}
+    else{clearInterval(iv);renderReport();showScreen('s-report');}
+  },400);
+}
+
+function renderReport(){
+  const r=computeReport();
+  const pasivaStatus=r.pasivaPct>80?'bad':r.pasivaPct>70?'warn':'ok';
+  const reserveStatus=r.reserveMonths<1?'bad':r.reserveMonths<3?'warn':'ok';
+  const insStatus=(r.hasLife&&r.hasProperty)?'ok':(!r.hasLife&&!r.hasProperty)?'bad':'warn';
+  const icons={ok:'✓',warn:'!',bad:'✕'};
+
+  // STATUS
+  document.getElementById('rep-status').innerHTML=`
+    <div class="status-item ${pasivaStatus}"><div class="status-icon">${icons[pasivaStatus]}</div><div class="status-label">Pasiva</div><div class="status-val">${r.pasivaPct} %</div></div>
+    <div class="status-item ${reserveStatus}"><div class="status-icon">${icons[reserveStatus]}</div><div class="status-label">Rezerva</div><div class="status-val">${r.reserveMonths<1?'Chybí':r.reserveMonths+'× příjem'}</div></div>
+    <div class="status-item ${insStatus}"><div class="status-icon">${icons[insStatus]}</div><div class="status-label">Ochrana</div><div class="status-val">${insStatus==='ok'?'OK':insStatus==='warn'?'Částečná':'Chybí'}</div></div>`;
+
+  // PASIVA TEXT
+  let pt='';
+  if(r.pasivaPct>80)pt=`<div style="background:var(--red-light);border:1px solid #F5C4B3;border-radius:var(--r-sm);padding:12px;font-size:13px;color:#712B13;line-height:1.65;margin-top:4px">Tvoje výdaje tvoří <strong>${r.pasivaPct} %</strong> příjmu — jsi nad hranicí 80 %. Dokud je nesníříš pod 70 %, jakékoliv spoření bude jen záplata.</div>`;
+  else if(r.pasivaPct>70)pt=`<div style="background:var(--amber-light);border:1px solid #FAC775;border-radius:var(--r-sm);padding:12px;font-size:13px;color:#633806;line-height:1.65;margin-top:4px">Výdaje jsou na <strong>${r.pasivaPct} %</strong> — mírně nad hranicí 70 %. Prostor pro investice existuje, ale je úzký.</div>`;
+  else pt=`<div style="background:var(--green-light);border:1px solid #9FE1CB;border-radius:var(--r-sm);padding:12px;font-size:13px;color:#085041;line-height:1.65;margin-top:4px">Výdaje jsou na <strong>${r.pasivaPct} %</strong> — jsi pod hranicí 70 %. Dobrý základ pro budování majetku.</div>`;
+  document.getElementById('rep-pasiva-text').innerHTML=pt;
+
+  // METRICS
+  document.getElementById('rep-metrics').innerHTML=`
+    <div class="metric"><div class="metric-label">Čistý příjem</div><div class="metric-value">${fmt(r.income)}</div><div class="metric-sub">měsíčně</div></div>
+    <div class="metric"><div class="metric-label">Výdaje</div><div class="metric-value">${fmt(r.expenses)}</div><div class="metric-sub">měsíčně</div></div>
+    <div class="metric"><div class="metric-label">Na investice</div><div class="metric-value">${fmt(r.monthlyInvest)}</div><div class="metric-sub">měsíčně</div></div>`;
+
+  // RATIO BAR
+  const p=r.pasivaPct,a=r.aktivaPct;
+  document.getElementById('rep-ratio-bar').innerHTML=`
+    <div style="margin-top:12px;margin-bottom:4px;font-size:12px;color:var(--ink3);display:flex;justify-content:space-between"><span>Pasiva ${p} %</span><span>Aktiva ${a} %</span></div>
+    <div class="ratio-bar">
+      <div class="ratio-seg" style="width:${p}%;background:#F5C4B3;color:#712B13">${p>20?p+'%':''}</div>
+      <div class="ratio-seg" style="width:${a}%;background:#9FE1CB;color:#085041">${a>10?a+'%':''}</div>
+    </div>`;
+  const diff=30-a;
+  document.getElementById('rep-ratio-text').textContent=diff>0
+    ?`Ideální poměr je 70:30. Rozdíl oproti ideálu: ${diff} % = ${fmt(r.income*diff/100)} měsíčně. Každé procento navíc na straně aktiv ti přibližuje cíle.`
+    :`Jsi na nebo nad doporučeným poměrem aktiv. Skvělá výchozí pozice.`;
+
+  // CHART
+  if(wealthChart)wealthChart.destroy();
+  const labels=['Dnes','5 let','10 let','15 let','20 let'];
+  const dark=matchMedia('(prefers-color-scheme:dark)').matches;
+  const tc=dark?'#9a9890':'#8a8a82';const gc=dark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';
+  wealthChart=new Chart(document.getElementById('wealth-chart'),{
+    type:'line',
+    data:{labels,datasets:[
+      {label:'Bez akce',data:r.chartData.none,borderColor:'#c8c4bc',borderWidth:2,pointRadius:3,tension:.4,fill:false},
+      {label:'S plánem',data:r.chartData.plan,borderColor:'#2d9467',borderWidth:2,pointRadius:3,tension:.4,fill:false},
+      {label:'S poradcem',data:r.chartData.adv,borderColor:'#4a3fb5',borderWidth:2.5,pointRadius:3,tension:.4,fill:false},
+    ]},
+    options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.parsed.y)}}},
+      scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:11}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:11},callback:v=>fmt(v)}}}}
+  });
+
+  // SCENARIOS
+  const maxW=r.w_adv;
+  document.getElementById('rep-scenarios').innerHTML=[
+    {name:'Bez akce',val:r.w_none,color:'#c8c4bc'},
+    {name:'S vlastním plánem',val:r.w_plan,color:'#2d9467'},
+    {name:`S poradcem <span style="background:#e8f4ee;color:#1a6b4a;font-size:11px;font-weight:500;padding:2px 7px;border-radius:8px;margin-left:4px">+${Math.round((r.w_adv/r.w_plan-1)*100)} %</span>`,val:r.w_adv,color:'#4a3fb5'},
+  ].map(s=>`<div class="scenario"><div class="scenario-top"><span style="color:var(--ink2)">${s.name}</span><span style="font-weight:600;color:${s.color}">${fmt(s.val)}</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(s.val/maxW*100)}%;background:${s.color}"></div></div></div>`).join('');
+
+  // ALLOC
+  document.getElementById('rep-alloc-sub').textContent=`${fmt(r.monthlyInvest)} měsíčně rozděleno podle tvých cílů a časových horizontů`;
+  document.getElementById('rep-alloc').innerHTML=[
+    {horizon:'3–5 let',amount:r.a1,product:'Dluhopisy + nem. fondy',ret:'3–6,5 % p.a.',bg:'#e8f4ee',border:'#9FE1CB',tc:'#1a6b4a'},
+    {horizon:'5–15 let',amount:r.a2,product:'Akciové portfolio',ret:'8–12 % p.a.',bg:'#eeedf8',border:'#AFA9EC',tc:'#4a3fb5'},
+    {horizon:'15+ let',amount:r.a3,product:'Rentea / dyn. fondy',ret:'12–14 % p.a.',bg:'#fceee9',border:'#F5C4B3',tc:'#c43a1a'},
+  ].map(a=>`<div class="alloc-card" style="background:${a.bg};border-color:${a.border}"><div class="alloc-horizon" style="color:${a.tc}">${a.horizon}</div><div class="alloc-amount" style="color:${a.tc}">${fmt(a.amount)}/měs.</div><div class="alloc-product" style="color:${a.tc}">${a.product}</div><div class="alloc-return" style="color:${a.tc}">${a.ret}</div></div>`).join('');
+
+  // GOALS IN REPORT
+  const allGoalDefs=[...GOAL_DEFS['1-3'],...GOAL_DEFS['3-5'],...GOAL_DEFS['6-15'],...GOAL_DEFS['15+']];
+  const horizonLabels={'1-3':'1–3 roky','3-5':'3–5 let','6-15':'6–15 let','15+':'15+ let'};
+  let goalHtml='';
+  let anyGoal=false;
+  Object.entries(answers.goals).forEach(([hKey,gIds])=>{
+    gIds.forEach(gId=>{
+      const gDef=allGoalDefs.find(g=>g.id===gId);
+      if(!gDef)return;
+      anyGoal=true;
+      const customName=answers.goalNames[gId];
+      const displayName=gDef.custom&&customName?customName:gDef.title;
+      const amount=answers.goalAmounts[gId]||'';
+      goalHtml+=`<div class="goal-report-item">
+        <span class="goal-report-emoji">${gDef.emoji}</span>
+        <div class="goal-report-info">
+          <input class="goal-report-name" type="text" value="${displayName}" 
+            onchange="answers.goalNames['${gId}']=this.value" 
+            title="Klikni pro úpravu názvu cíle">
+          <div class="goal-report-meta">${horizonLabels[hKey]}${amount?' · '+amount:''}</div>
+        </div>
+      </div>`;
+    });
+  });
+  if(!anyGoal) goalHtml=`<p style="font-size:13px;color:var(--ink3)">Nevybral jsi žádné konkrétní cíle — plán je nastaven obecně.</p>`;
+  goalHtml+=`<div class="goal-edit-hint">✏️ Klikni na název cíle pro jeho úpravu</div>`;
+  document.getElementById('rep-goals').innerHTML=goalHtml;
+
+  // 3 KROKY
+  const steps3=[];
+  if(r.reserveMonths<3)steps3.push({title:'Postav si finanční rezervu',desc:`Cíl: 3× měsíční příjem na spořáku (${fmt(r.targetReserve)}). Aktuálně máš ${fmt(r.currentReserve)}. Dokud rezervu nemáš naplněnou, jsou investice předčasné.`});
+  if(!r.hasLife||!r.hasProperty)steps3.push({title:'Zajisti pojistnou ochranu',desc:`${!r.hasLife?'Chybí životní pojistka. ':''}${!r.hasProperty?'Chybí pojištění majetku. ':''}Buduješ majetek bez záchranné sítě.`});
+  steps3.push({title:'Nastav pravidelnou investici',desc:`Z volných prostředků investuj ${fmt(r.monthlyInvest)} měsíčně do tří horizontů. Klíčem je pravidelnost.`});
+  if(steps3.length<3)steps3.push({title:'Optimalizuj poměr aktiv a pasiv',desc:`Cíl je dostat výdaje pod 70 % příjmu. Každý ušetřený tisíc navíc do investic za 20 let přinese ${fmt(calcFV(1000,20,0.085))} Kč.`});
+  document.getElementById('rep-steps').innerHTML=steps3.slice(0,3).map((s,i)=>`<div class="step"><div class="step-num">${i+1}</div><div><div class="step-title">${s.title}</div><div class="step-desc">${s.desc}</div></div></div>`).join('');
+
+  // MOTIVATION
+  const diff_pct=Math.max(0,20-(r.aktivaPct-10));
+  const monthly_diff=r.income*diff_pct/100;
+  const wealth_diff=calcFV(monthly_diff,20,0.085);
+  const mc=r.pasivaPct>80?'var(--red-light)':r.pasivaPct>70?'var(--amber-light)':'var(--green-light)';
+  const mb=r.pasivaPct>80?'#F5C4B3':r.pasivaPct>70?'#FAC775':'#9FE1CB';
+  const mt=r.pasivaPct>80?'#712B13':r.pasivaPct>70?'#633806':'#085041';
+  document.getElementById('rep-motivation').innerHTML=`<div style="background:${mc};border:1px solid ${mb};border-radius:var(--r-sm);padding:16px;color:${mt}"><div style="font-size:13px;line-height:1.7;margin-bottom:12px">${r.pasivaPct>70?`Snížením výdajů o <strong>${diff_pct} %</strong> příjmu (= ${fmt(monthly_diff)}/měs.) bys za 20 let měl o <strong>${fmt(wealth_diff)} navíc</strong>. To může znamenat odchod do důchodu o <strong>3–7 let dřív</strong>.`:`Jsi na dobré cestě. Každé další procento do investic přidá za 20 let přibližně <strong>${fmt(calcFV(r.income*0.01,20,0.085))}</strong>.`}</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${[{label:'Aktuální investice',val:fmt(r.monthlyInvest)+'/měs.'},{label:'Při ideálu 20 %',val:fmt(r.income*0.20)+'/měs.'},{label:'Rozdíl za 20 let',val:'+'+fmt(wealth_diff)}].map(m=>`<div style="background:rgba(255,255,255,.5);border-radius:var(--r-sm);padding:10px;text-align:center"><div style="font-size:11px;margin-bottom:3px;opacity:.75">${m.label}</div><div style="font-size:14px;font-weight:600">${m.val}</div></div>`).join('')}</div></div>`;
+
+  // REFINE
+  document.getElementById('rep-refine').innerHTML=[
+    {id:'r1',icon:'💰',title:'Příjmy a výdaje',text:'Upřesnit strukturu příjmů',color:'#1a6b4a',bg:'#e8f4ee'},
+    {id:'r2',icon:'📋',title:'Závazky',text:'Doplnit výši hypotéky a fixaci',color:'#c43a1a',bg:'#fceee9'},
+    {id:'r3',icon:'🏦',title:'Majetek',text:'Upřesnit hodnotu nemovitostí',color:'#1a4a8a',bg:'#e8eef8'},
+    {id:'r4',icon:'📁',title:'Produkty',text:'Doplnit výše pravidelných odvodů',color:'#c47a1a',bg:'#fdf3e3'},
+    {id:'r5',icon:'🎯',title:'Cíle',text:'Upřesnit horizont a výši renty',color:'#4a3fb5',bg:'#eeedf8'},
+  ].map(s=>`<div class="refine-card" onclick="toggleRefine('${s.id}')"><div class="refine-header"><div class="refine-icon" style="background:${s.bg}">${s.icon}</div><div class="refine-info"><div class="refine-title">${s.title}</div><div style="color:${s.color};font-size:12px">${s.text}</div></div><span style="font-size:14px;color:var(--ink3)">›</span></div><div class="vrstva2-body" id="${s.id}"><p style="font-size:13px;color:var(--ink3);line-height:1.7">Doplňující otázky pro sekci <strong>${s.title}</strong> — po zodpovězení se plán zpřesní. Tyto detaily řešíme kompletně na osobní konzultaci.</p><button class="btn btn-secondary btn-sm" style="margin-top:10px" onclick="event.stopPropagation();alert('V plné verzi zde budou doplňující otázky.')">Přejít na doplňující otázky →</button></div></div>`).join('');
+}
+
 function toggleRefine(id){document.getElementById(id).classList.toggle('open');}
 </script>
 </body>
