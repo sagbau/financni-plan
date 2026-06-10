@@ -227,7 +227,7 @@ canvas{display:block;width:100%!important}
   <div class="card"><p class="rpt">Za 20 let — srovnání scénářů</p><div id="rep-scenarios"></div><div style="font-size:12px;color:var(--ink3);margin-top:10px;line-height:1.6;padding:10px;background:var(--cream);border-radius:var(--rs)">Rozdíl „s poradcem" vychází z behavioral gap — průměrný investor zaostává za trhem o 1,7 % ročně díky emočním rozhodnutím.</div></div>
   <div class="card"><p class="rpt">Návrh alokace investic</p><p style="font-size:13px;color:var(--ink3);margin-bottom:14px" id="rep-alloc-sub"></p><div class="alloc-grid" id="rep-alloc"></div><div style="font-size:12px;color:var(--ink3);line-height:1.6;padding:10px;background:var(--cream);border-radius:var(--rs)">Každý horizont dostane vždy alespoň 15 % z investovatelné částky.</div></div>
   <div class="card" id="rep-renta-card" style="display:none"><p class="rpt">Výpočet cíle: renta / důchod</p><div id="rep-renta"></div></div>
-  <div class="card"><p class="rpt">Tvoje cíle — priorita a dosažitelnost</p><p style="font-size:12px;color:var(--ink3);margin-bottom:12px">Přetáhni cíle podle priority — důležitější cíle budou financovány přednostně.</p><div id="rep-goals-priority"></div></div>
+  <div class="card"><p class="rpt">Tvoje cíle — priorita a dosažitelnost</p><p style="font-size:12px;color:var(--ink3);margin-bottom:12px">Přetáhni cíle podle priority — důležitější cíle budou financovány přednostně.</p><div id="rep-goals-priority"></div><button class="btn btn-secondary btn-sm" style="margin-top:10px;width:auto;padding:8px 16px" onclick="toggleGoalManager()">+ Přidat nebo upravit cíle</button><div id="goal-manager" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--cream3)"><div id="goal-manager-inner"></div></div></div>
   <div class="card"><p class="rpt">Tvoje 3 konkrétní kroky</p><div id="rep-steps"></div></div>
   <div class="card"><p class="rpt">Co to udělá kdybysi zlepšil poměr aktiv</p><div id="rep-motivation"></div></div>
   <div class="card"><p class="rpt">Chceš přesnější výsledky?</p><p style="font-size:13px;color:var(--ink3);margin-bottom:14px;line-height:1.6">Odpověz na doplňující otázky — plán se zpřesní.</p><div id="rep-refine"></div></div>
@@ -539,8 +539,12 @@ function computeReport(){
   const hasLife=A.hasInsurance.includes('Životní pojistka');
   const hasProperty=A.hasInsurance.includes('Pojištění bytu/domu');
   const existingInvest=INVEST_MAP[A.investments]||50000;
-  const investPct=Math.max(0,aktivaPct/100-0.10);
-  const monthlyInvest=income*investPct;
+  // Metodika 40:30:20:10 — investice vždy 20 % příjmu, pojistky+rezerva 10 %
+  const monthlyInvest=income*0.20;
+  const monthlyProtection=income*0.10;
+  const actualLeftover=Math.max(0,income-expenses);
+  const canAfford30=actualLeftover>=income*0.30;
+  const shortfall=canAfford30?0:Math.max(0,income*0.30-actualLeftover);
 
   const hasShort=A.goals['1-3'].length>0, hasMid=A.goals['3-5'].length>0, hasLong=A.goals['15+'].length>0;
   let w1=0.35,w2=0.35,w3=0.30;
@@ -566,7 +570,7 @@ function computeReport(){
   }
 
   return{income,expenses,pasivaPct,aktivaPct,reserveMonths,targetReserve,currentReserve,
-    hasLife,hasProperty,monthlyInvest,a1,a2,a3,existingInvest,
+    hasLife,hasProperty,monthlyInvest,monthlyProtection,canAfford30,shortfall,a1,a2,a3,existingInvest,
     w_none:none(20),w_plan:plan(20),w_adv:adv(20),
     chartData:{none:[0,5,10,15,20].map(none),plan:[0,5,10,15,20].map(plan),adv:[0,5,10,15,20].map(adv)},
     rentaTargetMonthly,rentaCapitalNeeded};
@@ -624,7 +628,15 @@ function renderReport(){
   document.getElementById('rep-metrics').innerHTML=`
     <div class="metric"><div class="metric-label">Čistý příjem</div><div class="metric-value">${fmt(r.income)}</div><div class="metric-sub">měsíčně</div></div>
     <div class="metric"><div class="metric-label">Výdaje</div><div class="metric-value">${fmt(r.expenses)}</div><div class="metric-sub">měsíčně</div></div>
-    <div class="metric"><div class="metric-label">Na investice</div><div class="metric-value">${fmt(r.monthlyInvest)}</div><div class="metric-sub">měsíčně</div></div>`;
+    <div class="metric"><div class="metric-label">Na investice (20 %)</div><div class="metric-value" style="color:${r.canAfford30?'var(--green)':'var(--amber)'}">${fmt(r.monthlyInvest)}</div><div class="metric-sub">cíl dle metodiky</div></div>`;
+  if(!r.canAfford30){
+    document.getElementById('rep-metrics').insertAdjacentHTML('afterend',
+      `<div style="background:var(--al);border:1px solid #FAC775;border-radius:var(--rs);padding:10px 12px;font-size:12px;color:#633806;line-height:1.6;margin-bottom:12px">
+        ⚠️ Při tvých výdajích (${r.pasivaPct} % příjmu) zbývá na 30% aktiva jen ${fmt(Math.max(0,r.income-r.expenses))}/měs. — chybí ${fmt(r.shortfall)}.
+        Dle metodiky 40:30:20:10 je cíl: <strong>${fmt(r.monthlyInvest)} investice + ${fmt(r.monthlyProtection)} pojistky/rezerva</strong>.
+      </div>`
+    );
+  }
 
   const p=r.pasivaPct,a=r.aktivaPct;
   document.getElementById('rep-ratio-bar').innerHTML=`
@@ -780,6 +792,7 @@ function renderGoalPriority(r, allDefs, allocFrac){
         <div class="achieve-label" style="color:${pctColor}">${pct} %</div>
         <div class="achieve-bar-track"><div class="achieve-bar-fill" style="width:${pct}%;background:${pctColor}"></div></div>
       </div>`:'<div class="achieve-bar-wrap" style="text-align:right;font-size:11px;color:var(--ink3)">bez<br>částky</div>'}
+      <button onclick="removeGoal('${hz}','${gid}')" title="Odebrat cíl" style="background:none;border:none;font-size:16px;color:var(--ink3);cursor:pointer;padding:4px;flex-shrink:0;line-height:1" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--ink3)'">×</button>
     </div>`;
   });
 
@@ -818,6 +831,57 @@ function dropGoal(e,targetIdx){
   const allDefs=[...GOAL_DEFS['1-3'],...GOAL_DEFS['3-5'],...GOAL_DEFS['6-15'],...GOAL_DEFS['15+']];
   const allocFrac={'1-3':0.35,'3-5':0.35,'6-15':0.20,'15+':0.30};
   renderGoalPriority(r,allDefs,allocFrac);
+}
+
+function removeGoal(hz,gid){
+  A.goals[hz]=A.goals[hz].filter(id=>id!==gid);
+  goalPriority=goalPriority.filter(x=>x.gid!==gid);
+  const r=computeReport();
+  const allDefs=[...GOAL_DEFS['1-3'],...GOAL_DEFS['3-5'],...GOAL_DEFS['6-15'],...GOAL_DEFS['15+']];
+  const allocFrac={'1-3':0.35,'3-5':0.35,'6-15':0.20,'15+':0.30};
+  renderGoalPriority(r,allDefs,allocFrac);
+  renderGoalManager();
+}
+
+function toggleGoalManager(){
+  const el=document.getElementById('goal-manager');
+  const isOpen=el.style.display!=='none';
+  el.style.display=isOpen?'none':'block';
+  if(!isOpen) renderGoalManager();
+}
+
+function renderGoalManager(){
+  const hz_labels={'1-3':'Do 1–3 let','3-5':'Do 3–5 let','6-15':'Za 6–15 let','15+':'15+ let'};
+  const hz_colors={'1-3':'#1a6b4a','3-5':'#1a4a8a','6-15':'#c47a1a','15+':'#c43a1a'};
+  let html='<div style="font-size:13px;font-weight:500;margin-bottom:10px">Vyber cíle k přidání:</div>';
+  Object.entries(GOAL_DEFS).forEach(([hz,defs])=>{
+    html+=`<div style="margin-bottom:12px"><div style="font-size:12px;font-weight:500;color:${hz_colors[hz]};margin-bottom:6px">${hz_labels[hz]}</div><div style="display:flex;flex-wrap:wrap;gap:6px">`;
+    defs.forEach(g=>{
+      const isActive=A.goals[hz].includes(g.id);
+      html+=`<span style="font-size:12px;padding:6px 12px;border-radius:20px;border:1.5px solid ${isActive?'var(--green)':'var(--cream3)'};background:${isActive?'var(--gl)':'white'};color:${isActive?'var(--green)':'var(--ink2)'};cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:DM Sans,sans-serif"
+        onclick="toggleGoalFromManager('${hz}','${g.id}',this)">
+        ${g.emoji} ${g.title} ${isActive?'✓':''}
+      </span>`;
+    });
+    html+=`</div></div>`;
+  });
+  document.getElementById('goal-manager-inner').innerHTML=html;
+}
+
+function toggleGoalFromManager(hz,gid,el){
+  const isActive=A.goals[hz].includes(gid);
+  if(isActive){
+    A.goals[hz]=A.goals[hz].filter(id=>id!==gid);
+    goalPriority=goalPriority.filter(x=>x.gid!==gid);
+  } else {
+    A.goals[hz].push(gid);
+    goalPriority.push({hz,gid});
+  }
+  const r=computeReport();
+  const allDefs=[...GOAL_DEFS['1-3'],...GOAL_DEFS['3-5'],...GOAL_DEFS['6-15'],...GOAL_DEFS['15+']];
+  const allocFrac={'1-3':0.35,'3-5':0.35,'6-15':0.20,'15+':0.30};
+  renderGoalPriority(r,allDefs,allocFrac);
+  renderGoalManager();
 }
 
 function toggleRefine(id){document.getElementById(id).classList.toggle('open');}
