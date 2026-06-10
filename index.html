@@ -836,11 +836,9 @@ function dropGoal(e,targetIdx){
 function removeGoal(hz,gid){
   A.goals[hz]=A.goals[hz].filter(id=>id!==gid);
   goalPriority=goalPriority.filter(x=>x.gid!==gid);
-  const r=computeReport();
-  const allDefs=[...GOAL_DEFS['1-3'],...GOAL_DEFS['3-5'],...GOAL_DEFS['6-15'],...GOAL_DEFS['15+']];
-  const allocFrac={'1-3':0.35,'3-5':0.35,'6-15':0.20,'15+':0.30};
-  renderGoalPriority(r,allDefs,allocFrac);
-  renderGoalManager();
+  refreshPriority();
+  const mgr=document.getElementById('goal-manager');
+  if(mgr&&mgr.style.display!=='none') renderGoalManager();
 }
 
 function toggleGoalManager(){
@@ -853,22 +851,43 @@ function toggleGoalManager(){
 function renderGoalManager(){
   const hz_labels={'1-3':'Do 1–3 let','3-5':'Do 3–5 let','6-15':'Za 6–15 let','15+':'15+ let'};
   const hz_colors={'1-3':'#1a6b4a','3-5':'#1a4a8a','6-15':'#c47a1a','15+':'#c43a1a'};
-  let html='<div style="font-size:13px;font-weight:500;margin-bottom:10px">Vyber cíle k přidání:</div>';
+  const isLong={'1-3':false,'3-5':false,'6-15':false,'15+':true};
+  let html='<div style="font-size:13px;font-weight:500;margin-bottom:12px">Vyber nebo uprav cíle:</div>';
   Object.entries(GOAL_DEFS).forEach(([hz,defs])=>{
-    html+=`<div style="margin-bottom:12px"><div style="font-size:12px;font-weight:500;color:${hz_colors[hz]};margin-bottom:6px">${hz_labels[hz]}</div><div style="display:flex;flex-wrap:wrap;gap:6px">`;
+    html+=`<div style="margin-bottom:16px"><div style="font-size:12px;font-weight:500;color:${hz_colors[hz]};margin-bottom:8px">${hz_labels[hz]}</div>`;
     defs.forEach(g=>{
       const isActive=A.goals[hz].includes(g.id);
-      html+=`<span style="font-size:12px;padding:6px 12px;border-radius:20px;border:1.5px solid ${isActive?'var(--green)':'var(--cream3)'};background:${isActive?'var(--gl)':'white'};color:${isActive?'var(--green)':'var(--ink2)'};cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:DM Sans,sans-serif"
-        onclick="toggleGoalFromManager('${hz}','${g.id}',this)">
-        ${g.emoji} ${g.title} ${isActive?'✓':''}
-      </span>`;
+      const selAmt=A.goalAmounts[g.id]||'';
+      const amtOpts=isLong[hz]?AMOUNT_OPTS_LONG:AMOUNT_OPTS_SHORT;
+      html+=`<div style="border:1.5px solid ${isActive?'var(--green)':'var(--cream3)'};border-radius:var(--r);padding:10px 12px;margin-bottom:6px;background:${isActive?'var(--gl)':'white'}">
+        <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="toggleGoalFromManager('${hz}','${g.id}')">
+          <div style="width:18px;height:18px;border-radius:50%;border:1.5px solid ${isActive?'var(--green)':'var(--cream3)'};background:${isActive?'var(--green)':'transparent'};display:flex;align-items:center;justify-content:center;font-size:10px;color:white;flex-shrink:0">${isActive?'✓':''}</div>
+          <span style="font-size:15px">${g.emoji}</span>
+          <span style="font-size:13px;font-weight:500;flex:1">${g.title}</span>
+          ${!isLong[hz]&&isActive?'<span style="font-size:11px;color:var(--ink3)">navolit částku →</span>':''}
+          ${isLong[hz]&&isActive?'<span style="font-size:11px;color:var(--ink3)">nepovinné →</span>':''}
+        </div>
+        ${isActive?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid ${isActive?'#9FE1CB':'var(--cream3)'}">
+          <div style="font-size:11px;color:var(--ink3);margin-bottom:6px">Orientační částka${isLong[hz]?' (nepovinné)':''}:</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px">
+            ${amtOpts.map(a=>`<span style="font-size:12px;padding:5px 11px;border-radius:16px;border:1px solid ${selAmt===a?'var(--green)':'var(--cream3)'};background:${selAmt===a?'var(--green)':'white'};color:${selAmt===a?'white':'var(--ink2)'};cursor:pointer;font-family:DM Sans,sans-serif"
+              onclick="setGoalAmtManager('${g.id}','${a}',this,'${hz}')">${a}</span>`).join('')}
+            ${selAmt?`<span style="font-size:12px;padding:5px 11px;border-radius:16px;border:1px solid var(--cream3);background:white;color:var(--red);cursor:pointer;font-family:DM Sans,sans-serif"
+              onclick="setGoalAmtManager('${g.id}','',null,'${hz}')">× vymazat</span>`:''}
+          </div>
+          ${g.custom?`<input style="width:100%;font-size:13px;padding:7px 10px;border:1px solid var(--cream3);border-radius:var(--rs);background:var(--cream);color:var(--ink);font-family:DM Sans,sans-serif;margin-top:8px" 
+            type="text" placeholder="Pojmenuj svůj cíl..." 
+            value="${A.goalNames[g.id]||''}" 
+            oninput="A.goalNames['${g.id}']=this.value;refreshPriority()">`:``}
+        </div>`:''}
+      </div>`;
     });
-    html+=`</div></div>`;
+    html+=`</div>`;
   });
   document.getElementById('goal-manager-inner').innerHTML=html;
 }
 
-function toggleGoalFromManager(hz,gid,el){
+function toggleGoalFromManager(hz,gid){
   const isActive=A.goals[hz].includes(gid);
   if(isActive){
     A.goals[hz]=A.goals[hz].filter(id=>id!==gid);
@@ -877,11 +896,21 @@ function toggleGoalFromManager(hz,gid,el){
     A.goals[hz].push(gid);
     goalPriority.push({hz,gid});
   }
+  refreshPriority();
+  renderGoalManager();
+}
+
+function setGoalAmtManager(gid,amt,el,hz){
+  A.goalAmounts[gid]=amt;
+  refreshPriority();
+  renderGoalManager();
+}
+
+function refreshPriority(){
   const r=computeReport();
   const allDefs=[...GOAL_DEFS['1-3'],...GOAL_DEFS['3-5'],...GOAL_DEFS['6-15'],...GOAL_DEFS['15+']];
   const allocFrac={'1-3':0.35,'3-5':0.35,'6-15':0.20,'15+':0.30};
   renderGoalPriority(r,allDefs,allocFrac);
-  renderGoalManager();
 }
 
 function toggleRefine(id){document.getElementById(id).classList.toggle('open');}
