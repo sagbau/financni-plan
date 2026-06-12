@@ -609,11 +609,6 @@ function computeReport(){
     rentaTargetMonthly,rentaCapitalNeeded};
 }
 
-;
-  const target=AMOUNT_NUM[amtKey]||500000;
-  const pct=Math.round(Math.min(100,fv/target*100));
-  return{pct,fv,target};
-}
 
 // ─── PROCESSING ───────────────────────────────────────────────────────────────
 function processAndShowReport(){
