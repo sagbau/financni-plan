@@ -227,26 +227,65 @@ canvas{display:block;width:100%!important}
   <div class="card"><p class="rpt">Kde teď jsi</p><div class="metric-row" id="rep-metrics"></div><div id="rep-ratio-bar"></div><div id="rep-ratio-text" style="font-size:12px;color:var(--ink3);margin-top:6px;line-height:1.6"></div></div>
   <div class="card">
     <p class="rpt">Vývoj majetku</p>
-    <!-- RATE SLIDER -->
+    <!-- 3 RATE SLIDERS -->
     <div style="background:var(--cream);border-radius:var(--rs);padding:14px;margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div>
-          <span style="font-size:13px;font-weight:500;color:var(--ink)">Předpokládané zhodnocení portfolia</span>
-          <span style="font-size:11px;color:var(--ink3);margin-left:6px">průměr p.a.</span>
+      <div style="font-size:13px;font-weight:500;color:var(--ink);margin-bottom:12px">Předpokládané zhodnocení podle typu investice</div>
+
+      <!-- Slider 1: Dluhopisy + nemovitosti -->
+      <div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="width:10px;height:10px;border-radius:50%;background:#2d9467;flex-shrink:0;display:inline-block"></span>
+            <span style="font-size:12px;color:var(--ink2)">Dluhopisy + nemovitostní fondy</span>
+          </div>
+          <span id="rate1-display" style="font-size:15px;font-weight:600;color:#2d9467">4 % p.a.</span>
         </div>
-        <div style="text-align:right">
-          <span id="rate-display" style="font-size:22px;font-weight:600;color:var(--green)">8 %</span>
-          <span style="font-size:12px;color:var(--ink3)"> p.a.</span>
+        <input type="range" id="rate1" min="3" max="5" step="0.5" value="4"
+          oninput="updateRates()" style="width:100%;accent-color:#2d9467">
+        <div style="display:flex;justify-content:space-between;margin-top:2px">
+          <span style="font-size:10px;color:var(--ink3)">3 %</span>
+          <span style="font-size:10px;color:var(--ink3)">5 %</span>
         </div>
       </div>
-      <input type="range" id="portfolio-rate" min="1" max="14" step="0.5" value="8"
-        oninput="updateChartRate(this.value)" style="width:100%">
-      <div style="display:flex;justify-content:space-between;margin-top:4px">
-        <span style="font-size:10px;color:var(--ink3)">1 % (konzervativní)</span>
-        <span style="font-size:10px;color:var(--ink3)">8 % (vyvážené)</span>
-        <span style="font-size:10px;color:var(--ink3)">14 % (dynamické)</span>
+
+      <!-- Slider 2: Akcie -->
+      <div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="width:10px;height:10px;border-radius:50%;background:#4a3fb5;flex-shrink:0;display:inline-block"></span>
+            <span style="font-size:12px;color:var(--ink2)">Akciové fondy</span>
+          </div>
+          <span id="rate2-display" style="font-size:15px;font-weight:600;color:#4a3fb5">8 % p.a.</span>
+        </div>
+        <input type="range" id="rate2" min="6" max="10" step="0.5" value="8"
+          oninput="updateRates()" style="width:100%;accent-color:#4a3fb5">
+        <div style="display:flex;justify-content:space-between;margin-top:2px">
+          <span style="font-size:10px;color:var(--ink3)">6 %</span>
+          <span style="font-size:10px;color:var(--ink3)">10 %</span>
+        </div>
       </div>
-      <div id="rate-hint" style="font-size:12px;color:var(--ink3);margin-top:8px;line-height:1.5"></div>
+
+      <!-- Slider 3: Penze -->
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="width:10px;height:10px;border-radius:50%;background:#c43a1a;flex-shrink:0;display:inline-block"></span>
+            <span style="font-size:12px;color:var(--ink2)">Penzijní produkty</span>
+          </div>
+          <span id="rate3-display" style="font-size:15px;font-weight:600;color:#c43a1a">12 % p.a.</span>
+        </div>
+        <input type="range" id="rate3" min="10" max="14" step="0.5" value="12"
+          oninput="updateRates()" style="width:100%;accent-color:#c43a1a">
+        <div style="display:flex;justify-content:space-between;margin-top:2px">
+          <span style="font-size:10px;color:var(--ink3)">10 %</span>
+          <span style="font-size:10px;color:var(--ink3)">14 %</span>
+        </div>
+      </div>
+
+      <div id="rate-display" style="display:none"></div><!-- kept for compat -->
+      <div id="rate-hint" style="font-size:12px;color:var(--ink3);margin-top:10px;line-height:1.5;padding-top:10px;border-top:1px solid var(--cream3)">
+        <span id="rate-weighted"></span>
+      </div>
     </div>
     <!-- LEGEND -->
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;font-size:12px;color:var(--ink3)">
@@ -431,7 +470,7 @@ let A = {
   loans:[], consumerPayment:null, consumerDuration:null,
   reserve:null, property:null, investments:null,
   hasInsurance:[], currentProducts:[],
-  family:null, risk:null,
+  family:null, risk:null, age:null,
   goals:{'1-3':[],'3-5':[],'6-15':[],'15+':[]},
   goalAmounts:{}, goalNames:{},
   v2:{
@@ -460,7 +499,10 @@ let A2 = {
 let currentStep = 0;
 let wealthChart = null;
 let dragSrc = null;
-let portfolioRate = 8; // % p.a. — user adjustable
+let portfolioRate = 8; // % p.a. — weighted average (kept for compat)
+let portfolioRate1 = 4; // dluhopisy + nemovitosti 3-5%
+let portfolioRate2 = 8; // akcie 6-10%
+let portfolioRate3 = 12; // penze 10-14%
 
 // ─── NAVIGATION ───────────────────────────────────────────────────────────────
 function showScreen(id){
@@ -679,6 +721,17 @@ function renderGoals(){
     });
     h+=`</div></div><hr class="divider">`;
   });
+
+  // AGE at end of goals step
+  h += `<hr class="divider">
+  <div class="q-block">
+    <span class="q-label">Kolik ti je let? <span style="font-size:11px;font-weight:400;color:var(--ink3)">(pro přesnější výpočet renty a horizontu)</span></span>
+    <div class="pills">`;
+  ['Do 25','25–30','30–35','35–40','40–45','45–50','50–55','55–60','60+'].forEach(o=>{
+    h += `<span class="pill ${A.age===o?'sel':''}" data-qid="age" data-val="${o}" onclick="pickSingle(this)">${o}</span>`;
+  });
+  h += `</div></div>`;
+
   return h;
 }
 
@@ -754,8 +807,8 @@ function computeReport(){
   const loanYears = Math.max(mortDuration, consDuration, a2LoanYears);
   const freedMonthly = loanPayment; // after payoff, this flows to investments
 
-  // Age & retirement horizon from A2
-  const currentAge = AGE_MAP[A2.currentAge] || 35; // default 35
+  // Age from main questionnaire (A.age) or refinement (A2.currentAge), default 35
+  const currentAge = AGE_MAP[A.age] || AGE_MAP[A2.currentAge] || 35;
   const retireAgeVal = RETIRE_AGE_MAP[A2.retireAge] || 60; // default 60
   const yearsToRetire = Math.max(1, retireAgeVal - currentAge);
   const retireHorizon = yearsToRetire; // actual years until retirement
@@ -790,30 +843,30 @@ function computeReport(){
   const adjRentaMonthly = rentaTargetMonthly * retireIncomePct;
   const adjRentaCapital = (adjRentaMonthly / 5000) * 1000000;
 
-  const rate = portfolioRate / 100;
+  const r1 = portfolioRate1 / 100; // dluhopisy 3-5%
+  const r2 = portfolioRate2 / 100; // akcie 6-10%
+  const r3 = portfolioRate3 / 100; // penze 10-14%
   const rateNone = 0.02;
-  const rateAdv = rate + 0.017; // behavioral gap: +1.7% p.a. — větší sazba = větší absolutní gap
+  // Weighted average rate for overall chart
+  const totalAlloc = (adjustedMonthlyInvest * (w1 + w2 + w3)) || 1;
+  const weightedRate = (w1*r1 + w2*r2 + w3*r3) / (w1 + w2 + w3);
+  const rate = isNaN(weightedRate) ? 0.08 : weightedRate;
+  const rateAdv = rate + 0.017; // behavioral gap +1.7%
 
-  // Phased calculation: before loan payoff vs after
-  // Phase 1: 0 → loanYears (invest with reduced capacity due to loan payments)
-  // Phase 2: loanYears → horizon (invest with freed capital added)
+  // Phased calc: Phase 1 = splácím, Phase 2 = po splacení freed capital → investice
   function calcPhased(monthly, years, r) {
     if(!loanYears || !freedMonthly || loanYears >= years) {
-      // No loan data or already paid off — standard calc
       return calcFV(monthly, years, r) + existingInvest * Math.pow(1+r, years);
     }
-    // Phase 1: accumulate until loan paid off
     const fv1 = calcFV(monthly, loanYears, r) + existingInvest * Math.pow(1+r, loanYears);
-    // Phase 2: start with fv1 as principal + higher monthly (freed capital added)
     const phase2years = years - loanYears;
-    const monthlyPhase2 = monthly + freedMonthly;
-    const fv2 = fv1 * Math.pow(1+r, phase2years) + calcFV(monthlyPhase2, phase2years, r);
+    const fv2 = fv1 * Math.pow(1+r, phase2years) + calcFV(monthly + freedMonthly, phase2years, r);
     return fv2;
   }
 
-  const none=y=>Math.round(calcPhased(monthlyInvest*0.3, y, rateNone));
-  const plan=y=>Math.round(calcPhased(monthlyInvest, y, rate));
-  const adv=y=>Math.round(calcPhased(monthlyInvest, y, rateAdv));
+  const none=y=>Math.round(calcPhased(adjustedMonthlyInvest*0.3, y, rateNone));
+  const plan=y=>Math.round(calcPhased(adjustedMonthlyInvest, y, rate));
+  const adv=y=>Math.round(calcPhased(adjustedMonthlyInvest, y, rateAdv));
 
   // Build priority list from selected goals
   if(goalPriority.length===0){
@@ -910,9 +963,14 @@ function renderReport(){
   // FOMO tile
   updateFomoTile(r.w_plan, r.w_adv);
 
-  // Init slider position
-  const sliderEl = document.getElementById('portfolio-rate');
-  if(sliderEl) { sliderEl.value = portfolioRate; updateRateHint(portfolioRate); }
+  // Init 3 sliders
+  const s1 = document.getElementById('rate1');
+  const s2 = document.getElementById('rate2');
+  const s3 = document.getElementById('rate3');
+  if(s1) s1.value = portfolioRate1;
+  if(s2) s2.value = portfolioRate2;
+  if(s3) s3.value = portfolioRate3;
+  updateRates();
 
   const effectiveRateText = `${fmt(r.monthlyInvest)} měsíčně · předpokládané zhodnocení: ${portfolioRate} % p.a.`;
   document.getElementById('rep-alloc-sub').textContent = effectiveRateText;
@@ -1308,10 +1366,35 @@ function refreshPriority(){
   renderGoalPriority(r,allDefs);
 }
 
-// ─── CHART RATE SLIDER ────────────────────────────────────────────────────────
+// ─── CHART RATE SLIDERS ───────────────────────────────────────────────────────
+function updateRates() {
+  portfolioRate1 = parseFloat(document.getElementById('rate1')?.value || 4);
+  portfolioRate2 = parseFloat(document.getElementById('rate2')?.value || 8);
+  portfolioRate3 = parseFloat(document.getElementById('rate3')?.value || 12);
+
+  // Update displays
+  const d1 = document.getElementById('rate1-display');
+  const d2 = document.getElementById('rate2-display');
+  const d3 = document.getElementById('rate3-display');
+  if(d1) d1.textContent = portfolioRate1 + ' % p.a.';
+  if(d2) d2.textContent = portfolioRate2 + ' % p.a.';
+  if(d3) d3.textContent = portfolioRate3 + ' % p.a.';
+
+  // Compute weighted average for overall chart
+  const r = computeReport();
+  const total = r.a1 + r.a2 + r.a3 || 1;
+  portfolioRate = (r.a1/total)*portfolioRate1 + (r.a2/total)*portfolioRate2 + (r.a3/total)*portfolioRate3;
+
+  const wEl = document.getElementById('rate-weighted');
+  if(wEl) wEl.textContent = `Vážený průměr portfolia: ${portfolioRate.toFixed(1)} % p.a.`;
+
+  updateChartRate(portfolioRate);
+}
+
 function updateChartRate(val) {
   portfolioRate = parseFloat(val);
-  document.getElementById('rate-display').textContent = portfolioRate + ' %';
+  const dispEl = document.getElementById('rate-display');
+  if(dispEl) dispEl.textContent = portfolioRate.toFixed(1) + ' %';
   updateRateHint(portfolioRate);
   const r = computeReport();
   if(wealthChart) {
