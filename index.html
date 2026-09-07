@@ -335,9 +335,31 @@ let A = {
   hasInsurance:[], currentProducts:[],
   family:null, risk:null,
   goals:{'1-3':[],'3-5':[],'6-15':[],'15+':[]},
-  goalAmounts:{}, goalNames:{}
+  goalAmounts:{}, goalNames:{},
+  v2:{
+    incomeStability:null, incomeChange:null, partnerIncome:null,
+    mortgageBalance:null, mortgageFixEnd:null, monthlyPayments:null,
+    propertyValue:null, monthlyContrib:null, existingReturn:null,
+    monthlyToProducts:null, retireAge:null, retireIncomePct:null
+  }
 };
 let goalPriority = []; // ordered list of {horizon, goalId}
+let A2 = {}; // supplementary answers
+
+// Vrstva 2 — doplňující otázky
+let A2 = {
+  incomeStability: null,    // Stabilní / Kolísavý / Sezónní
+  extraIncome: null,        // měsíční vedlejší příjem v Kč (0 = žádný)
+  mortgageBalance: null,    // zbývající jistina
+  mortgageFixEnd: null,     // konec fixace
+  mortgageRate: null,       // úroková sazba
+  propertyValue: null,      // hodnota nemovitosti
+  currentMonthlySavings: null, // kolik měsíčně už odvádí
+  investReturns: null,      // ví co vynáší?
+  retireAge: null,          // ve kolika letech chce přestat
+  retireIncomePct: null,    // kolik % příjmu chce v důchodu
+  nextChild: null,          // plánuje další dítě?
+};
 let currentStep = 0;
 let wealthChart = null;
 let dragSrc = null;
@@ -591,6 +613,19 @@ function computeReport(){
   const rentaTargetMonthly=income*inflFactor;
   const rentaCapitalNeeded=(rentaTargetMonthly/5000)*1000000;
 
+  // A2 adjustments
+  const extraIncome = A2.extraIncome || 0;
+  const totalInvest = (income + extraIncome) * 0.20;
+  const adjustedMonthlyInvest = totalInvest;
+  // existing savings already going in (reduce required new savings)
+  const currentSavings = A2.currentMonthlySavings || 0;
+  // retirement horizon override
+  const retireYears = A2.retireAge ? Math.max(1, (A2.retireAge - 40)) : 20;
+  // renta income target override
+  const retireIncomePct = A2.retireIncomePct ? parseInt(A2.retireIncomePct) / 100 : 1.0;
+  const adjRentaMonthly = rentaTargetMonthly * retireIncomePct;
+  const adjRentaCapital = (adjRentaMonthly / 5000) * 1000000;
+
   const none=y=>Math.round(calcFV(monthlyInvest*0.3,y,0.02)+existingInvest*Math.pow(1.02,y));
   const plan=y=>Math.round(calcFV(monthlyInvest,y,0.085)+existingInvest*Math.pow(1.06,y));
   const adv=y=>Math.round(plan(y)*1.30);
@@ -603,10 +638,10 @@ function computeReport(){
   }
 
   return{income,expenses,pasivaPct,aktivaPct,reserveMonths,targetReserve,currentReserve,
-    hasLife,hasProperty,monthlyInvest,monthlyProtection,canAfford30,shortfall,a1,a2,a3,existingInvest,
+    hasLife,hasProperty,monthlyInvest:adjustedMonthlyInvest,monthlyProtection,canAfford30,shortfall,a1:adjustedMonthlyInvest*w1,a2:adjustedMonthlyInvest*w2,a3:adjustedMonthlyInvest*w3,existingInvest,
     w_none:none(20),w_plan:plan(20),w_adv:adv(20),
     chartData:{none:[0,5,10,15,20].map(none),plan:[0,5,10,15,20].map(plan),adv:[0,5,10,15,20].map(adv)},
-    rentaTargetMonthly,rentaCapitalNeeded};
+    rentaTargetMonthly:adjRentaMonthly,rentaCapitalNeeded:adjRentaCapital,retireYears};
 }
 
 
@@ -739,13 +774,106 @@ function renderReport(){
   const mt=r.pasivaPct>80?'#712B13':r.pasivaPct>70?'#633806':'#085041';
   document.getElementById('rep-motivation').innerHTML=`<div style="background:${mc};border:1px solid ${mb};border-radius:var(--rs);padding:16px;color:${mt}"><div style="font-size:13px;line-height:1.7;margin-bottom:12px">${r.pasivaPct>70?`Snížením výdajů o <strong>${dp} %</strong> (= ${fmt(md)}/měs.) bys za 20 let měl o <strong>${fmt(wd)} navíc</strong> — to může znamenat odchod do důchodu o 3–7 let dřív.`:`Každé další procento do investic přidá za 20 let přibližně <strong>${fmt(calcFV(r.income*0.01,20,0.085))}</strong>.`}</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${[{label:'Aktuální investice',val:fmt(r.monthlyInvest)+'/měs.'},{label:'Při ideálu 20 %',val:fmt(r.income*0.20)+'/měs.'},{label:'Rozdíl za 20 let',val:'+'+fmt(wd)}].map(m=>`<div style="background:rgba(255,255,255,.5);border-radius:var(--rs);padding:10px;text-align:center"><div style="font-size:11px;margin-bottom:3px;opacity:.75">${m.label}</div><div style="font-size:14px;font-weight:600">${m.val}</div></div>`).join('')}</div></div>`;
 
-  document.getElementById('rep-refine').innerHTML=[
-    {id:'r1',icon:'💰',title:'Příjmy a výdaje',text:'Upřesnit strukturu příjmů',color:'#1a6b4a',bg:'#e8f4ee'},
-    {id:'r2',icon:'📋',title:'Závazky',text:'Doplnit výši hypotéky a fixaci',color:'#c43a1a',bg:'#fceee9'},
-    {id:'r3',icon:'🏦',title:'Majetek',text:'Upřesnit hodnotu nemovitostí',color:'#1a4a8a',bg:'#e8eef8'},
-    {id:'r4',icon:'📁',title:'Produkty',text:'Doplnit výše pravidelných odvodů',color:'#c47a1a',bg:'#fdf3e3'},
-    {id:'r5',icon:'🎯',title:'Cíle',text:'Upřesnit horizont a výši renty',color:'#4a3fb5',bg:'#eeedf8'},
-  ].map(s=>`<div class="refine-card" onclick="toggleRefine('${s.id}')"><div class="refine-header"><div class="refine-icon" style="background:${s.bg}">${s.icon}</div><div style="flex:1"><div style="font-size:13px;font-weight:500">${s.title}</div><div style="color:${s.color};font-size:12px">${s.text}</div></div><span style="font-size:14px;color:var(--ink3)">›</span></div><div class="vrstva2-body" id="${s.id}"><p style="font-size:13px;color:var(--ink3);line-height:1.7">Doplňující otázky pro sekci <strong>${s.title}</strong> — po zodpovězení se plán zpřesní.</p><button class="btn btn-secondary btn-sm" style="margin-top:10px" onclick="event.stopPropagation();alert('V plné verzi zde budou doplňující otázky.')">Přejít →</button></div></div>`).join('');
+  // ─── DOPLŇUJÍCÍ OTÁZKY (vrstva 2) ──────────────────────────────────────────
+  const A2 = window.A2 = window.A2 || {};
+
+  const REFINE_DEFS = [
+    {
+      id:'r1', icon:'💰', title:'Příjmy a výdaje', text:'Upřesnit strukturu příjmů', color:'#1a6b4a', bg:'#e8f4ee',
+      questions:[
+        {id:'incomeChange', label:'Očekáváš změnu příjmu v dalších 2 letech?', multi:false,
+          opts:['Poroste','Zůstane stejný','Může klesnout','Nevím']},
+        {id:'extraIncome', label:'Máš jiné zdroje příjmu?', multi:true,
+          opts:['Pronájem nemovitosti','Dividendy / investice','Vedlejší činnost / OSVČ','Ne, pouze hlavní příjem']},
+        {id:'incomeStability', label:'Je příjem stabilní nebo kolísavý?', multi:false,
+          opts:['Stabilní každý měsíc','Mírně kolísá','Výrazně kolísá (sezónní / provize)']},
+      ]
+    },
+    {
+      id:'r2', icon:'📋', title:'Závazky', text:'Doplnit výši hypotéky a fixaci', color:'#c43a1a', bg:'#fceee9',
+      questions:[
+        {id:'mortgageBalance', label:'Zbývající jistina hypotéky', multi:false,
+          opts:['Do 1 mil. Kč','1–3 mil. Kč','3–5 mil. Kč','Nad 5 mil. Kč','Nemám hypotéku']},
+        {id:'mortgageFixEnd', label:'Kdy ti končí fixace?', multi:false,
+          opts:['Do 1 roku','1–3 roky','3–5 let','5+ let','Nemám hypotéku']},
+        {id:'mortgageRate', label:'Úroková sazba hypotéky', multi:false,
+          opts:['Do 2 %','2–4 %','4–6 %','Nad 6 %','Nemám hypotéku']},
+      ]
+    },
+    {
+      id:'r3', icon:'🏦', title:'Majetek', text:'Upřesnit hodnotu nemovitostí', color:'#1a4a8a', bg:'#e8eef8',
+      questions:[
+        {id:'propertyValue', label:'Odhadovaná hodnota nemovitosti', multi:false,
+          opts:['Do 3 mil. Kč','3–6 mil. Kč','6–10 mil. Kč','Nad 10 mil. Kč','Nevlastním nemovitost']},
+        {id:'otherAssets', label:'Máš jiný majetek?', multi:true,
+          opts:['Auto / vozidla','Podíl ve firmě','Pozemky','Cennosti / sbírky','Nic dalšího']},
+        {id:'savingsLiquidity', label:'Kolik úspor máš dostupných do 24 hodin?', multi:false,
+          opts:['Vše (spořicí účet / hotovost)','Většinu','Méně než polovinu','Téměř nic (vše v investicích)']},
+      ]
+    },
+    {
+      id:'r4', icon:'📁', title:'Produkty', text:'Doplnit výše pravidelných odvodů', color:'#c47a1a', bg:'#fdf3e3',
+      questions:[
+        {id:'monthlyInvestment', label:'Kolik měsíčně odvádíš do spoření / investic?', multi:false,
+          opts:['Nic','Do 2 000 Kč','2 000–5 000 Kč','5 000–15 000 Kč','Nad 15 000 Kč']},
+        {id:'investmentAwareness', label:'Víš co tvé investice aktuálně vynášejí?', multi:false,
+          opts:['Ano, pravidelně sleduji','Přibližně tuším','Nevím, nesleduji to']},
+        {id:'productSatisfaction', label:'Jsi spokojený s aktuálním nastavením?', multi:false,
+          opts:['Ano, funguje mi to','Chci optimalizovat','Nevím, potřebuji poradit']},
+      ]
+    },
+    {
+      id:'r5', icon:'🎯', title:'Cíle', text:'Upřesnit horizont a výši renty', color:'#4a3fb5', bg:'#eeedf8',
+      questions:[
+        {id:'retireAge', label:'Ve kolika letech chceš přestat pracovat?', multi:false,
+          opts:['Do 50 let','50–60 let','60–65 let','Nechci přestat úplně']},
+        {id:'retireIncome', label:'Kolik by ti stačilo měsíčně v důchodu?', multi:false,
+          opts:['50–60 % dnešního příjmu','70–80 % dnešního příjmu','Stejně jako dnes','Více než dnes']},
+        {id:'nextChild', label:'Plánujete další dítě?', multi:false,
+          opts:['Ne','Ano, do 2 let','Možná, nevíme']},
+      ]
+    },
+  ];
+
+  // Render refine cards
+  document.getElementById('rep-refine').innerHTML = REFINE_DEFS.map(s=>`
+    <div class="refine-card" id="card-${s.id}">
+      <div class="refine-header" onclick="toggleRefine('${s.id}')">
+        <div class="refine-icon" style="background:${s.bg}">${s.icon}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:500">${s.title}</div>
+          <div style="color:${s.color};font-size:12px">${s.text}</div>
+        </div>
+        <span id="chev-${s.id}" style="font-size:14px;color:var(--ink3);transition:transform .2s">›</span>
+      </div>
+      <div class="vrstva2-body" id="${s.id}">
+        <div id="q2-${s.id}"></div>
+      </div>
+    </div>`).join('');
+
+  // Populate question content for each section
+  REFINE_DEFS.forEach(sec=>{
+    const wrap = document.getElementById('q2-'+sec.id);
+    if(!wrap) return;
+    let html = '';
+    sec.questions.forEach((q,qi)=>{
+      const cur = A2[q.id] || (q.multi ? [] : null);
+      html += `<div style="margin-bottom:${qi<sec.questions.length-1?'16px':'0'}">`;
+      html += `<div style="font-size:13px;font-weight:500;color:var(--ink);margin-bottom:8px">${q.label}`;
+      if(q.multi) html += ` <span class="tag-multi">více možností</span>`;
+      html += `</div><div style="display:flex;flex-wrap:wrap;gap:7px">`;
+      q.opts.forEach(opt=>{
+        const isSel = q.multi ? cur.includes(opt) : cur===opt;
+        const cls = isSel ? (q.multi?'sel-multi':'sel') : '';
+        html += `<span class="pill ${cls}" 
+          data-qid="${q.id}" data-val="${opt.replace(/"/g,'&quot;')}" data-multi="${q.multi}"
+          onclick="pickRefine(this)">${opt}</span>`;
+      });
+      html += `</div></div>`;
+      if(qi < sec.questions.length-1) html += `<hr style="border:none;border-top:1px solid var(--cream3);margin:14px 0">`;
+    });
+    wrap.innerHTML = html;
+  });
 }
 
 // ─── GOAL PRIORITY RENDER ─────────────────────────────────────────────────────
@@ -940,7 +1068,163 @@ function refreshPriority(){
   renderGoalPriority(r,allDefs);
 }
 
-function toggleRefine(id){document.getElementById(id).classList.toggle('open');}
+function toggleRefine(id){
+  const body=document.getElementById(id);
+  const chev=document.getElementById('chev-'+id);
+  const isOpen=body.classList.contains('open');
+  body.classList.toggle('open');
+  if(chev) chev.style.transform=isOpen?'':'rotate(90deg)';
+  if(!isOpen) renderRefineQuestions(id);
+}
+
+function renderRefineQuestions(id){
+  const wrap=document.getElementById('q2-'+id);
+  if(!wrap) return;
+  let html='';
+  if(id==='r1') html=renderRefineIncome();
+  else if(id==='r2') html=renderRefineLiabilities();
+  else if(id==='r3') html=renderRefineAssets();
+  else if(id==='r4') html=renderRefineProducts();
+  else if(id==='r5') html=renderRefineGoals();
+  wrap.innerHTML=html;
+}
+
+// ─── VRSTVA 2 QUESTIONS ───────────────────────────────────────────────────────
+function r2pill(key,val,label,multi){
+  const active=multi?(A2[key]&&A2[key].includes(val)):(A2[key]===val);
+  return `<span class="pill ${active?'sel':''}" style="font-size:12px;padding:6px 14px"
+    onclick="pickA2('${key}','${val}',${multi},this)">${label}</span>`;
+}
+function pickA2(key,val,multi,el){
+  if(multi){
+    if(!A2[key])A2[key]=[];
+    const idx=A2[key].indexOf(val);
+    if(idx>-1)A2[key].splice(idx,1);else A2[key].push(val);
+    el.classList.toggle('sel');
+  } else {
+    A2[key]=val;
+    el.closest('.pills').querySelectorAll('.pill').forEach(p=>p.classList.remove('sel'));
+    el.classList.add('sel');
+  }
+  refreshReport();
+}
+function refreshReport(){
+  // re-render just the dynamic parts of report
+  const r=computeReport();
+  // update metrics
+  document.getElementById('rep-metrics').innerHTML=`
+    <div class="metric"><div class="metric-label">Čistý příjem</div><div class="metric-value">${fmt(r.income)}</div><div class="metric-sub">měsíčně</div></div>
+    <div class="metric"><div class="metric-label">Výdaje</div><div class="metric-value">${fmt(r.expenses)}</div><div class="metric-sub">měsíčně</div></div>
+    <div class="metric"><div class="metric-label">Na investice (20 %)</div><div class="metric-value" style="color:${r.canAfford30?'var(--green)':'var(--amber)'}">${fmt(r.monthlyInvest)}</div><div class="metric-sub">cíl dle metodiky</div></div>`;
+  // update alloc
+  document.getElementById('rep-alloc-sub').textContent=`${fmt(r.monthlyInvest)} měsíčně rozděleno podle tvých cílů`;
+  document.getElementById('rep-alloc').innerHTML=[
+    {horizon:'3–5 let',amount:r.a1,product:'Dluhopisy + nem. fondy',ret:'3–6,5 % p.a.',bg:'#e8f4ee',border:'#9FE1CB',tc:'#1a6b4a'},
+    {horizon:'5–15 let',amount:r.a2,product:'Akciové portfolio',ret:'8–12 % p.a.',bg:'#eeedf8',border:'#AFA9EC',tc:'#4a3fb5'},
+    {horizon:'15+ let',amount:r.a3,product:'Penzijní produkty',ret:'12–14 % p.a.',bg:'#fceee9',border:'#F5C4B3',tc:'#c43a1a'},
+  ].map(ac=>`<div class="alloc-card" style="background:${ac.bg};border-color:${ac.border}"><div class="alloc-horizon" style="color:${ac.tc}">${ac.horizon}</div><div class="alloc-amount" style="color:${ac.tc}">${fmt(ac.amount)}/měs.</div><div class="alloc-product" style="color:${ac.tc}">${ac.product}</div><div class="alloc-return" style="color:${ac.tc}">${ac.ret}</div></div>`).join('');
+  // update goals
+  refreshPriority();
+}
+
+function q2block(title,note,content){
+  return `<div style="margin-bottom:16px">
+    <div style="font-size:13px;font-weight:500;margin-bottom:${note?'4px':'8px'}">${title}</div>
+    ${note?`<div style="font-size:12px;color:var(--ink3);margin-bottom:8px">${note}</div>`:''}
+    ${content}
+  </div>`;
+}
+
+function renderRefineIncome(){
+  let html=`<div style="padding-top:4px">`;
+  html+=q2block('Stabilita příjmu','',
+    `<div class="pills">${['Stabilní každý měsíc','Mírně kolísá','Sezónní / výrazně kolísá'].map(o=>r2pill('incomeStability',o,o,false)).join('')}</div>`);
+  html+=q2block('Máš jiné pravidelné příjmy?','Pronájem, vedlejší příjmy, dividendy...',
+    `<div class="pills">${['Žádné','Do 5 000 Kč/měs.','5–15 000 Kč/měs.','15–30 000 Kč/měs.','Nad 30 000 Kč/měs.'].map(o=>r2pill('extraIncome',o,o,false)).join('')}</div>`);
+  html+=`<div style="font-size:12px;color:var(--green);padding:8px;background:var(--gl);border-radius:var(--rs);line-height:1.5">
+    ✓ Vedlejší příjmy zvyšují tvůj investiční pool a zlepší dosažitelnost cílů.
+  </div></div>`;
+  return html;
+}
+
+function renderRefineLiabilities(){
+  const hasMortgage=A.mortgage&&A.mortgage!=='Ne';
+  let html=`<div style="padding-top:4px">`;
+  if(hasMortgage){
+    html+=q2block('Zbývající jistina hypotéky','',
+      `<div class="pills">${['Do 500 000 Kč','500 tis.–1 mil.','1–2 mil.','2–4 mil.','4–6 mil.','Nad 6 mil.'].map(o=>r2pill('mortgageBalance',o,o,false)).join('')}</div>`);
+    html+=q2block('Kdy ti končí fixace?','',
+      `<div class="pills">${['Do 1 roku','1–2 roky','2–4 roky','4+ let'].map(o=>r2pill('mortgageFixEnd',o,o,false)).join('')}</div>`);
+    html+=q2block('Aktuální úroková sazba hypotéky','',
+      `<div class="pills">${['Do 2 %','2–3 %','3–4 %','4–5 %','Nad 5 %'].map(o=>r2pill('mortgageRate',o,o,false)).join('')}</div>`);
+    if(A2.mortgageFixEnd==='Do 1 roku'||A2.mortgageFixEnd==='1–2 roky'){
+      html+=`<div style="font-size:12px;color:var(--amber);padding:8px;background:var(--al);border-radius:var(--rs);line-height:1.5;margin-top:8px">
+        ⚠️ Fixace brzy končí — doporučujeme začít sledovat aktuální sazby a zvážit refinancování.
+      </div>`;
+    }
+  } else {
+    html+=`<div style="font-size:13px;color:var(--ink3);line-height:1.6">Nemáš hypotéku — v této sekci není co upřesnit.</div>`;
+  }
+  html+=`</div>`;
+  return html;
+}
+
+function renderRefineAssets(){
+  let html=`<div style="padding-top:4px">`;
+  const hasProp=A.property&&A.property!=='Ne';
+  if(hasProp){
+    html+=q2block('Odhadovaná tržní hodnota nemovitosti','',
+      `<div class="pills">${['Do 2 mil.','2–4 mil.','4–6 mil.','6–10 mil.','Nad 10 mil.'].map(o=>r2pill('propertyValue',o,o,false)).join('')}</div>`);
+  }
+  html+=q2block('Kolik měsíčně aktuálně spoříš nebo investuješ?','Do všech produktů dohromady',
+    `<div class="pills">${['Nic','Do 2 000 Kč','2–5 000 Kč','5–10 000 Kč','10–20 000 Kč','Nad 20 000 Kč'].map(o=>r2pill('currentMonthlySavings',o,o,false)).join('')}</div>`);
+  if(A2.currentMonthlySavings&&A2.currentMonthlySavings!=='Nic'){
+    html+=`<div style="font-size:12px;color:var(--green);padding:8px;background:var(--gl);border-radius:var(--rs);line-height:1.5;margin-top:4px">
+      ✓ Existující spoření zlepší výchozí bod tvých projekcí.
+    </div>`;
+  }
+  html+=`</div>`;
+  return html;
+}
+
+function renderRefineProducts(){
+  let html=`<div style="padding-top:4px">`;
+  html+=q2block('Víš co tvoje investice aktuálně vynášejí?','',
+    `<div class="pills">${['Ano, pravidelně sleduji','Přibližně tuším','Nevím, neřeším to'].map(o=>r2pill('investReturns',o,o,false)).join('')}</div>`);
+  if(A2.investReturns==='Nevím, neřeším to'){
+    html+=`<div style="font-size:12px;color:var(--amber);padding:8px;background:var(--al);border-radius:var(--rs);line-height:1.5;margin-bottom:12px">
+      ⚠️ Neznat výnos svých investic je jedním z hlavních důvodů behavioral gap. Tohle rozebíráme na konzultaci.
+    </div>`;
+  }
+  html+=q2block('Jsi spokojený s aktuálním nastavením?','',
+    `<div class="pills">${['Ano, jsem spokojen','Spíš ne — chci optimalizovat','Nevím — potřebuji poradit'].map(o=>r2pill('investSatisfaction',o,o,false)).join('')}</div>`);
+  html+=q2block('Máš penzijní spoření se státním příspěvkem?','',
+    `<div class="pills">${['Ano, přispívám 1 000+ Kč','Ano, ale méně než 1 000 Kč','Ne, nemám'].map(o=>r2pill('hasDPS',o,o,false)).join('')}</div>`);
+  if(A2.hasDPS==='Ne, nemám'){
+    html+=`<div style="font-size:12px;color:var(--amber);padding:8px;background:var(--al);border-radius:var(--rs);line-height:1.5;margin-top:4px">
+      ⚠️ Přicházíš o státní příspěvek až 340 Kč/měs. a daňové zvýhodnění. Tohle je nízko visící ovoce.
+    </div>`;
+  }
+  html+=`</div>`;
+  return html;
+}
+
+function renderRefineGoals(){
+  let html=`<div style="padding-top:4px">`;
+  html+=q2block('Ve kolika letech chceš přestat pracovat (nebo výrazně omezit)?','Ovlivní délku investičního horizontu',
+    `<div class="pills">${['Do 50 let','50–55 let','55–60 let','60–65 let','Nechci přestat úplně'].map(o=>r2pill('retireAge',o,o,false)).join('')}</div>`);
+  html+=q2block('Kolik % dnešního příjmu by ti v důchodu stačilo?','',
+    `<div class="pills">${['50 %','70 %','90 %','100 %','Více než dnes'].map(o=>r2pill('retireIncomePct',o,o,false)).join('')}</div>`);
+  html+=q2block('Plánujete s partnerem další dítě?','',
+    `<div class="pills">${['Ne','Ano — do 2 let','Možná, nevíme'].map(o=>r2pill('nextChild',o,o,false)).join('')}</div>`);
+  if(A2.nextChild&&A2.nextChild!=='Ne'){
+    html+=`<div style="font-size:12px;color:var(--blue);padding:8px;background:var(--bl);border-radius:var(--rs);line-height:1.5;margin-top:4px">
+      💡 Plánované dítě ovlivní příjmy domácnosti (MD/RD). Doporučujeme to zohlednit v krátkodobých cílech.
+    </div>`;
+  }
+  html+=`</div>`;
+  return html;
+}
 </script>
 </body>
 </html>
