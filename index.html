@@ -344,7 +344,6 @@ let A = {
   }
 };
 let goalPriority = []; // ordered list of {horizon, goalId}
-let A2 = {}; // supplementary answers
 
 // Vrstva 2 — doplňující otázky
 let A2 = {
@@ -775,8 +774,6 @@ function renderReport(){
   document.getElementById('rep-motivation').innerHTML=`<div style="background:${mc};border:1px solid ${mb};border-radius:var(--rs);padding:16px;color:${mt}"><div style="font-size:13px;line-height:1.7;margin-bottom:12px">${r.pasivaPct>70?`Snížením výdajů o <strong>${dp} %</strong> (= ${fmt(md)}/měs.) bys za 20 let měl o <strong>${fmt(wd)} navíc</strong> — to může znamenat odchod do důchodu o 3–7 let dřív.`:`Každé další procento do investic přidá za 20 let přibližně <strong>${fmt(calcFV(r.income*0.01,20,0.085))}</strong>.`}</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${[{label:'Aktuální investice',val:fmt(r.monthlyInvest)+'/měs.'},{label:'Při ideálu 20 %',val:fmt(r.income*0.20)+'/měs.'},{label:'Rozdíl za 20 let',val:'+'+fmt(wd)}].map(m=>`<div style="background:rgba(255,255,255,.5);border-radius:var(--rs);padding:10px;text-align:center"><div style="font-size:11px;margin-bottom:3px;opacity:.75">${m.label}</div><div style="font-size:14px;font-weight:600">${m.val}</div></div>`).join('')}</div></div>`;
 
   // ─── DOPLŇUJÍCÍ OTÁZKY (vrstva 2) ──────────────────────────────────────────
-  const A2 = window.A2 = window.A2 || {};
-
   const REFINE_DEFS = [
     {
       id:'r1', icon:'💰', title:'Příjmy a výdaje', text:'Upřesnit strukturu příjmů', color:'#1a6b4a', bg:'#e8f4ee',
