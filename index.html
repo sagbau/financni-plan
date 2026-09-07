@@ -640,13 +640,15 @@ function calcFV(monthly,years,rate){
   return r>0?monthly*((Math.pow(1+r,n)-1)/r):monthly*n;
 }
 function fmt(n){
+  if(n===undefined||n===null||isNaN(n)) return '—';
   if(n>=1000000)return(n/1000000).toFixed(1)+' mil. Kč';
   if(n>=1000)return Math.round(n/1000)+' tis. Kč';
   return Math.round(n).toLocaleString('cs-CZ')+' Kč';
 }
 
 function computeReport(){
-  const income=A.income||50000, expenses=A.expenses||30000;
+  const income = (A.income && !isNaN(A.income) && A.income > 0) ? A.income : 50000;
+  const expenses = (A.expenses && !isNaN(A.expenses)) ? A.expenses : 30000;
   const pasivaPct=Math.round(Math.min(100,expenses/income*100));
   const aktivaPct=100-pasivaPct;
   const reserveMonths=RESERVE_MAP[A.reserve]||0;
@@ -655,7 +657,8 @@ function computeReport(){
   const hasProperty=A.hasInsurance.includes('Pojištění bytu/domu');
   const existingInvest=INVEST_MAP[A.investments]||50000;
   // Metodika 40:30:20:10 — investice vždy 20 % příjmu, pojistky+rezerva 10 %
-  const monthlyInvest=income*0.20;
+  const monthlyInvest = Math.max(0, income * 0.20);
+  if(isNaN(monthlyInvest)) console.error('monthlyInvest NaN, income=', income);
   const monthlyProtection=income*0.10;
   const actualLeftover=Math.max(0,income-expenses);
   const canAfford30=actualLeftover>=income*0.30;
@@ -688,10 +691,14 @@ function computeReport(){
 
   const rate = portfolioRate / 100;
   const rateNone = 0.02;
-  const rateAdv = Math.min(rate + 0.015, 0.14); // profesionál = +1.5% nad vlastní plán (behavioral gap)
+  // Profesionál = stejná sazba, ale behavioral gap (+1.7% p.a.) = vlastní plán × 1.30 za 20 let
+  // Čím vyšší základní sazba, tím větší absolutní rozdíl (složené úročení amplifikuje gap)
+  const gapMultiplier = 1 + (0.017 * 20 * 0.7); // ~1.238 base, ale zvýší se s compoundingem
   const none=y=>Math.round(calcFV(monthlyInvest*0.3,y,rateNone)+existingInvest*Math.pow(1+rateNone,y));
   const plan=y=>Math.round(calcFV(monthlyInvest,y,rate)+existingInvest*Math.pow(1+rate,y));
-  const adv=y=>Math.round(calcFV(monthlyInvest,y,rateAdv)*1.08+existingInvest*Math.pow(1+rateAdv,y));
+  // Adv: stejný kapitál ale lepší behavioral = rate + 1.7% (behavioral gap je fixní % přidaný k výnosu)
+  const rateAdv = rate + 0.017;
+  const adv=y=>Math.round(calcFV(monthlyInvest,y,rateAdv)+existingInvest*Math.pow(1+rateAdv,y));
 
   // Build priority list from selected goals
   if(goalPriority.length===0){
@@ -792,7 +799,8 @@ function renderReport(){
   const sliderEl = document.getElementById('portfolio-rate');
   if(sliderEl) { sliderEl.value = portfolioRate; updateRateHint(portfolioRate); }
 
-  document.getElementById('rep-alloc-sub').textContent=`${fmt(r.monthlyInvest)} měsíčně rozděleno podle tvých cílů`;
+  const effectiveRateText = `${fmt(r.monthlyInvest)} měsíčně · předpokládané zhodnocení: ${portfolioRate} % p.a.`;
+  document.getElementById('rep-alloc-sub').textContent = effectiveRateText;
   document.getElementById('rep-alloc').innerHTML=[
     {horizon:'3–5 let',amount:r.a1,product:'Dluhopisy + nem. fondy',ret:'3–6,5 % p.a.',bg:'#e8f4ee',border:'#9FE1CB',tc:'#1a6b4a'},
     {horizon:'5–15 let',amount:r.a2,product:'Akciové portfolio',ret:'8–12 % p.a.',bg:'#eeedf8',border:'#AFA9EC',tc:'#4a3fb5'},
@@ -1282,7 +1290,8 @@ function refreshReport(){
     <div class="metric"><div class="metric-label">Výdaje</div><div class="metric-value">${fmt(r.expenses)}</div><div class="metric-sub">měsíčně</div></div>
     <div class="metric"><div class="metric-label">Na investice (20 %)</div><div class="metric-value" style="color:${r.canAfford30?'var(--green)':'var(--amber)'}">${fmt(r.monthlyInvest)}</div><div class="metric-sub">cíl dle metodiky</div></div>`;
   // update alloc
-  document.getElementById('rep-alloc-sub').textContent=`${fmt(r.monthlyInvest)} měsíčně rozděleno podle tvých cílů`;
+  const effectiveRateText = `${fmt(r.monthlyInvest)} měsíčně · předpokládané zhodnocení: ${portfolioRate} % p.a.`;
+  document.getElementById('rep-alloc-sub').textContent = effectiveRateText;
   document.getElementById('rep-alloc').innerHTML=[
     {horizon:'3–5 let',amount:r.a1,product:'Dluhopisy + nem. fondy',ret:'3–6,5 % p.a.',bg:'#e8f4ee',border:'#9FE1CB',tc:'#1a6b4a'},
     {horizon:'5–15 let',amount:r.a2,product:'Akciové portfolio',ret:'8–12 % p.a.',bg:'#eeedf8',border:'#AFA9EC',tc:'#4a3fb5'},
