@@ -282,6 +282,11 @@ canvas{display:block;width:100%!important}
   </div>
   <div class="card"><p class="rpt">Za 20 let — srovnání scénářů</p><div id="rep-scenarios"></div><div style="font-size:12px;color:var(--ink3);margin-top:10px;line-height:1.6;padding:10px;background:var(--cream);border-radius:var(--rs)">Rozdíl „s profesionálem" vychází z behavioral gap — průměrný investor zaostává za trhem o 1,7 % ročně díky emočním rozhodnutím.</div></div>
   <div class="card"><p class="rpt">Návrh alokace investic</p><p style="font-size:13px;color:var(--ink3);margin-bottom:14px" id="rep-alloc-sub"></p><div class="alloc-grid" id="rep-alloc"></div><div style="font-size:12px;color:var(--ink3);line-height:1.6;padding:10px;background:var(--cream);border-radius:var(--rs)">Každý horizont dostane vždy alespoň 15 % z investovatelné částky.</div></div>
+  <div class="card" id="rep-loan-card" style="display:none">
+    <p class="rpt" style="color:var(--red)">Dopad splátek na tvůj majetek</p>
+    <div id="rep-loan"></div>
+  </div>
+
   <div class="card" id="rep-renta-card" style="display:none"><p class="rpt">Výpočet cíle: renta / důchod</p><div id="rep-renta"></div></div>
   <div class="card"><p class="rpt">Tvoje cíle — priorita a dosažitelnost</p><p style="font-size:12px;color:var(--ink3);margin-bottom:4px">Přetáhni cíle podle priority — důležitější cíle budou financovány přednostně.</p><p style="font-size:11px;color:var(--ink3);margin-bottom:12px;line-height:1.5">💡 Přepočet % funguje mezi cíli ve stejném časovém horizontu. Přesuň cíl nahoru → zvýší se jeho %, ostatní ve stejném horizontu poklesnou.</p><div id="rep-goals-priority"></div><button class="btn btn-secondary btn-sm" style="margin-top:10px;width:auto;padding:8px 16px" onclick="toggleGoalManager()">+ Přidat nebo upravit cíle</button><div id="goal-manager" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--cream3)"><div id="goal-manager-inner"></div></div></div>
   <div class="card"><p class="rpt">Tvoje 3 konkrétní kroky</p><div id="rep-steps"></div></div>
@@ -384,6 +389,14 @@ const INVEST_MAP = {
   'Do 50 tis.':25000,'50–100 tis.':75000,'100–200 tis.':150000,
   '200–300 tis.':250000,'300–500 tis.':400000,'500–750 tis.':625000,
   '750 tis.–1,2 mil.':975000,'1,2 mil. a více':2000000
+};
+const LOAN_PAYMENT_MAP = {
+  'Do 5 000 Kč':4000, '5 000–10 000 Kč':7500, '10 000–20 000 Kč':15000,
+  '20 000–35 000 Kč':27500, 'Nad 35 000 Kč':42000, 'Žádné splátky':0
+};
+const LOAN_DURATION_MAP = {
+  'Do 2 let':1.5, '2–5 let':3.5, '5–10 let':7.5,
+  '10–20 let':15, '20–35 let':27, 'Nevím / neřeším':0
 };
 const RESERVE_MAP = {'Žádnou':0,'Méně než 1 měsíc':0.5,'1–2 měsíce':1.5,'3–6 měsíců':4,'Nad 6 měsíců':7};
 
@@ -660,6 +673,11 @@ function computeReport(){
   const monthlyInvest = Math.max(0, income * 0.20);
   if(isNaN(monthlyInvest)) console.error('monthlyInvest NaN, income=', income);
   const monthlyProtection=income*0.10;
+
+  // Loan impact from A2 refinement answers
+  const loanPayment = LOAN_PAYMENT_MAP[A2.monthlyLoanPayment] || 0;
+  const loanYears = LOAN_DURATION_MAP[A2.loanDuration] || 0;
+  const freedMonthly = loanPayment; // after payoff, this flows to investments
   const actualLeftover=Math.max(0,income-expenses);
   const canAfford30=actualLeftover>=income*0.30;
   const shortfall=canAfford30?0:Math.max(0,income*0.30-actualLeftover);
@@ -691,14 +709,28 @@ function computeReport(){
 
   const rate = portfolioRate / 100;
   const rateNone = 0.02;
-  // Profesionál = stejná sazba, ale behavioral gap (+1.7% p.a.) = vlastní plán × 1.30 za 20 let
-  // Čím vyšší základní sazba, tím větší absolutní rozdíl (složené úročení amplifikuje gap)
-  const gapMultiplier = 1 + (0.017 * 20 * 0.7); // ~1.238 base, ale zvýší se s compoundingem
-  const none=y=>Math.round(calcFV(monthlyInvest*0.3,y,rateNone)+existingInvest*Math.pow(1+rateNone,y));
-  const plan=y=>Math.round(calcFV(monthlyInvest,y,rate)+existingInvest*Math.pow(1+rate,y));
-  // Adv: stejný kapitál ale lepší behavioral = rate + 1.7% (behavioral gap je fixní % přidaný k výnosu)
-  const rateAdv = rate + 0.017;
-  const adv=y=>Math.round(calcFV(monthlyInvest,y,rateAdv)+existingInvest*Math.pow(1+rateAdv,y));
+  const rateAdv = rate + 0.017; // behavioral gap: +1.7% p.a. — větší sazba = větší absolutní gap
+
+  // Phased calculation: before loan payoff vs after
+  // Phase 1: 0 → loanYears (invest with reduced capacity due to loan payments)
+  // Phase 2: loanYears → horizon (invest with freed capital added)
+  function calcPhased(monthly, years, r) {
+    if(!loanYears || !freedMonthly || loanYears >= years) {
+      // No loan data or already paid off — standard calc
+      return calcFV(monthly, years, r) + existingInvest * Math.pow(1+r, years);
+    }
+    // Phase 1: accumulate until loan paid off
+    const fv1 = calcFV(monthly, loanYears, r) + existingInvest * Math.pow(1+r, loanYears);
+    // Phase 2: start with fv1 as principal + higher monthly (freed capital added)
+    const phase2years = years - loanYears;
+    const monthlyPhase2 = monthly + freedMonthly;
+    const fv2 = fv1 * Math.pow(1+r, phase2years) + calcFV(monthlyPhase2, phase2years, r);
+    return fv2;
+  }
+
+  const none=y=>Math.round(calcPhased(monthlyInvest*0.3, y, rateNone));
+  const plan=y=>Math.round(calcPhased(monthlyInvest, y, rate));
+  const adv=y=>Math.round(calcPhased(monthlyInvest, y, rateAdv));
 
   // Build priority list from selected goals
   if(goalPriority.length===0){
@@ -708,7 +740,7 @@ function computeReport(){
   }
 
   return{income,expenses,pasivaPct,aktivaPct,reserveMonths,targetReserve,currentReserve,
-    hasLife,hasProperty,monthlyInvest:adjustedMonthlyInvest,monthlyProtection,canAfford30,shortfall,a1:adjustedMonthlyInvest*w1,a2:adjustedMonthlyInvest*w2,a3:adjustedMonthlyInvest*w3,existingInvest,
+    hasLife,hasProperty,monthlyInvest:adjustedMonthlyInvest,monthlyProtection,canAfford30,shortfall,a1:adjustedMonthlyInvest*w1,a2:adjustedMonthlyInvest*w2,a3:adjustedMonthlyInvest*w3,existingInvest,loanPayment,loanYears,freedMonthly,
     w_none:none(20),w_plan:plan(20),w_adv:adv(20),
     chartData:{none:[0,5,10,15,20].map(none),plan:[0,5,10,15,20].map(plan),adv:[0,5,10,15,20].map(adv)},
     rentaTargetMonthly:adjRentaMonthly,rentaCapitalNeeded:adjRentaCapital,retireYears};
@@ -807,6 +839,43 @@ function renderReport(){
     {horizon:'15+ let',amount:r.a3,product:'Penzijní produkty',ret:'12–14 % p.a.',bg:'#fceee9',border:'#F5C4B3',tc:'#c43a1a'},
   ].map(ac=>`<div class="alloc-card" style="background:${ac.bg};border-color:${ac.border}"><div class="alloc-horizon" style="color:${ac.tc}">${ac.horizon}</div><div class="alloc-amount" style="color:${ac.tc}">${fmt(ac.amount)}/měs.</div><div class="alloc-product" style="color:${ac.tc}">${ac.product}</div><div class="alloc-return" style="color:${ac.tc}">${ac.ret}</div></div>`).join('');
 
+  // LOAN IMPACT
+  const loanCard = document.getElementById('rep-loan-card');
+  if(r.loanPayment > 0 && r.loanYears > 0) {
+    loanCard.style.display = 'block';
+    const lostInvestYears = r.loanYears;
+    const lostTotal = r.loanPayment * 12 * lostInvestYears;
+    // What would that monthly payment grow to if invested instead?
+    const lostFV = calcFV(r.loanPayment, lostInvestYears, portfolioRate/100);
+    const freedBoost = calcFV(r.loanPayment, 20 - Math.min(lostInvestYears, 20), portfolioRate/100);
+    document.getElementById('rep-loan').innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+        <div style="background:var(--rl);border-radius:var(--rs);padding:12px">
+          <div style="font-size:11px;color:var(--red);margin-bottom:3px">Měsíční splátky</div>
+          <div style="font-size:18px;font-weight:600;color:var(--red)">${fmt(r.loanPayment)}</div>
+          <div style="font-size:11px;color:var(--red);opacity:.7">měsíčně</div>
+        </div>
+        <div style="background:var(--al);border-radius:var(--rs);padding:12px">
+          <div style="font-size:11px;color:var(--amber);margin-bottom:3px">Ještě splácím</div>
+          <div style="font-size:18px;font-weight:600;color:var(--amber)">${r.loanYears} let</div>
+          <div style="font-size:11px;color:var(--amber);opacity:.7">zbývá</div>
+        </div>
+        <div style="background:var(--gl);border-radius:var(--rs);padding:12px">
+          <div style="font-size:11px;color:var(--green);margin-bottom:3px">Po splacení volní</div>
+          <div style="font-size:18px;font-weight:600;color:var(--green)">${fmt(r.loanPayment)}</div>
+          <div style="font-size:11px;color:var(--green);opacity:.7">přejde do investic</div>
+        </div>
+      </div>
+      <div style="background:var(--cream);border-radius:var(--rs);padding:12px;font-size:13px;line-height:1.7;color:var(--ink2)">
+        📉 Pokud by ses těchto <strong>${fmt(r.loanPayment)}/měs.</strong> zbavil dříve a investoval je, 
+        za ${lostInvestYears} let by to bylo <strong>${fmt(lostFV)}</strong> navíc.<br>
+        ✅ Po splacení všech závazků za <strong>${r.loanYears} let</strong> bude tento cashflow automaticky 
+        přesměrován do investic — v grafu výše vidíš, jak se křivka v tento moment zalomí nahoru.
+      </div>`;
+  } else {
+    loanCard.style.display = 'none';
+  }
+
   // RENTA CALC
   const hasRetireGoal=['renta','driv','fire'].some(id=>A.goals['15+'].includes(id));
   if(hasRetireGoal){
@@ -871,7 +940,7 @@ function renderReport(){
       ]
     },
     {
-      id:'r2', icon:'📋', title:'Závazky', text:'Doplnit výši hypotéky a fixaci', color:'#c43a1a', bg:'#fceee9',
+      id:'r2', icon:'📋', title:'Závazky', text:'Doplnit výši splátek a dobu splácení', color:'#c43a1a', bg:'#fceee9',
       questions:[
         {id:'mortgageBalance', label:'Zbývající jistina hypotéky', multi:false,
           opts:['Do 1 mil. Kč','1–3 mil. Kč','3–5 mil. Kč','Nad 5 mil. Kč','Nemám hypotéku']},
@@ -879,6 +948,10 @@ function renderReport(){
           opts:['Do 1 roku','1–3 roky','3–5 let','5+ let','Nemám hypotéku']},
         {id:'mortgageRate', label:'Úroková sazba hypotéky', multi:false,
           opts:['Do 2 %','2–4 %','4–6 %','Nad 6 %','Nemám hypotéku']},
+        {id:'monthlyLoanPayment', label:'Celková měsíční splátka všech úvěrů a hypoték', multi:false,
+          opts:['Do 5 000 Kč','5 000–10 000 Kč','10 000–20 000 Kč','20 000–35 000 Kč','Nad 35 000 Kč','Žádné splátky']},
+        {id:'loanDuration', label:'Za jak dlouho budeš mít vše splaceno?', multi:false,
+          opts:['Do 2 let','2–5 let','5–10 let','10–20 let','20–35 let','Nevím / neřeším']},
       ]
     },
     {
