@@ -922,13 +922,8 @@ function renderReport(){
 
 
 
-  // SCENARIOS
-  const maxW=r.w_adv;
-  document.getElementById('rep-scenarios').innerHTML=[
-    {name:'Bez akce',val:r.w_none,color:'#c8c4bc'},
-    {name:'S vlastním plánem',val:r.w_plan,color:'#2d9467'},
-    {name:`S profesionálem <span style="background:#e8f4ee;color:#1a6b4a;font-size:11px;font-weight:500;padding:2px 7px;border-radius:8px;margin-left:4px">+${Math.round((r.w_adv/r.w_plan-1)*100)} %</span>`,val:r.w_adv,color:'#4a3fb5'},
-  ].map(s=>`<div class="scenario"><div class="scenario-top"><span style="color:var(--ink2)">${s.name}</span><span style="font-weight:600;color:${s.color}">${fmt(s.val)}</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(s.val/maxW*100)}%;background:${s.color}"></div></div></div>`).join('');
+    // Scenarios card removed
+
 
   // ALLOC
   document.getElementById('rep-alloc-sub').textContent=`${fmt(r.monthlyInvest)}/měs. rozděleno dle cílů — z toho vychází graf vúvoje. Sazby: dluhopisové fondy ${RATE1} % · akcie ${RATE2} % · penze ${RATE3} % p.a.`;
