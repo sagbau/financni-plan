@@ -236,12 +236,17 @@ canvas{display:block;width:100%!important}
   <!-- VÝVOJ MAJETKU -->
   <div class="card">
     <p class="rpt">Vývoj majetku</p>
+    <!-- FOMO HIGHLIGHT - above chart -->
+    <div id="fomo-chart-top" style="display:none;background:var(--ink);color:white;border-radius:var(--r);padding:14px 18px;margin-bottom:16px">
+      <div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">⚠️ Upozornění</div>
+      <div id="fomo-chart-top-text" style="font-size:16px;font-weight:600;line-height:1.4"></div>
+    </div>
     <!-- STATIC RATE INFO -->
     <div class="rate-info-grid" id="rate-info-grid">
       <div class="rate-info-box" style="background:#e8f4ee">
         <div class="rate-info-label" style="color:#1a6b4a">Krátkodobé (1–5 let)</div>
         <div class="rate-info-value" style="color:#1a6b4a" id="rate1-val">4 %</div>
-        <div class="rate-info-sub" style="color:#1a6b4a">Dluhopisy + nem. fondy</div>
+        <div class="rate-info-sub" style="color:#1a6b4a">Dluhopisové a nem. fondy</div>
       </div>
       <div class="rate-info-box" style="background:#eeedf8">
         <div class="rate-info-label" style="color:#4a3fb5">Střednědobé (5–15 let)</div>
@@ -262,6 +267,19 @@ canvas{display:block;width:100%!important}
       <span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:3px;background:#4a3fb5;display:inline-block;border-radius:2px"></span>S profesionálem</span>
     </div>
     <canvas id="wealth-chart" height="200"></canvas>
+    <!-- EMAIL BELOW CHART -->
+    <div id="email-chart-wrap" style="display:none;margin-top:14px;background:var(--cream);border-radius:var(--r);padding:14px 16px">
+      <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:8px">📬 Pošleme ti tento plán na e-mail + 7denního průvodce k finančnímu zdraví</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input id="cta-email-chart" type="email" placeholder="Tvůj e-mail..."
+          style="flex:1;min-width:160px;padding:10px 14px;border-radius:var(--rs);border:1.5px solid var(--cream3);font-size:14px;font-family:DM Sans,sans-serif;color:var(--ink)">
+        <button onclick="submitEmailChart()"
+          style="padding:10px 18px;background:var(--green);color:white;border:none;border-radius:var(--rs);font-size:14px;font-weight:500;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap">
+          Poslat →
+        </button>
+      </div>
+      <div id="cta-msg-chart" style="font-size:11px;color:var(--ink3);margin-top:6px">Žádný spam · kdykoli odhlásit</div>
+    </div>
     <!-- FOMO TILE -->
     <div id="fomo-tile" style="margin-top:16px;border-radius:var(--r);overflow:hidden">
       <div style="background:var(--ink);padding:16px 20px">
@@ -407,7 +425,7 @@ const INVEST_MAP = {
   '300–500 tis.':400000,'500–750 tis.':625000,'750 tis.–1,2 mil.':975000,'1,2 mil. a více':2000000
 };
 const MORTGAGE_PAYMENT_MAP = {'Do 8 000 Kč':6000,'8 000–12 000 Kč':10000,'12 000–18 000 Kč':15000,'18 000–25 000 Kč':21500,'25 000–35 000 Kč':30000,'Nad 35 000 Kč':42000};
-const MORTGAGE_DURATION_MAP = {'Do 5 let':3,'5–10 let':7.5,'10–15 let':12.5,'15–20 let':17.5,'20–25 let':22.5,'25–35 let':30};
+const MORTGAGE_DURATION_MAP = {'Do 5 let':3,'5–10 let':7.5,'10–15 let':12.5,'15–20 let':17.5,'20–25 let':22.5,'25–30 let':27.5,'Nad 30 let':32};
 const CONSUMER_PAYMENT_MAP = {'Do 3 000 Kč':2000,'3 000–6 000 Kč':4500,'6 000–10 000 Kč':8000,'10 000–15 000 Kč':12500,'Nad 15 000 Kč':18000};
 const CONSUMER_DURATION_MAP = {'Do 1 roku':0.75,'1–2 roky':1.5,'2–4 roky':3,'4–7 let':5.5,'7–10 let':8.5};
 const AGE_MAP = {'Do 25':22,'25–30':27,'30–35':32,'35–40':37,'40–45':42,'45–50':47,'50–55':52,'55–60':57,'60+':62};
@@ -542,7 +560,7 @@ function renderLiabilities(){
       <span class="q-label">Měsíční splátka hypotéky</span><div class="pills">`;
     mortPayOpts.forEach(o=>h+=`<span class="pill ${A.mortgagePayment===o?'sel':''}" data-qid="mortgagePayment" data-val="${o}" onclick="pickSingle(this)">${o}</span>`);
     h+=`</div></div>`;
-    const mortDurOpts=['Do 5 let','5–10 let','10–15 let','15–20 let','20–25 let','25–35 let'];
+    const mortDurOpts=['Do 5 let','5–10 let','10–15 let','15–20 let','20–25 let','25–30 let','Nad 30 let'];
     h+=`<div class="q-block" style="margin-left:16px;padding-left:12px;border-left:2px solid var(--cream3)">
       <span class="q-label">Zbývající doba splácení hypotéky</span><div class="pills">`;
     mortDurOpts.forEach(o=>h+=`<span class="pill ${A.mortgageDuration===o?'sel':''}" data-qid="mortgageDuration" data-val="${o}" onclick="pickSingle(this)">${o}</span>`);
@@ -709,7 +727,11 @@ function fmt(n){
 function computeReport(){
   const income=(A.income&&!isNaN(A.income)&&A.income>0)?A.income:50000;
   const expenses=(A.expenses&&!isNaN(A.expenses))?A.expenses:30000;
-  const pasivaPct=Math.round(Math.min(100,expenses/income*100));
+  // Výdaje zadány BEZ splátek — přičteme splátky pro reálný obraz pasiv
+  const mortPaymentEarly = MORTGAGE_PAYMENT_MAP[A.mortgagePayment] || 0;
+  const consPaymentEarly = CONSUMER_PAYMENT_MAP[A.consumerPayment] || 0;
+  const totalPassive = expenses + mortPaymentEarly + consPaymentEarly;
+  const pasivaPct=Math.round(Math.min(100,totalPassive/income*100));
   const aktivaPct=100-pasivaPct;
   const reserveMonths=RESERVE_MAP[A.reserve]||0;
   const targetReserve=income*3, currentReserve=income*reserveMonths;
@@ -787,7 +809,7 @@ function computeReport(){
     currentAge,retireAgeVal,yearsToRetire,rentaTargetMonthly,rentaCapitalNeeded,
     weightedRate,rate,
     actualCurrentSavings,w_none:none(20),w_plan:plan(20),w_adv:adv(20),
-    chartData:{none:[0,5,10,15,20].map(none),plan:[0,5,10,15,20].map(plan),adv:[0,5,10,15,20].map(adv)}};
+    chartData:{none:[0,5,10,15,20,25,30].map(none),plan:[0,5,10,15,20,25,30].map(plan),adv:[0,5,10,15,20,25,30].map(adv)}};
 }
 
 // ─── PROCESSING ───────────────────────────────────────────────────────────────
@@ -856,7 +878,7 @@ function renderReport(){
 
   // CHART
   if(wealthChart) wealthChart.destroy();
-  const labels=['Dnes','5 let','10 let','15 let','20 let'];
+  const labels=['Dnes','5 let','10 let','15 let','20 let','25 let','30 let'];
   const dark=matchMedia('(prefers-color-scheme:dark)').matches;
   const tc=dark?'#9a9890':'#8a8a82', gc=dark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';
   wealthChart=new Chart(document.getElementById('wealth-chart'),{
@@ -872,16 +894,30 @@ function renderReport(){
   // FOMO TILE
   updateFomoTile(r.w_plan,r.w_adv);
 
-  // SINGLE FOMO MESSAGE near CTA
-  // Formula: (majetek_s_profesionálem - majetek_bez_akce) / 20 let / 12 měsíců
+  // SINGLE FOMO MESSAGE — calculated correctly
+  // (w_adv - w_none) / 20 let / 12 měsíců = měsíční cena nečinnosti
+  const fomoMonthly = Math.round((r.w_adv - r.w_none) / 20 / 12);
+  const currentSavNote = r.actualCurrentSavings > 0
+    ? ` Počítáme s tvým aktuálním spořením ${fmt(r.actualCurrentSavings)}/měs. a stávajícím majetkem ${fmt(r.existingInvest)}.`
+    : '';
+
+  // 1. Prominent FOMO above chart
+  const fomoTop = document.getElementById('fomo-chart-top');
+  const fomoTopText = document.getElementById('fomo-chart-top-text');
+  if(fomoTop && fomoTopText){
+    fomoTop.style.display = 'block';
+    fomoTopText.innerHTML = `Každý měsíc tě stojí cca <span style="color:var(--gold)">${fmt(fomoMonthly)}</span>, pokud nic neuděláš — to je rozdíl mezi situací bez akce a optimálním plánem za 20 let.`;
+  }
+
+  // 2. Email below chart (show after chart renders)
+  const emailWrap = document.getElementById('email-chart-wrap');
+  if(emailWrap) emailWrap.style.display = 'block';
+
+  // 3. FOMO in CTA section
   const fomoMain = document.getElementById('fomo-main');
   if(fomoMain){
-    const fomoMonthly = Math.round((r.w_adv - r.w_none) / 20 / 12);
-    const currentSavNote = r.actualCurrentSavings > 0
-      ? ` (počítáme s tvým aktuálním spořením ${fmt(r.actualCurrentSavings)}/měs. a majetkem ${fmt(r.existingInvest)})`
-      : ` (vychází z rozdílu mezi "nic neděláš" a optimálním plánem za 20 let)`;
     fomoMain.style.display = 'block';
-    fomoMain.innerHTML = `⚠️ <strong>Každý měsíc tě stojí cca ${fmt(fomoMonthly)}</strong>, pokud nic neuděláš${currentSavNote}. To je rozdíl mezi tvým majetkem bez akce (${fmt(r.w_none)}) a s profesionálním plánem (${fmt(r.w_adv)}) za 20 let.`;
+    fomoMain.innerHTML = `⚠️ <strong>Každý měsíc tě stojí cca ${fmt(fomoMonthly)}</strong>, pokud nic neuděláš.${currentSavNote} Rozdíl za 20 let: bez akce ${fmt(r.w_none)} vs. s plánem ${fmt(r.w_adv)}.`;
   }
 
 
@@ -897,7 +933,7 @@ function renderReport(){
   // ALLOC
   document.getElementById('rep-alloc-sub').textContent=`${fmt(r.monthlyInvest)} měsíčně · dluhopisy ${RATE1} % · akcie ${RATE2} % · penze ${RATE3} % p.a.`;
   document.getElementById('rep-alloc').innerHTML=[
-    {horizon:'3–5 let',amount:r.a1,product:'Dluhopisy + nem. fondy',ret:RATE1+' % p.a.',bg:'#e8f4ee',border:'#9FE1CB',tc:'#1a6b4a'},
+    {horizon:'3–5 let',amount:r.a1,product:'Dluhopisové a nem. fondy',ret:RATE1+' % p.a.',bg:'#e8f4ee',border:'#9FE1CB',tc:'#1a6b4a'},
     {horizon:'5–15 let',amount:r.a2,product:'Akciové portfolio',ret:RATE2+' % p.a.',bg:'#eeedf8',border:'#AFA9EC',tc:'#4a3fb5'},
     {horizon:'15+ let',amount:r.a3,product:'Penzijní produkty',ret:RATE3+' % p.a.',bg:'#fceee9',border:'#F5C4B3',tc:'#c43a1a'},
   ].map(ac=>`<div class="alloc-card" style="background:${ac.bg};border-color:${ac.border}"><div class="alloc-horizon" style="color:${ac.tc}">${ac.horizon}</div><div class="alloc-amount" style="color:${ac.tc}">${fmt(ac.amount)}/měs.</div><div class="alloc-product" style="color:${ac.tc}">${ac.product}</div><div class="alloc-return" style="color:${ac.tc}">${ac.ret}</div></div>`).join('');
@@ -1143,6 +1179,19 @@ function refreshPriority(){
 }
 
 // ─── EMAIL CTA ────────────────────────────────────────────────────────────────
+function submitEmailChart(){
+  const email = document.getElementById('cta-email-chart').value.trim();
+  const msg = document.getElementById('cta-msg-chart');
+  if(!email||!email.includes('@')){msg.textContent='⚠️ Zadej platný e-mail.';msg.style.color='var(--red)';return;}
+  msg.innerHTML='✅ Skvěle! Zkontroluj e-mail — posíláme ti plán a průvodce.';
+  msg.style.color='var(--green)';
+  document.getElementById('cta-email-chart').disabled=true;
+  document.querySelector('#email-chart-wrap button').disabled=true;
+  document.querySelector('#email-chart-wrap button').textContent='Odesláno ✓';
+  console.log('Email (chart):', email);
+  // TODO: connect to email service
+}
+
 function submitEmail(){
   const email=document.getElementById('cta-email').value.trim();
   const msg=document.getElementById('cta-msg');
