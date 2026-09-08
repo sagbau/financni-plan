@@ -223,7 +223,6 @@ canvas{display:block;width:100%!important}
     <p class="rpt">Přehled situace</p>
     <div class="status-row" id="rep-status"></div>
     <div id="rep-pasiva-text"></div>
-    <div id="fomo-status" class="fomo-box fomo-amber" style="display:none"></div>
   </div>
 
   <!-- KDE TEĎ JSI -->
@@ -232,7 +231,6 @@ canvas{display:block;width:100%!important}
     <div class="metric-row" id="rep-metrics"></div>
     <div id="rep-ratio-bar"></div>
     <div id="rep-ratio-text" style="font-size:12px;color:var(--ink3);margin-top:6px;line-height:1.6"></div>
-    <div id="fomo-pasiva" class="fomo-box fomo-amber" style="display:none"></div>
   </div>
 
   <!-- VÝVOJ MAJETKU -->
@@ -279,7 +277,6 @@ canvas{display:block;width:100%!important}
         <span style="font-size:20px;margin-left:12px">💡</span>
       </div>
     </div>
-    <div id="fomo-time" class="fomo-box fomo-amber" style="display:none"></div>
   </div>
 
   <!-- SROVNÁNÍ SCÉNÁŘŮ -->
@@ -295,21 +292,18 @@ canvas{display:block;width:100%!important}
     <p style="font-size:13px;color:var(--ink3);margin-bottom:14px" id="rep-alloc-sub"></p>
     <div class="alloc-grid" id="rep-alloc"></div>
     <div style="font-size:12px;color:var(--ink3);line-height:1.6;padding:10px;background:var(--cream);border-radius:var(--rs)">Každý horizont dostane vždy alespoň 15 % z investovatelné částky. Čím dřív začneš, tím méně měsíčně potřebuješ.</div>
-    <div id="fomo-alloc" class="fomo-box fomo-blue" style="display:none"></div>
   </div>
 
   <!-- DOPAD SPLÁTEK -->
   <div class="card" id="rep-loan-card" style="display:none">
     <p class="rpt" style="color:var(--red)">Dopad splátek na tvůj majetek</p>
     <div id="rep-loan"></div>
-    <div id="fomo-loan" class="fomo-box fomo-amber" style="display:none"></div>
   </div>
 
   <!-- RENTA / DŮCHOD -->
   <div class="card" id="rep-renta-card" style="display:none">
     <p class="rpt">Výpočet cíle: renta / důchod</p>
     <div id="rep-renta"></div>
-    <div id="fomo-renta" class="fomo-box fomo-green" style="display:none"></div>
   </div>
 
   <!-- CÍLE — PRIORITA -->
@@ -320,14 +314,13 @@ canvas{display:block;width:100%!important}
     <div id="rep-goals-priority"></div>
     <button class="btn btn-secondary btn-sm" style="margin-top:10px;width:auto;padding:8px 16px" onclick="toggleGoalManager()">+ Přidat nebo upravit cíle</button>
     <div id="goal-manager" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--cream3)"><div id="goal-manager-inner"></div></div>
-    <div id="fomo-goals" class="fomo-box fomo-amber" style="display:none"></div>
   </div>
 
   <!-- 3 KONKRÉTNÍ KROKY -->
   <div class="card">
     <p class="rpt">Tvoje 3 konkrétní kroky</p>
     <div id="rep-steps"></div>
-    <div class="fomo-box fomo-green" style="margin-top:12px">⏱️ <strong>Průměrný člověk čeká 2,5 roku</strong> než začne aktivně řešit finance. Každý rok čekání při 8 % p.a. a 10 000 Kč/měs. stojí <strong>~125 000 Kč</strong> ušlého výnosu.</div>
+
   </div>
 
   <!-- MOTIVACE — POMĚR AKTIV -->
@@ -349,6 +342,7 @@ canvas{display:block;width:100%!important}
         Poslat plán →
       </button>
     </div>
+    <div id="fomo-main" style="background:rgba(255,255,255,.08);border-radius:var(--rs);padding:12px 14px;margin-bottom:16px;font-size:13px;color:rgba(255,255,255,.9);line-height:1.6;display:none"></div>
     <div id="cta-msg" style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.6">
       📬 Obdržíš výstup z analýzy + 7 e-mailů s kroky ke zlepšení finanční situace · Žádný spam · Kdykoli se lze odhlásit
     </div>
@@ -419,6 +413,10 @@ const CONSUMER_DURATION_MAP = {'Do 1 roku':0.75,'1–2 roky':1.5,'2–4 roky':3,
 const AGE_MAP = {'Do 25':22,'25–30':27,'30–35':32,'35–40':37,'40–45':42,'45–50':47,'50–55':52,'55–60':57,'60+':62};
 const RETIRE_AGE_MAP = {'Do 50 let':50,'50–55 let':52,'55–60 let':57,'60–65 let':62,'65+ / nechci přestat':67};
 const RETIRE_INCOME_MAP = {'50–60 %':0.55,'70–80 %':0.75,'100 % (stejně jako dnes)':1.0,'Více než dnes':1.2};
+const CURRENT_SAVINGS_MAP = {
+  'Nic nesporim':0,'Do 2 000 Kč':1500,'2 000–5 000 Kč':3500,
+  '5 000–10 000 Kč':7500,'10 000–20 000 Kč':15000,'Nad 20 000 Kč':25000
+};
 const RESERVE_MAP = {'Žádnou':0,'Méně než 1 měsíc':0.5,'1–2 měsíce':1.5,'3–6 měsíců':4,'Nad 6 měsíců':7};
 
 // Fixed rates per horizon (no sliders)
@@ -434,7 +432,7 @@ let A = {
   reserve:null, property:null, investments:null,
   hasInsurance:[], currentProducts:[],
   family:null, risk:null,
-  age:null, retireAge:null, retireIncome:null,
+  age:null, retireAge:null, retireIncome:null, currentSavings:null,
   goals:{'1-3':[],'3-5':[],'6-15':[],'15+':[]},
   goalAmounts:{}, goalNames:{}
 };
@@ -585,6 +583,11 @@ function renderAssets(){
   const io=['Do 50 tis.','50–100 tis.','100–200 tis.','200–300 tis.','300–500 tis.','500–750 tis.','750 tis.–1,2 mil.','1,2 mil. a více'];
   h+=`<div class="q-block"><span class="q-label">Celková výše investic a úspor</span><div class="pills">`;
   io.forEach(o=>h+=`<span class="pill ${A.investments===o?'sel':''}" data-qid="investments" data-val="${o}" onclick="pickSingle(this)">${o}</span>`);
+  h+=`<hr class="divider">`;
+  const cs=['Nic nesporim','Do 2 000 Kč','2 000–5 000 Kč','5 000–10 000 Kč','10 000–20 000 Kč','Nad 20 000 Kč'];
+  h+=`<div class="q-block"><span class="q-label">Kolik měsíčně aktuálně spoříš nebo investuješ?</span><span class="q-note">Do všech produktů dohromady — spořicí účet, fondy, penze...</span><div class="pills">`;
+  cs.forEach(o=>h+=`<span class="pill ${A.currentSavings===o?'sel':''}" data-qid="currentSavings" data-val="${o}" onclick="pickSingle(this)">${o}</span>`);
+  h+=`</div></div>`;
   return h+`</div></div>`;
 }
 
@@ -763,7 +766,13 @@ function computeReport(){
     const p2=years-loanYears;
     return fv1*Math.pow(1+r,p2)+calcFV(monthly+freedMonthly,p2,r);
   }
-  const none=y=>Math.round(calcPhased(monthlyInvest*0.3,y,rateNone));
+  // "Bez akce" = realisticky: co teď aktuálně odkládáš + existující majetek při 2 % p.a.
+  const actualCurrentSavings = CURRENT_SAVINGS_MAP[A.currentSavings] || 0;
+  // Pokud nemáme data o aktuálním spoření, použijeme 0 (nezahrnujeme investiční zvyk)
+  function calcNone(years){
+    return calcFV(actualCurrentSavings, years, rateNone) + existingInvest * Math.pow(1+rateNone, years);
+  }
+  const none=y=>Math.round(calcNone(y));
   const plan=y=>Math.round(calcPhased(monthlyInvest,y,rate));
   const adv=y=>Math.round(calcPhased(monthlyInvest,y,rateAdv));
 
@@ -777,7 +786,7 @@ function computeReport(){
     loanPayment,loanYears,freedMonthly,mortPayment,mortDuration,consPayment,consDuration,
     currentAge,retireAgeVal,yearsToRetire,rentaTargetMonthly,rentaCapitalNeeded,
     weightedRate,rate,
-    w_none:none(20),w_plan:plan(20),w_adv:adv(20),
+    actualCurrentSavings,w_none:none(20),w_plan:plan(20),w_adv:adv(20),
     chartData:{none:[0,5,10,15,20].map(none),plan:[0,5,10,15,20].map(plan),adv:[0,5,10,15,20].map(adv)}};
 }
 
@@ -813,16 +822,7 @@ function renderReport(){
   else pt=`<div style="background:var(--gl);border:1px solid #9FE1CB;border-radius:var(--rs);padding:12px;font-size:13px;color:#085041;line-height:1.65;margin-top:4px">Výdaje jsou na <strong>${r.pasivaPct} %</strong> — pod hranicí 70 %. Dobrý základ.</div>`;
   document.getElementById('rep-pasiva-text').innerHTML=pt;
 
-  // FOMO: status
-  const fomoStatus=document.getElementById('fomo-status');
-  if(r.pasivaPct>70){
-    fomoStatus.style.display='block';
-    fomoStatus.innerHTML=`⚠️ <strong>${r.pasivaPct>80?'83':'62'} % lidí s podobným profilem</strong> nikdy nezačne investovat, protože "teď to nejde". Přitom i malá optimalizace výdajů dnes = stovky tisíc rozdíl za 10 let.`;
-  } else {
-    fomoStatus.style.display='block';
-    fomoStatus.className='fomo-box fomo-green';
-    fomoStatus.innerHTML=`✅ Jsi v lepší pozici než <strong>62 % lidí tvého věku</strong>. Teď záleží jen na tom, jestli to využiješ — každý rok čekání stojí ${fmt(Math.round(r.monthlyInvest*r.rate*12))} Kč ušlého výnosu.`;
-  }
+  // FOMO handled by single message near CTA
 
   // METRICS
   document.getElementById('rep-metrics').innerHTML=`
@@ -844,12 +844,7 @@ function renderReport(){
   const diff30=30-a;
   document.getElementById('rep-ratio-text').textContent=diff30>0?`Ideální poměr je 70:30. Rozdíl: ${diff30} % = ${fmt(r.income*diff30/100)} měsíčně.`:`Jsi na nebo nad doporučeným poměrem aktiv.`;
 
-  // FOMO pasiva
-  const fomoPasiva=document.getElementById('fomo-pasiva');
-  if(diff30>0){
-    fomoPasiva.style.display='block';
-    fomoPasiva.innerHTML=`💸 Přesun <strong>${fmt(r.income*diff30/100)}/měs.</strong> z pasiv do aktiv by za 20 let přinesl navíc <strong>${fmt(Math.round(calcFV(r.income*diff30/100,20,r.rate)))}</strong>. To je rozdíl mezi závislostí na státním důchodu a finanční svobodou.`;
-  }
+
 
   // UPDATE RATE DISPLAY
   const wr=r.weightedRate*100;
@@ -877,13 +872,19 @@ function renderReport(){
   // FOMO TILE
   updateFomoTile(r.w_plan,r.w_adv);
 
-  // FOMO time
-  const fomoTime=document.getElementById('fomo-time');
-  if(fomoTime){
-    fomoTime.style.display='block';
-    const monthlyLoss=Math.round(r.monthlyInvest*r.rate);
-    fomoTime.innerHTML=`⏳ <strong>Každý měsíc odkládání tě stojí ${fmt(monthlyLoss)} Kč</strong> na budoucím majetku (ušlý výnos při ${(r.rate*100).toFixed(1)} % p.a.). Za rok to je <strong>${fmt(monthlyLoss*12)}</strong>.`;
+  // SINGLE FOMO MESSAGE near CTA
+  // Formula: (majetek_s_profesionálem - majetek_bez_akce) / 20 let / 12 měsíců
+  const fomoMain = document.getElementById('fomo-main');
+  if(fomoMain){
+    const fomoMonthly = Math.round((r.w_adv - r.w_none) / 20 / 12);
+    const currentSavNote = r.actualCurrentSavings > 0
+      ? ` (počítáme s tvým aktuálním spořením ${fmt(r.actualCurrentSavings)}/měs. a majetkem ${fmt(r.existingInvest)})`
+      : ` (vychází z rozdílu mezi "nic neděláš" a optimálním plánem za 20 let)`;
+    fomoMain.style.display = 'block';
+    fomoMain.innerHTML = `⚠️ <strong>Každý měsíc tě stojí cca ${fmt(fomoMonthly)}</strong>, pokud nic neuděláš${currentSavNote}. To je rozdíl mezi tvým majetkem bez akce (${fmt(r.w_none)}) a s profesionálním plánem (${fmt(r.w_adv)}) za 20 let.`;
   }
+
+
 
   // SCENARIOS
   const maxW=r.w_adv;
@@ -901,12 +902,7 @@ function renderReport(){
     {horizon:'15+ let',amount:r.a3,product:'Penzijní produkty',ret:RATE3+' % p.a.',bg:'#fceee9',border:'#F5C4B3',tc:'#c43a1a'},
   ].map(ac=>`<div class="alloc-card" style="background:${ac.bg};border-color:${ac.border}"><div class="alloc-horizon" style="color:${ac.tc}">${ac.horizon}</div><div class="alloc-amount" style="color:${ac.tc}">${fmt(ac.amount)}/měs.</div><div class="alloc-product" style="color:${ac.tc}">${ac.product}</div><div class="alloc-return" style="color:${ac.tc}">${ac.ret}</div></div>`).join('');
 
-  // FOMO alloc
-  const fomoAlloc=document.getElementById('fomo-alloc');
-  if(fomoAlloc){
-    fomoAlloc.style.display='block';
-    fomoAlloc.innerHTML=`📊 <strong>Správná alokace rozhoduje o 91 % výsledku</strong> — výběr konkrétních produktů jen o 9 % (Brinson, Hood & Beebower). Máš správné rozložení? Potvrzení přichází jen s reálnými čísly.`;
-  }
+
 
   // LOAN IMPACT
   const loanCard=document.getElementById('rep-loan-card');
@@ -927,8 +923,7 @@ function renderReport(){
         📉 Tyto peníze teď nejdou do investic. Kdyby šly, za ${Math.round(r.loanYears)} let by to bylo <strong>${fmt(lostFV)}</strong> navíc.<br>
         ✅ Po splacení všech závazků za <strong>${Math.round(r.loanYears)} let</strong> se ${fmt(r.loanPayment)}/měs. přesměruje do investic — v grafu vidíš zalomení křivky nahoru.
       </div>`;
-    const fomoLoan=document.getElementById('fomo-loan');
-    if(fomoLoan){fomoLoan.style.display='block';fomoLoan.innerHTML=`🎯 Každý rok dřívějšího splacení ti uvolní ${fmt(r.loanPayment*12)} Kč ročně navíc do investic. Mimořádné splátky se vždy vyplatí.`;}
+
   } else {
     loanCard.style.display='none';
   }
@@ -954,13 +949,7 @@ function renderReport(){
         <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${pct>=100?'#2d9467':pct>=60?'#c47a1a':'#c43a1a'}"></div></div>
         <div style="font-size:12px;color:var(--ink3);margin-top:6px">Pasivní příjem z kapitálu: <strong>${fmt(passiveIncome)}/měs.</strong></div>
       </div>`;
-    const fomoRenta=document.getElementById('fomo-renta');
-    if(fomoRenta){
-      fomoRenta.style.display='block';
-      const gap=r.rentaCapitalNeeded-rentaFV;
-      if(gap>0) fomoRenta.innerHTML=`🚨 Na cílovou rentu ti chybí <strong>${fmt(gap)}</strong>. Každý rok který začneš dřív sníží potřebný měsíční příspěvek o stovky korun. Čas je tady opravdu klíčový.`;
-      else fomoRenta.className='fomo-box fomo-green'; fomoRenta.innerHTML=`🎉 Na cílovou rentu dosáhneš! Zbývající prostředky jdou na vybudování větší finanční rezervy nebo na dřívější odchod.`;
-    }
+
   }
 
   // GOALS PRIORITY
@@ -970,11 +959,7 @@ function renderReport(){
   ['1-3','3-5','6-15','15+'].forEach(hz=>A.goals[hz].forEach(gid=>{if(!goalPriority.find(x=>x.gid===gid)) goalPriority.push({hz,gid});}));
   renderGoalPriority(r,allDefs);
 
-  const fomoGoals=document.getElementById('fomo-goals');
-  if(fomoGoals&&goalPriority.length>0){
-    fomoGoals.style.display='block';
-    fomoGoals.innerHTML=`💡 Máš ${goalPriority.length} cíl${goalPriority.length>4?'ů':goalPriority.length>1?'e':''} — přetažením nastav priority. Cíle bez dostatku prostředků jsou vyznačeny červeně.`;
-  }
+
 
   // 3 KROKY
   const steps3=[];
