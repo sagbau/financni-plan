@@ -233,6 +233,14 @@ canvas{display:block;width:100%!important}
     <div id="rep-ratio-text" style="font-size:12px;color:var(--ink3);margin-top:6px;line-height:1.6"></div>
   </div>
 
+  <!-- ALOKACE INVESTIC -->
+  <div class="card">
+    <p class="rpt">Návrh alokace investic</p>
+    <p style="font-size:13px;color:var(--ink3);margin-bottom:14px" id="rep-alloc-sub"></p>
+    <div class="alloc-grid" id="rep-alloc"></div>
+    <div style="font-size:12px;color:var(--ink3);line-height:1.6;padding:10px;background:var(--cream);border-radius:var(--rs)">Každý horizont dostane vždy alespoň 15 % z investovatelné částky. Čím dřív začneš, tím méně měsíčně potřebuješ.</div>
+  </div>
+
   <!-- VÝVOJ MAJETKU -->
   <div class="card">
     <p class="rpt">Vývoj majetku</p>
@@ -297,20 +305,7 @@ canvas{display:block;width:100%!important}
     </div>
   </div>
 
-  <!-- SROVNÁNÍ SCÉNÁŘŮ -->
-  <div class="card">
-    <p class="rpt">Za 20 let — srovnání scénářů</p>
-    <div id="rep-scenarios"></div>
-    <div style="font-size:12px;color:var(--ink3);margin-top:10px;line-height:1.6;padding:10px;background:var(--cream);border-radius:var(--rs)">Rozdíl „s profesionálem" vychází z behavioral gap — průměrný investor zaostává za trhem o 1,7 % ročně díky emočním rozhodnutím.</div>
-  </div>
 
-  <!-- ALOKACE INVESTIC -->
-  <div class="card">
-    <p class="rpt">Návrh alokace investic</p>
-    <p style="font-size:13px;color:var(--ink3);margin-bottom:14px" id="rep-alloc-sub"></p>
-    <div class="alloc-grid" id="rep-alloc"></div>
-    <div style="font-size:12px;color:var(--ink3);line-height:1.6;padding:10px;background:var(--cream);border-radius:var(--rs)">Každý horizont dostane vždy alespoň 15 % z investovatelné částky. Čím dřív začneš, tím méně měsíčně potřebuješ.</div>
-  </div>
 
   <!-- DOPAD SPLÁTEK -->
   <div class="card" id="rep-loan-card" style="display:none">
@@ -343,7 +338,7 @@ canvas{display:block;width:100%!important}
 
   <!-- MOTIVACE — POMĚR AKTIV -->
   <div class="card">
-    <p class="rpt">Co to udělá kdybysi zlepšil poměr aktiv</p>
+    <p class="rpt">Co to udělá kdybys zlepšil poměr aktiv</p>
     <div id="rep-motivation"></div>
   </div>
 
@@ -809,7 +804,12 @@ function computeReport(){
     currentAge,retireAgeVal,yearsToRetire,rentaTargetMonthly,rentaCapitalNeeded,
     weightedRate,rate,
     actualCurrentSavings,w_none:none(20),w_plan:plan(20),w_adv:adv(20),
-    chartData:{none:[0,5,10,15,20,25,30].map(none),plan:[0,5,10,15,20,25,30].map(plan),adv:[0,5,10,15,20,25,30].map(adv)}};
+    chartData:(()=>{
+      const baseYears=[0,5,10,15,20,25,30];
+      const chartYears=(loanYears>0&&loanYears<30&&!baseYears.includes(Math.round(loanYears)))?[...baseYears,Math.round(loanYears)].sort((a,b)=>a-b):baseYears;
+      const chartLabels=chartYears.map(y=>y===0?'Dnes':y+' let');
+      return{none:chartYears.map(none),plan:chartYears.map(plan),adv:chartYears.map(adv),labels:chartLabels};
+    })()};
 }
 
 // ─── PROCESSING ───────────────────────────────────────────────────────────────
@@ -878,7 +878,7 @@ function renderReport(){
 
   // CHART
   if(wealthChart) wealthChart.destroy();
-  const labels=['Dnes','5 let','10 let','15 let','20 let','25 let','30 let'];
+  const labels=r.chartData.labels||['Dnes','5 let','10 let','15 let','20 let','25 let','30 let'];
   const dark=matchMedia('(prefers-color-scheme:dark)').matches;
   const tc=dark?'#9a9890':'#8a8a82', gc=dark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';
   wealthChart=new Chart(document.getElementById('wealth-chart'),{
@@ -906,7 +906,7 @@ function renderReport(){
   const fomoTopText = document.getElementById('fomo-chart-top-text');
   if(fomoTop && fomoTopText){
     fomoTop.style.display = 'block';
-    fomoTopText.innerHTML = `Každý měsíc tě stojí cca <span style="color:var(--gold)">${fmt(fomoMonthly)}</span>, pokud nic neuděláš — to je rozdíl mezi situací bez akce a optimálním plánem za 20 let.`;
+    fomoTopText.innerHTML = `Každý měsíc nečinnosti tě přijde cca <span style="color:var(--gold)">${fmt(fomoMonthly)}</span> — průměrný rozdíl za 20 let mezi scénářem bez změny a optimálním plánem s profesionálem.`;
   }
 
   // 2. Email below chart (show after chart renders)
@@ -931,9 +931,9 @@ function renderReport(){
   ].map(s=>`<div class="scenario"><div class="scenario-top"><span style="color:var(--ink2)">${s.name}</span><span style="font-weight:600;color:${s.color}">${fmt(s.val)}</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(s.val/maxW*100)}%;background:${s.color}"></div></div></div>`).join('');
 
   // ALLOC
-  document.getElementById('rep-alloc-sub').textContent=`${fmt(r.monthlyInvest)} měsíčně · dluhopisy ${RATE1} % · akcie ${RATE2} % · penze ${RATE3} % p.a.`;
+  document.getElementById('rep-alloc-sub').textContent=`${fmt(r.monthlyInvest)}/měs. rozděleno dle cílů — z toho vychází graf vúvoje. Sazby: dluhopisové fondy ${RATE1} % · akcie ${RATE2} % · penze ${RATE3} % p.a.`;
   document.getElementById('rep-alloc').innerHTML=[
-    {horizon:'3–5 let',amount:r.a1,product:'Dluhopisové a nem. fondy',ret:RATE1+' % p.a.',bg:'#e8f4ee',border:'#9FE1CB',tc:'#1a6b4a'},
+    {horizon:'1–5 let',amount:r.a1,product:'Dluhopisové a nemovitostní fondy',ret:RATE1+' % p.a.',bg:'#e8f4ee',border:'#9FE1CB',tc:'#1a6b4a'},
     {horizon:'5–15 let',amount:r.a2,product:'Akciové portfolio',ret:RATE2+' % p.a.',bg:'#eeedf8',border:'#AFA9EC',tc:'#4a3fb5'},
     {horizon:'15+ let',amount:r.a3,product:'Penzijní produkty',ret:RATE3+' % p.a.',bg:'#fceee9',border:'#F5C4B3',tc:'#c43a1a'},
   ].map(ac=>`<div class="alloc-card" style="background:${ac.bg};border-color:${ac.border}"><div class="alloc-horizon" style="color:${ac.tc}">${ac.horizon}</div><div class="alloc-amount" style="color:${ac.tc}">${fmt(ac.amount)}/měs.</div><div class="alloc-product" style="color:${ac.tc}">${ac.product}</div><div class="alloc-return" style="color:${ac.tc}">${ac.ret}</div></div>`).join('');
@@ -974,11 +974,12 @@ function renderReport(){
     const pct=Math.round(Math.min(100,rentaFV/r.rentaCapitalNeeded*100));
     document.getElementById('rep-renta').innerHTML=`
       <div class="renta-box">
-        <strong>Věk:</strong> ${r.currentAge} let · <strong>Odchod:</strong> ${r.retireAgeVal} let · <strong>Zbývá:</strong> ${r.yearsToRetire} let<br>
-        <strong>Cílový pasivní příjem:</strong> ${fmt(r.rentaTargetMonthly)}/měs.<br>
-        <strong>Potřebný kapitál:</strong> ${fmt(r.rentaCapitalNeeded)} (1 mil. = 5 000 Kč/měs.)<br>
-        <strong>Odhad kapitálu za ${rentaHorizon} let:</strong> ${fmt(rentaFV)}<br>
-        <strong>Dosažitelnost:</strong> ${pct} %
+        <strong>Věk:</strong> ${r.currentAge} let · <strong>Plánovaný odchod:</strong> ${r.retireAgeVal} let · <strong>Zbývá:</strong> ${r.yearsToRetire} let<br><br>
+        <strong>Cílový pasivní příjem v důchodu:</strong> ${fmt(r.rentaTargetMonthly)}/měs.<br>
+        <span style="font-size:12px;opacity:.8">↳ Dnešní příjem ${fmt(r.income)}/měs. navýšen inflací 2,5 % p.a. za ${r.yearsToRetire} let — v budoucnu budeš potřebovat více Kč za stejný životní standard.</span><br><br>
+        <strong>Potřebný kapitál:</strong> ${fmt(r.rentaCapitalNeeded)}<br>
+        <span style="font-size:12px;opacity:.8">↳ Pravidlo 5 %: 1 mil. Kč kapitálu = cca 5 000 Kč/měs. pasivního příjmu (6 % výnos portfolia minus 2,5 % inflace = 3,5 % reálný výnos ≈ 5 % výběr je mírně konzervativní).</span><br><br>
+        <strong>Odhadovaný kapitál za ${rentaHorizon} let:</strong> ${fmt(rentaFV)} · <strong>Pokrytí cíle:</strong> ${pct} %
       </div>
       <div style="margin-top:10px">
         <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--ink3)">Pokrytí cílového příjmu</span><span style="font-weight:600;color:${pct>=100?'var(--green)':pct>=60?'var(--amber)':'var(--red)'}">${pct} %</span></div>
