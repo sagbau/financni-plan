@@ -1972,213 +1972,7 @@ canvas { display: block; width: 100% !important; }
 </style>
 </head>
 <body>
-<div id="app">
 
-<!-- ── INTRO ─────────────────────────────────────────────────────────────── -->
-<div id="s-intro" class="screen active">
-  <div class="intro-wrap">
-    <div class="intro-inner">
-      <div class="logo-mark">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      </div>
-      <div class="trust-badge">
-        <span class="dot"></span>
-        Bezplatná analýza · Výsledky okamžitě
-      </div>
-      <h1 class="hero-h1">
-        Zjisti kde jsi<br>
-        <span class="grad">a kam můžeš dojít</span>
-      </h1>
-      <p class="hero-sub">Finanční plán na míru za 3 minuty. Žádné zbytečné otázky — jen jasná čísla o tvé situaci a konkrétní kroky vpřed.</p>
-      <div class="feature-row">
-        <div class="feature-pill"><span class="icon">📊</span> Analýza situace</div>
-        <div class="feature-pill"><span class="icon">🎯</span> Metodika 40:30:20:10</div>
-        <div class="feature-pill"><span class="icon">📈</span> Projekce na 30 let</div>
-      </div>
-      <button class="btn-hero" onclick="startQuestionnaire()">Spustit analýzu →</button>
-      <p class="disclaimer-hero">⚠️ Reprezentativní příklad sloužící výhradně pro ilustraci. Není investičním poradenstvím, finanční analýzou ani nabídkou investičních nástrojů ve smyslu ZPKT. Výsledky se mohou lišit. Konkrétní plán vždy konzultujte s licencovaným poradcem.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ── QUESTIONNAIRE ──────────────────────────────────────────────────────── -->
-<div id="s-quest" class="screen">
-  <div class="q-header">
-    <div class="q-nav-top">
-      <button class="back-btn" id="btn-back-q" onclick="prevStep()">←</button>
-      <div class="q-step-info">
-        <div class="q-step-label" id="q-section-label">Sekce 1 z 5</div>
-        <div class="q-step-name" id="q-step-label">Příjmy a výdaje</div>
-      </div>
-    </div>
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-fill" id="q-progress" style="width:20%"></div>
-    </div>
-  </div>
-  <div id="q-content"></div>
-  <div class="nav-row">
-    <button class="btn btn-primary" id="btn-next-q" onclick="nextStep()">Pokračovat →</button>
-  </div>
-</div>
-
-<!-- ── PROCESSING ─────────────────────────────────────────────────────────── -->
-<div id="s-processing" class="screen">
-  <div class="processing-wrap">
-    <div class="spinner-ring"></div>
-    <h2 class="processing-title">Analyzuji tvoji situaci</h2>
-    <p class="processing-sub">Připravuji tvůj osobní finanční plán</p>
-    <ul class="proc-steps" id="proc-steps">
-      <li><span class="dot"></span>Vyhodnocuji poměr aktiv a pasiv…</li>
-      <li><span class="dot"></span>Kontroluji likvidní rezervu…</li>
-      <li><span class="dot"></span>Ověřuji pojistnou ochranu…</li>
-      <li><span class="dot"></span>Sestavuji investiční plán…</li>
-      <li><span class="dot"></span>Počítám projekci majetku a cílů…</li>
-    </ul>
-  </div>
-</div>
-
-<!-- ── REPORT ─────────────────────────────────────────────────────────────── -->
-<div id="s-report" class="screen">
-  <button class="report-back" onclick="showScreen('s-quest')" style="margin-bottom:16px">← Upravit odpovědi</button>
-
-  <!-- FOMO — full width across both columns -->
-  <div class="fomo-block report-full-width">
-    <div class="fomo-main-area" id="fomo-chart-top" style="display:none">
-      <div class="fomo-eyebrow">⚠️ Cena nečinnosti</div>
-      <div class="fomo-amount" id="fomo-chart-top-text">—</div>
-      <div class="fomo-desc" id="fomo-main"></div>
-    </div>
-    <div class="fomo-sub-area" id="fomo-tile-sub">
-      <span class="fomo-sub-text" id="fomo-msg">Tohle je cena za správné rozhodnutí v pravý čas.</span>
-      <span style="font-size:22px;flex-shrink:0">💡</span>
-    </div>
-  </div>
-
-  <!-- EMAIL #1 — full width, right after FOMO -->
-  <div class="email-mini-wrap report-full-width" id="email-fomo-wrap" style="display:none">
-    <div class="email-mini-label">📬 Pošleme ti tento plán na e-mail + 7denního průvodce k finančnímu zdraví</div>
-    <div class="email-mini-row">
-      <input class="email-mini-input" id="cta-email-fomo" type="email" placeholder="Tvůj e-mail…">
-      <button class="email-mini-btn" onclick="submitEmailFomo()">Poslat plán →</button>
-    </div>
-    <div class="email-mini-note" id="cta-msg-fomo">Zdarma · žádný spam · kdykoli odhlásit</div>
-  </div>
-
-  <!-- 2-COLUMN GRID -->
-  <div class="report-grid">
-
-    <!-- LEFT COLUMN -->
-    <div class="report-left">
-
-      <!-- Přehled situace -->
-      <div class="card">
-        <p class="rpt">Přehled situace</p>
-        <div class="status-row" id="rep-status"></div>
-        <div id="rep-pasiva-text"></div>
-      </div>
-
-      <!-- Kde teď jsi -->
-      <div class="card">
-        <p class="rpt">Kde teď jsi</p>
-        <div class="metric-row" id="rep-metrics"></div>
-        <div id="rep-ratio-bar"></div>
-        <div id="rep-ratio-text" style="font-size:12px;color:var(--ink3);margin-top:8px;line-height:1.6"></div>
-      </div>
-
-      <!-- Návrh alokace -->
-      <div class="card">
-        <p class="rpt">Návrh alokace investic</p>
-        <p style="font-size:13px;color:var(--ink3);margin-bottom:16px" id="rep-alloc-sub"></p>
-        <div class="alloc-grid" id="rep-alloc"></div>
-        <span id="rate1-val" style="display:none"></span><span id="rate2-val" style="display:none"></span><span id="rate3-val" style="display:none"></span>
-        <div class="rate-weighted-note" id="rate-weighted-display">Vážený průměr: načítám…</div>
-      </div>
-
-      <!-- Dopad splátek -->
-      <div class="card" id="rep-loan-card" style="display:none">
-        <p class="rpt" style="color:var(--bad)">Dopad splátek na tvůj majetek</p>
-        <div id="rep-loan"></div>
-      </div>
-
-      <!-- Renta / důchod -->
-      <div class="card" id="rep-renta-card" style="display:none">
-        <p class="rpt">Výpočet cíle — renta / důchod</p>
-        <div id="rep-renta"></div>
-      </div>
-
-      <!-- Co by se změnilo -->
-      <div class="card">
-        <p class="rpt">Co by se změnilo, kdybys zlepšil poměr aktiv</p>
-        <div id="rep-motivation"></div>
-      </div>
-
-    </div><!-- /report-left -->
-
-    <!-- RIGHT COLUMN -->
-    <div class="report-right">
-
-      <!-- Graf -->
-      <div class="card">
-        <p class="rpt">Vývoj majetku za 30 let</p>
-        <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;font-size:12px;color:var(--ink3)">
-          <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:#4A4060;display:inline-block;border-radius:2px"></span>Bez akce</span>
-          <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:var(--ok);display:inline-block;border-radius:2px"></span>Vlastní plán</span>
-          <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:var(--pink);display:inline-block;border-radius:2px"></span>S profesionálem</span>
-        </div>
-        <canvas id="wealth-chart" height="260"></canvas>
-        <div style="margin-top:16px;background:var(--bg3);border-radius:var(--r);padding:14px;border:1px solid var(--border);display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center">
-          <div><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">Vlastní plán (20 let)</div><div id="fomo-plan" style="font-family:'Plus Jakarta Sans';font-size:17px;font-weight:800;color:var(--ok)">—</div></div>
-          <div style="text-align:center"><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">Rozdíl</div><div id="fomo-diff" style="font-family:'Plus Jakarta Sans';font-size:22px;font-weight:800;color:var(--gold)">—</div></div>
-          <div style="text-align:right"><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">S profesionálem</div><div id="fomo-pro" style="font-family:'Plus Jakarta Sans';font-size:17px;font-weight:800;color:var(--pink)">—</div></div>
-        </div>
-        <!-- Email #2 under chart -->
-        <div class="email-mini-wrap" id="email-chart-wrap">
-          <div class="email-mini-label">📬 Poslat tento plán na e-mail + 7denní průvodce</div>
-          <div class="email-mini-row">
-            <input class="email-mini-input" id="cta-email-chart" type="email" placeholder="Tvůj e-mail…">
-            <button class="email-mini-btn" onclick="submitEmailChart()">Poslat →</button>
-          </div>
-          <div class="email-mini-note" id="cta-msg-chart">Zdarma · žádný spam · kdykoli odhlásit</div>
-        </div>
-      </div>
-
-      <!-- Cíle — priorita -->
-      <div class="card">
-        <p class="rpt">Tvoje cíle — priorita a dosažitelnost</p>
-        <p style="font-size:12px;color:var(--ink3);margin-bottom:4px">Přetáhni cíle podle priority — důležitější cíle jsou financovány přednostně.</p>
-        <p style="font-size:11px;color:var(--ink3);margin-bottom:14px;line-height:1.5">Každý měsíc dostává prostor jen omezený pool peněz — cíle výše čerpají jako první.</p>
-        <div id="rep-goals-priority"></div>
-        <button class="btn btn-secondary btn-sm" style="margin-top:12px;width:auto;padding:9px 18px" onclick="toggleGoalManager()">+ Přidat nebo upravit cíle</button>
-        <div id="goal-manager" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)"><div id="goal-manager-inner"></div></div>
-      </div>
-
-      <!-- 3 kroky -->
-      <div class="card">
-        <p class="rpt">Tvoje 3 konkrétní kroky</p>
-        <div id="rep-steps"></div>
-        <div class="alert alert-ok" style="margin-top:14px">⏱️ Průměrný člověk čeká 2,5 roku než začne aktivně řešit finance. Každý rok čekání při 8 % p.a. a 10 000 Kč/měs. stojí <strong>~125 000 Kč</strong> ušlého výnosu.</div>
-      </div>
-
-    </div><!-- /report-right -->
-
-  </div><!-- /report-grid -->
-
-  <!-- CTA — email lead magnet — full width -->
-  <div class="cta-card report-full-width" style="margin-top:12px">
-    <div class="cta-eyebrow">🎁 Zdarma · bez závazků</div>
-    <h3 class="cta-h3">Pošleme ti výsledky<br>+ 7denního průvodce</h3>
-    <p class="cta-sub">Shrnutí finančního plánu a série tipů co dělat každý den — přímo do e-mailu.</p>
-    <div id="fomo-main-cta" style="background:rgba(228,24,106,.08);border:1px solid rgba(228,24,106,.2);border-radius:var(--r-sm);padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--ink2);line-height:1.6;display:none"></div>
-    <div class="cta-input-row" style="max-width:560px;margin:0 auto 12px">
-      <input class="cta-email-input" id="cta-email" type="email" placeholder="Tvůj e-mail…">
-      <button class="cta-submit" onclick="submitEmail()">Poslat plán →</button>
-    </div>
-    <div class="cta-footnote" id="cta-msg">📬 Obdržíš výstup z analýzy + 7 e-mailů s kroky ke zlepšení · Žádný spam · Kdykoli odhlásit</div>
-  </div>
-
-</div>
-
-</div><!-- /app -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
@@ -2277,9 +2071,7 @@ let goalPriority = [];
 let currentStep = 0;
 let wealthChart = null;
 let dragSrc = null;
-let touchDragSrc = null;
-let touchClone = null;
-let touchOffX = 0, touchOffY = 0;
+let touchDragSrc = null, touchClone = null, touchOffX = 0, touchOffY = 0;
 
 function handleTouchStart(e) {
   const item = e.currentTarget;
@@ -2288,7 +2080,7 @@ function handleTouchStart(e) {
   touchOffX = e.touches[0].clientX - rect.left;
   touchOffY = e.touches[0].clientY - rect.top;
   touchClone = item.cloneNode(true);
-  touchClone.style.cssText = `position:fixed;z-index:9999;pointer-events:none;width:${item.offsetWidth}px;opacity:.9;border:2px solid var(--pink);border-radius:14px;box-shadow:0 8px 32px rgba(228,24,106,.3);`;
+  touchClone.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;width:'+item.offsetWidth+'px;opacity:.9;border:2px solid #E4186A;border-radius:14px;box-shadow:0 8px 32px rgba(228,24,106,.3);';
   document.body.appendChild(touchClone);
   item.style.opacity = '0.4';
   e.preventDefault();
@@ -2302,7 +2094,7 @@ function handleTouchMove(e) {
   const el = document.elementFromPoint(t.clientX, t.clientY);
   touchClone.style.display = '';
   document.querySelectorAll('.goal-priority-item').forEach(i=>i.classList.remove('drag-over'));
-  const tgt = el?.closest('[data-idx]');
+  const tgt = el && el.closest('[data-idx]');
   if(tgt && parseInt(tgt.dataset.idx) !== touchDragSrc) tgt.classList.add('drag-over');
   e.preventDefault();
 }
@@ -2314,14 +2106,14 @@ function handleTouchEnd(e) {
   touchClone.style.display = '';
   document.querySelectorAll('.goal-priority-item').forEach(i=>{i.classList.remove('drag-over');i.style.opacity='';});
   touchClone.remove(); touchClone = null;
-  const tgt = el?.closest('[data-idx]');
+  const tgt = el && el.closest('[data-idx]');
   if(tgt) {
     const ti = parseInt(tgt.dataset.idx);
     if(touchDragSrc !== null && touchDragSrc !== ti) {
       const moved = goalPriority.splice(touchDragSrc,1)[0];
       goalPriority.splice(ti,0,moved);
       refreshPriority();
-      setTimeout(()=>{document.querySelectorAll('.achieve-bar-fill').forEach(el=>{el.classList.remove('bar-flash');void el.offsetWidth;el.classList.add('bar-flash');});},50);
+      setTimeout(()=>{document.querySelectorAll('.achieve-bar-fill').forEach(b=>{b.classList.remove('bar-flash');void b.offsetWidth;b.classList.add('bar-flash');});},50);
     }
   }
   touchDragSrc = null;
@@ -2361,7 +2153,7 @@ const STEP_BADGES=[
   {text:'📋 Závazky',bg:'#fceee9',color:'#c43a1a'},
   {text:'🏦 Majetek',bg:'#e8eef8',color:'#1a4a8a'},
   {text:'📁 Produkty',bg:'#fdf3e3',color:'#c47a1a'},
-  {text:'🎯 Cíle',bg:'#eeedf8',color:'var(--pink)'},
+  {text:'🎯 Cíle',bg:'#eeedf8',color:'#4a3fb5'},
 ];
 function renderStep(){
   const idx=currentStep;
@@ -2371,7 +2163,7 @@ function renderStep(){
   document.getElementById('btn-back-q').style.display=idx===0?'none':'flex';
   document.getElementById('btn-next-q').textContent=idx===4?'Vygenerovat plán →':'Pokračovat →';
   const b=STEP_BADGES[idx];
-  let html=`<div class="q-card"><span class="section-badge" style="background:rgba(255,255,255,0.06);color:${b.color};border:1px solid ${b.color}22">${b.text}</span>`;
+  let html=`<div class="section-header"><span class="section-badge" style="background:${b.bg};color:${b.color}">${b.text}</span>`;
   if(idx===0) html+=renderIncome();
   else if(idx===1) html+=renderLiabilities();
   else if(idx===2) html+=renderAssets();
@@ -2670,7 +2462,6 @@ function computeReport(){
     ['1-3','3-5','6-15','15+'].forEach(hz=>A.goals[hz].forEach(gid=>goalPriority.push({hz,gid})));
   }
 
-  // Goal wealth adjustment — consumption goals remove wealth, property goals grow at 4%
   function calcGoalAdj(baseYears, r) {
     let adj = 0;
     goalPriority.forEach(({hz,gid}) => {
@@ -2681,11 +2472,8 @@ function computeReport(){
       if(goalYear > baseYears) return;
       const yearsAfter = baseYears - goalYear;
       const type = GOAL_TYPE[gid] || 'consumption';
-      if(type === 'consumption') {
-        adj -= amount * Math.pow(1 + r, yearsAfter);
-      } else if(type === 'property') {
-        adj += amount * (Math.pow(1.04, yearsAfter) - Math.pow(1 + r, yearsAfter));
-      }
+      if(type === 'consumption') adj -= amount * Math.pow(1+r, yearsAfter);
+      else if(type === 'property') adj += amount * (Math.pow(1.04,yearsAfter) - Math.pow(1+r,yearsAfter));
     });
     return adj;
   }
@@ -2699,8 +2487,7 @@ function computeReport(){
     loanPayment,loanYears,freedMonthly,mortPayment,mortDuration,consPayment,consDuration,
     currentAge,retireAgeVal,yearsToRetire,rentaTargetMonthly,rentaCapitalNeeded,
     weightedRate,rate,
-    actualCurrentSavings,w_none:none(20)+noneAdj(20),w_plan:plan(20)+planAdj(20),w_adv:adv(20)+advAdj(20),   
-
+    actualCurrentSavings,w_none:none(20)+noneAdj(20),w_plan:plan(20)+planAdj(20),w_adv:adv(20)+advAdj(20),
     chartData:(()=>{
       const baseYears=[0,5,10,15,20,25,30];
       const chartYears=(loanYears>0&&loanYears<30&&!baseYears.includes(Math.round(loanYears)))?[...baseYears,Math.round(loanYears)].sort((a,b)=>a-b):baseYears;
@@ -2736,9 +2523,9 @@ function renderReport(){
     <div class="status-item ${insStatus}"><div class="status-icon">${icons[insStatus]}</div><div class="status-label">Ochrana</div><div class="status-val">${insStatus==='ok'?'OK':insStatus==='warn'?'Částečná':'Chybí'}</div></div>`;
 
   let pt='';
-  if(r.pasivaPct>80) pt=`<div class="alert alert-bad">Výdaje tvoří <strong>${r.pasivaPct} %</strong> příjmu — nad hranicí 80 %. Dokud je nesníříš pod 70 %, jakékoliv spoření bude jen záplata.</div>`;
-  else if(r.pasivaPct>70) pt=`<div class="alert alert-warn">Výdaje jsou na <strong>${r.pasivaPct} %</strong> — mírně nad hranicí 70 %. Prostor existuje, ale je úzký.</div>`;
-  else pt=`<div class="alert alert-ok">Výdaje jsou na <strong>${r.pasivaPct} %</strong> — pod hranicí 70 %. Dobrý základ.</div>`;
+  if(r.pasivaPct>80) pt=`<div style="background:var(--rl);border:1px solid #F5C4B3;border-radius:var(--rs);padding:12px;font-size:13px;color:#712B13;line-height:1.65;margin-top:4px">Výdaje tvoří <strong>${r.pasivaPct} %</strong> příjmu — nad hranicí 80 %. Dokud je nesníříš pod 70 %, jakékoliv spoření bude jen záplata.</div>`;
+  else if(r.pasivaPct>70) pt=`<div style="background:var(--al);border:1px solid #FAC775;border-radius:var(--rs);padding:12px;font-size:13px;color:#633806;line-height:1.65;margin-top:4px">Výdaje jsou na <strong>${r.pasivaPct} %</strong> — mírně nad hranicí 70 %. Prostor existuje, ale je úzký.</div>`;
+  else pt=`<div style="background:var(--gl);border:1px solid #9FE1CB;border-radius:var(--rs);padding:12px;font-size:13px;color:#085041;line-height:1.65;margin-top:4px">Výdaje jsou na <strong>${r.pasivaPct} %</strong> — pod hranicí 70 %. Dobrý základ.</div>`;
   document.getElementById('rep-pasiva-text').innerHTML=pt;
 
   // FOMO handled by single message near CTA
@@ -2747,7 +2534,7 @@ function renderReport(){
   document.getElementById('rep-metrics').innerHTML=`
     <div class="metric"><div class="metric-label">Čistý příjem</div><div class="metric-value">${fmt(r.income)}</div><div class="metric-sub">měsíčně</div></div>
     <div class="metric"><div class="metric-label">Výdaje</div><div class="metric-value">${fmt(r.expenses)}</div><div class="metric-sub">měsíčně</div></div>
-    <div class="metric"><div class="metric-label">Na investice (20 %)</div><div class="metric-value" style="color:${r.canAfford30?'var(--ok)':'var(--warn)'}">${fmt(r.monthlyInvest)}</div><div class="metric-sub">cíl dle metodiky</div></div>`;
+    <div class="metric"><div class="metric-label">Na investice (20 %)</div><div class="metric-value" style="color:${r.canAfford30?'var(--green)':'var(--amber)'}">${fmt(r.monthlyInvest)}</div><div class="metric-sub">cíl dle metodiky</div></div>`;
   if(!r.canAfford30){
     document.getElementById('rep-metrics').insertAdjacentHTML('afterend',
       `<div style="background:var(--al);border:1px solid #FAC775;border-radius:var(--rs);padding:10px 12px;font-size:12px;color:#633806;line-height:1.6;margin-bottom:12px">
@@ -2759,7 +2546,7 @@ function renderReport(){
   const p=r.pasivaPct,a=r.aktivaPct;
   document.getElementById('rep-ratio-bar').innerHTML=`
     <div style="margin-top:12px;margin-bottom:4px;font-size:12px;color:var(--ink3);display:flex;justify-content:space-between"><span>Pasiva ${p} %</span><span>Aktiva ${a} %</span></div>
-    <div class="ratio-bar"><div class="ratio-seg" style="width:${p}%;background:rgba(228,24,106,.35);color:#FF7BAB">${p>20?p+'%':''}</div><div class="ratio-seg" style="width:${a}%;background:rgba(24,212,200,.25);color:var(--ok)">${a>10?a+'%':''}</div></div>`;
+    <div class="ratio-bar"><div class="ratio-seg" style="width:${p}%;background:#F5C4B3;color:#712B13">${p>20?p+'%':''}</div><div class="ratio-seg" style="width:${a}%;background:#9FE1CB;color:#085041">${a>10?a+'%':''}</div></div>`;
   const diff30=30-a;
   document.getElementById('rep-ratio-text').textContent=diff30>0?`Ideální poměr je 70:30. Rozdíl: ${diff30} % = ${fmt(r.income*diff30/100)} měsíčně.`:`Jsi na nebo nad doporučeným poměrem aktiv.`;
 
@@ -2777,14 +2564,14 @@ function renderReport(){
   if(wealthChart) wealthChart.destroy();
   const labels=r.chartData.labels||['Dnes','5 let','10 let','15 let','20 let','25 let','30 let'];
   const dark=matchMedia('(prefers-color-scheme:dark)').matches;
-  const tc='#5A5070', gc='rgba(255,255,255,0.06)';
+  const tc=dark?'#9a9890':'#8a8a82', gc=dark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';
   wealthChart=new Chart(document.getElementById('wealth-chart'),{
     type:'line',data:{labels,datasets:[
-      {label:'Bez akce',data:r.chartData.none,borderColor:'#4A4060',borderWidth:2,pointRadius:3,tension:.4,fill:false},
-      {label:'S plánem',data:r.chartData.plan,borderColor:'#18D4C8',borderWidth:2,pointRadius:3,tension:.4,fill:false},
-      {label:'S profesionálem',data:r.chartData.adv,borderColor:'#E4186A',borderWidth:2.5,pointRadius:3,tension:.4,fill:false},
+      {label:'Bez akce',data:r.chartData.none,borderColor:'#c8c4bc',borderWidth:2,pointRadius:3,tension:.4,fill:false},
+      {label:'S plánem',data:r.chartData.plan,borderColor:'#2d9467',borderWidth:2,pointRadius:3,tension:.4,fill:false},
+      {label:'S profesionálem',data:r.chartData.adv,borderColor:'#4a3fb5',borderWidth:2.5,pointRadius:3,tension:.4,fill:false},
     ]},
-    options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(19,15,36,.95)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleColor:'#B8B0D4',bodyColor:'#F0EDF8',padding:12,callbacks:{label:c=>' '+fmt(c.parsed.y)}}}},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(19,15,36,.95)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleColor:'#B8B0D4',bodyColor:'#F0EDF8',padding:12,callbacks:{label:c=>' '+fmt(c.parsed.y)}}},
       scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:11}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:11},callback:v=>fmt(v)}}}}
   });
 
@@ -2809,11 +2596,9 @@ function renderReport(){
   // 2. Email below chart (show after chart renders)
   const emailWrap = document.getElementById('email-chart-wrap');
   if(emailWrap) emailWrap.style.display = 'block';
-  const fomoEmailWrap = document.getElementById('email-fomo-wrap');
-  if(fomoEmailWrap) fomoEmailWrap.style.display = 'block';
 
   // 3. FOMO in CTA section
-  const fomoMain = document.getElementById('fomo-main-cta');
+  const fomoMain = document.getElementById('fomo-main');
   if(fomoMain){
     fomoMain.style.display = 'block';
     fomoMain.innerHTML = `⚠️ <strong>Každý měsíc tě stojí cca ${fmt(fomoMonthly)}</strong>, pokud nic neuděláš.${currentSavNote} Rozdíl za 20 let: bez akce ${fmt(r.w_none)} vs. s plánem ${fmt(r.w_adv)}.`;
@@ -2827,9 +2612,9 @@ function renderReport(){
   // ALLOC
   document.getElementById('rep-alloc-sub').textContent=`${fmt(r.monthlyInvest)}/měs. rozděleno dle cílů — z toho vychází graf vúvoje. Sazby: dluhopisové fondy ${RATE1} % · akcie ${RATE2} % · penze ${RATE3} % p.a.`;
   document.getElementById('rep-alloc').innerHTML=[
-    {horizon:'1–5 let',amount:r.a1,product:'Dluhopisy + nem. fondy',ret:RATE1+' % p.a.',bg:'rgba(24,212,200,.08)',border:'rgba(24,212,200,.25)',tc:'#18D4C8'},
-    {horizon:'5–15 let',amount:r.a2,product:'Akciové portfolio',ret:RATE2+' % p.a.',bg:'rgba(155,92,246,.1)',border:'rgba(155,92,246,.3)',tc:'#C4A8FF'},
-    {horizon:'15+ let',amount:r.a3,product:'Penzijní produkty',ret:RATE3+' % p.a.',bg:'rgba(228,24,106,.1)',border:'rgba(228,24,106,.3)',tc:'#FF7BAB'},
+    {horizon:'1–5 let',amount:r.a1,product:'Dluhopisové a nemovitostní fondy',ret:RATE1+' % p.a.',bg:'#e8f4ee',border:'#9FE1CB',tc:'#1a6b4a'},
+    {horizon:'5–15 let',amount:r.a2,product:'Akciové portfolio',ret:RATE2+' % p.a.',bg:'#eeedf8',border:'#AFA9EC',tc:'#4a3fb5'},
+    {horizon:'15+ let',amount:r.a3,product:'Penzijní produkty',ret:RATE3+' % p.a.',bg:'#fceee9',border:'#F5C4B3',tc:'#c43a1a'},
   ].map(ac=>`<div class="alloc-card" style="background:${ac.bg};border-color:${ac.border}"><div class="alloc-horizon" style="color:${ac.tc}">${ac.horizon}</div><div class="alloc-amount" style="color:${ac.tc}">${fmt(ac.amount)}/měs.</div><div class="alloc-product" style="color:${ac.tc}">${ac.product}</div><div class="alloc-return" style="color:${ac.tc}">${ac.ret}</div></div>`).join('');
 
 
@@ -2844,12 +2629,12 @@ function renderReport(){
     if(r.consPayment>0) loanBreakdown+=`<div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--cream3)"><span>💳 Ostatní úvěry</span><span><strong>${fmt(r.consPayment)}/měs.</strong> · ještě ${r.consDuration} let</span></div>`;
     document.getElementById('rep-loan').innerHTML=`
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
-        <div class="loan-cell" style="background:var(--bad-soft)"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--bad);margin-bottom:3px">Celkové splátky</div><div style="font-family:'Plus Jakarta Sans';font-size:18px;font-weight:800;color:var(--bad)">${fmt(r.loanPayment)}</div><div style="font-size:11px;color:var(--bad);opacity:.7">měsíčně</div></div>
-        <div class="loan-cell" style="background:var(--warn-soft)"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--warn);margin-bottom:3px">Nejdéle splácím</div><div style="font-family:'Plus Jakarta Sans';font-size:18px;font-weight:800;color:var(--warn)">${Math.round(r.loanYears)} let</div><div style="font-size:11px;color:var(--warn);opacity:.7">zbývá</div></div>
-        <div class="loan-cell" style="background:var(--ok-soft)"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ok);margin-bottom:3px">Po splacení navíc</div><div style="font-family:'Plus Jakarta Sans';font-size:18px;font-weight:800;color:var(--ok)">${fmt(r.loanPayment)}</div><div style="font-size:11px;color:var(--ok);opacity:.7">přejde do investic</div></div>
+        <div style="background:var(--rl);border-radius:var(--rs);padding:12px"><div style="font-size:11px;color:var(--red);margin-bottom:3px">Celkové splátky</div><div style="font-size:18px;font-weight:600;color:var(--red)">${fmt(r.loanPayment)}</div><div style="font-size:11px;color:var(--red);opacity:.7">měsíčně</div></div>
+        <div style="background:var(--al);border-radius:var(--rs);padding:12px"><div style="font-size:11px;color:var(--amber);margin-bottom:3px">Nejdéle splácím</div><div style="font-size:18px;font-weight:600;color:var(--amber)">${Math.round(r.loanYears)} let</div><div style="font-size:11px;color:var(--amber);opacity:.7">zbývá</div></div>
+        <div style="background:var(--gl);border-radius:var(--rs);padding:12px"><div style="font-size:11px;color:var(--green);margin-bottom:3px">Po splacení navíc</div><div style="font-size:18px;font-weight:600;color:var(--green)">${fmt(r.loanPayment)}</div><div style="font-size:11px;color:var(--green);opacity:.7">přejde do investic</div></div>
       </div>
-      ${loanBreakdown?`<div style="background:var(--bg3);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px;border:1px solid var(--border)">${loanBreakdown}</div>`:''}
-      <div style="background:var(--bg3);border-radius:var(--rs);padding:12px;font-size:13px;line-height:1.7;color:var(--ink2);border:1px solid var(--border)">
+      ${loanBreakdown?`<div style="background:var(--cream);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px">${loanBreakdown}</div>`:''}
+      <div style="background:var(--cream);border-radius:var(--rs);padding:12px;font-size:13px;line-height:1.7;color:var(--ink2)">
         📉 Tyto peníze teď nejdou do investic. Kdyby šly, za ${Math.round(r.loanYears)} let by to bylo <strong>${fmt(lostFV)}</strong> navíc.<br>
         ✅ Po splacení všech závazků za <strong>${Math.round(r.loanYears)} let</strong> se ${fmt(r.loanPayment)}/měs. přesměruje do investic — v grafu vidíš zalomení křivky nahoru.
       </div>`;
@@ -2906,7 +2691,7 @@ function renderReport(){
   const mc=r.pasivaPct>80?'var(--rl)':r.pasivaPct>70?'var(--al)':'var(--gl)';
   const mb=r.pasivaPct>80?'#F5C4B3':r.pasivaPct>70?'#FAC775':'#9FE1CB';
   const mt=r.pasivaPct>80?'#712B13':r.pasivaPct>70?'#633806':'#085041';
-  document.getElementById('rep-motivation').innerHTML=`<div class="motiv-inner" style="background:${r.pasivaPct>80?'var(--bad-soft)':r.pasivaPct>70?'var(--warn-soft)':'var(--ok-soft)'};border-color:${r.pasivaPct>80?'rgba(228,24,106,.2)':r.pasivaPct>70?'rgba(245,166,35,.2)':'rgba(24,212,200,.2)'}"><div style="font-size:13px;line-height:1.7;margin-bottom:12px">${r.pasivaPct>70?`Snížením výdajů o <strong>${dp} %</strong> (= ${fmt(md)}/měs.) bys za 20 let měl o <strong>${fmt(wd)} navíc</strong> — to může znamenat odchod do důchodu o 3–7 let dřív.`:`Každé další procento do investic přidá za 20 let přibližně <strong>${fmt(calcFV(r.income*0.01,20,r.rate))}</strong>.`}</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${[{label:'Aktuální investice',val:fmt(r.monthlyInvest)+'/měs.'},{label:'Při ideálu 20 %',val:fmt(r.income*0.20)+'/měs.'},{label:'Rozdíl za 20 let',val:'+'+fmt(wd)}].map(m=>`<div class="motiv-cell"><div class="motiv-cell-label">${m.label}</div><div class="motiv-cell-val">${m.val}</div></div>`).join('')}</div></div>`;
+  document.getElementById('rep-motivation').innerHTML=`<div style="background:${mc};border:1px solid ${mb};border-radius:var(--rs);padding:16px;color:${mt}"><div style="font-size:13px;line-height:1.7;margin-bottom:12px">${r.pasivaPct>70?`Snížením výdajů o <strong>${dp} %</strong> (= ${fmt(md)}/měs.) bys za 20 let měl o <strong>${fmt(wd)} navíc</strong> — to může znamenat odchod do důchodu o 3–7 let dřív.`:`Každé další procento do investic přidá za 20 let přibližně <strong>${fmt(calcFV(r.income*0.01,20,r.rate))}</strong>.`}</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${[{label:'Aktuální investice',val:fmt(r.monthlyInvest)+'/měs.'},{label:'Při ideálu 20 %',val:fmt(r.income*0.20)+'/měs.'},{label:'Rozdíl za 20 let',val:'+'+fmt(wd)}].map(m=>`<div style="background:rgba(255,255,255,.5);border-radius:var(--rs);padding:10px;text-align:center"><div style="font-size:11px;margin-bottom:3px;opacity:.75">${m.label}</div><div style="font-size:14px;font-weight:600">${m.val}</div></div>`).join('')}</div></div>`;
 }
 
 // ─── FOMO TILE ────────────────────────────────────────────────────────────────
@@ -2972,7 +2757,7 @@ function renderGoalPriority(r,allDefs){
 
   let html='';
   goalData.forEach(({hz,gid,def,name,amtText,pct,pctColor,idx})=>{
-    const badge=idx===0?'<span style="font-size:10px;background:var(--pink-soft);color:var(--pink);padding:2px 8px;border-radius:100px;font-weight:700;margin-left:6px">Priorita č.1</span>':'';
+    const badge=idx===0?'<span style="font-size:10px;background:#e8f4ee;color:#1a6b4a;padding:2px 7px;border-radius:8px;font-weight:500;margin-left:6px">Priorita č.1</span>':'';
     html+=`<div class="goal-priority-item" draggable="true" data-idx="${idx}"
       ondragstart="dragStart(event,${idx})" ondragover="dragOver(event)"
       ondrop="dropGoal(event,${idx})" ondragleave="dragLeave(event)" ondragend="dragEnd(event)">
@@ -2994,11 +2779,10 @@ function renderGoalPriority(r,allDefs){
   const anyOverloaded=poolRemaining<=0&&goalData.some(g=>g.pct!==null&&g.pct<100);
   if(anyOverloaded) html+=`<div class="priority-hint">💡 Máš více cílů než dostupných prostředků. Přetáhni důležitější cíl nahoru — ten dostane prostředky jako první.</div>`;
   wrap.innerHTML=html;
-  // Add touch event listeners for mobile drag & drop
   wrap.querySelectorAll('.goal-priority-item').forEach(item=>{
-    item.addEventListener('touchstart', handleTouchStart, {passive:false});
-    item.addEventListener('touchmove',  handleTouchMove,  {passive:false});
-    item.addEventListener('touchend',   handleTouchEnd,   {passive:false});
+    item.addEventListener('touchstart',handleTouchStart,{passive:false});
+    item.addEventListener('touchmove', handleTouchMove, {passive:false});
+    item.addEventListener('touchend',  handleTouchEnd,  {passive:false});
   });
 }
 
@@ -3028,6 +2812,14 @@ function removeGoal(hz,gid){
   const mgr=document.getElementById('goal-manager');
   if(mgr&&mgr.style.display!=='none') renderGoalManager();
 }
+function toggleLoanDetail(){
+  const detail = document.getElementById('rep-loan-detail');
+  const icon = document.getElementById('loan-toggle-icon');
+  if(!detail) return;
+  const isOpen = detail.style.display !== 'none';
+  detail.style.display = isOpen ? 'none' : 'block';
+  if(icon) icon.textContent = isOpen ? 'Zobrazit ↓' : 'Skrýt ↑';
+}
 function toggleGoalManager(){
   const el=document.getElementById('goal-manager');
   const isOpen=el.style.display!=='none';
@@ -3045,7 +2837,7 @@ function renderGoalManager(){
       const isActive=A.goals[hz].includes(g.id);
       const selAmt=A.goalAmounts[g.id]||'';
       const amtOpts=isLong[hz]===true?AMOUNT_OPTS_LONG:isLong[hz]==='mid'?AMOUNT_OPTS_MED:AMOUNT_OPTS_SHORT;
-      html+=`<div class="goal-mgr-card ${isActive?'active':''}" >
+      html+=`<div style="border:1.5px solid ${isActive?'var(--green)':'var(--cream3)'};border-radius:var(--r);padding:10px 12px;margin-bottom:6px;background:${isActive?'var(--gl)':'white'}">
         <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="toggleGoalFromManager('${hz}','${g.id}')">
           <div style="width:18px;height:18px;border-radius:50%;border:1.5px solid ${isActive?'var(--green)':'var(--cream3)'};background:${isActive?'var(--green)':'transparent'};display:flex;align-items:center;justify-content:center;font-size:10px;color:white;flex-shrink:0">${isActive?'✓':''}</div>
           <span style="font-size:15px">${g.emoji}</span>
@@ -3080,28 +2872,6 @@ function refreshPriority(){
 }
 
 // ─── EMAIL CTA ────────────────────────────────────────────────────────────────
-function submitEmailSteps(){
-  const email=document.getElementById('cta-email-steps').value.trim();
-  const msg=document.getElementById('cta-msg-steps');
-  if(!email||!email.includes('@')){msg.textContent='⚠️ Zadej platný e-mail.';msg.style.color='var(--bad)';return;}
-  msg.innerHTML='✅ Přihlášeno! Tipy dorazí každý den po dobu 7 dní.';msg.style.color='var(--ok)';
-  document.getElementById('cta-email-steps').disabled=true;
-  document.querySelector('[onclick="submitEmailSteps()"]').disabled=true;
-  document.querySelector('[onclick="submitEmailSteps()"]').textContent='Přihlášeno ✓';
-  console.log('Email (steps):',email);
-}
-
-function submitEmailFomo(){
-  const email=document.getElementById('cta-email-fomo').value.trim();
-  const msg=document.getElementById('cta-msg-fomo');
-  if(!email||!email.includes('@')){msg.textContent='⚠️ Zadej platný e-mail.';msg.style.color='var(--bad)';return;}
-  msg.innerHTML='✅ Skvěle! Plán ti dorazí do e-mailu.';msg.style.color='var(--ok)';
-  document.getElementById('cta-email-fomo').disabled=true;
-  document.querySelector('#email-fomo-wrap button').disabled=true;
-  document.querySelector('#email-fomo-wrap button').textContent='Odesláno ✓';
-  console.log('Email (fomo):',email);
-}
-
 function submitEmailChart(){
   const email = document.getElementById('cta-email-chart').value.trim();
   const msg = document.getElementById('cta-msg-chart');
@@ -3130,8 +2900,5 @@ function submitEmail(){
   // TODO: connect to your email service (Mailchimp, ConvertKit, Brevo...)
 }
 </script>
-</body>
-</html>
-
 </body>
 </html>
