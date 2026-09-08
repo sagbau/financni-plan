@@ -3,366 +3,906 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Finanční plán na míru</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Finanční plán na míru — Peníze Profesionálně</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --ink:#1a1a18;--ink2:#4a4a44;--ink3:#8a8a82;
-  --cream:#f7f5f0;--cream2:#ede9e0;--cream3:#e0dbd0;
-  --green:#1a6b4a;--gl:#e8f4ee;--gm:#2d9467;
-  --amber:#c47a1a;--al:#fdf3e3;
-  --red:#c43a1a;--rl:#fceee9;
-  --purple:#4a3fb5;--pl:#eeedf8;
-  --blue:#1a4a8a;--bl:#e8eef8;
-  --gold:#d4a843;--r:12px;--rs:8px;--rl2:16px;
+/* ─── RESET & BASE ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Brand palette — from Instagram */
+  --bg:        #0C0919;
+  --bg2:       #130F24;
+  --bg3:       #1C1635;
+  --surface:   rgba(255,255,255,0.042);
+  --surface2:  rgba(255,255,255,0.07);
+  --border:    rgba(255,255,255,0.08);
+  --border2:   rgba(255,255,255,0.14);
+
+  --ink:       #F0EDF8;
+  --ink2:      #B8B0D4;
+  --ink3:      #7A708F;
+
+  --pink:      #E4186A;
+  --pink-glow: rgba(228,24,106,0.22);
+  --pink-soft: rgba(228,24,106,0.12);
+  --purple:    #9B5CF6;
+  --purple-soft: rgba(155,92,246,0.15);
+  --cyan:      #18D4C8;
+  --cyan-soft: rgba(24,212,200,0.12);
+  --gold:      #F5C842;
+
+  --ok:        #18D4C8;
+  --ok-soft:   rgba(24,212,200,0.12);
+  --warn:      #F5A623;
+  --warn-soft: rgba(245,166,35,0.12);
+  --bad:       #E4186A;
+  --bad-soft:  rgba(228,24,106,0.12);
+
+  --r:    14px;
+  --r-sm: 8px;
+  --r-lg: 20px;
+  --r-xl: 28px;
 }
-body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
-h1,h2,h3{font-family:'DM Serif Display',serif}
-#app{max-width:680px;margin:0 auto;padding:16px}
-.screen{display:none;animation:fadeIn .4s ease}
-.screen.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.intro-hero{text-align:center;padding:48px 24px 32px}
-.intro-logo{width:56px;height:56px;background:var(--ink);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:24px}
-.intro-hero h1{font-size:clamp(28px,5vw,42px);line-height:1.15;margin-bottom:16px}
-.intro-hero h1 em{font-style:italic;color:var(--green)}
-.intro-hero p{font-size:15px;color:var(--ink2);line-height:1.7;max-width:480px;margin:0 auto 32px}
-.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px}
-.feature{background:white;border-radius:var(--r);padding:16px;border:1px solid var(--cream3);text-align:center}
-.feature-icon{font-size:20px;margin-bottom:8px}
-.feature-title{font-size:13px;font-weight:500;margin-bottom:4px}
-.feature-desc{font-size:12px;color:var(--ink3);line-height:1.5}
-.disclaimer{font-size:11px;color:var(--ink3);background:var(--cream2);border-radius:var(--rs);padding:10px 14px;margin-bottom:24px;line-height:1.6}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;border-radius:var(--r);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;border:none;width:100%}
-.btn-primary{background:var(--ink);color:var(--cream)}
-.btn-primary:hover{background:#2d2d28;transform:translateY(-1px)}
-.btn-secondary{background:white;color:var(--ink);border:1.5px solid var(--cream3)}
-.btn-secondary:hover{border-color:var(--ink3)}
-.btn-green{background:var(--green);color:white}
-.btn-sm{padding:9px 18px;font-size:13px}
-.progress-wrap{margin-bottom:24px}
-.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.progress-label{font-size:12px;color:var(--ink3)}
-.progress-step{font-size:12px;font-weight:500;color:var(--ink2)}
-.progress-bar{height:4px;background:var(--cream3);border-radius:2px;overflow:hidden}
-.progress-fill{height:100%;background:var(--ink);border-radius:2px;transition:width .4s ease}
-.section-header{margin-bottom:24px}
-.section-badge{display:inline-flex;align-items:center;font-size:12px;font-weight:500;padding:4px 12px;border-radius:20px;margin-bottom:12px}
-.section-header h2{font-size:22px;line-height:1.25;margin-bottom:6px}
-.section-header p{font-size:13px;color:var(--ink3);line-height:1.6}
-.q-block{margin-bottom:20px}
-.q-label{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:10px;line-height:1.5;display:block}
-.q-note{font-size:12px;color:var(--ink3);margin-bottom:8px;display:block}
-.pills{display:flex;flex-wrap:wrap;gap:8px}
-.pill{font-size:13px;padding:8px 16px;border-radius:24px;border:1.5px solid var(--cream3);color:var(--ink2);cursor:pointer;background:white;transition:all .15s;font-family:'DM Sans',sans-serif;user-select:none}
-.pill:hover{border-color:var(--ink3);color:var(--ink)}
-.pill.sel{background:var(--ink);border-color:var(--ink);color:white}
-.pill.sel-multi{background:var(--gl);border-color:var(--green);color:var(--green)}
-.divider{border:none;border-top:1px solid var(--cream3);margin:20px 0}
-.slider-display{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
-.slider-value{font-size:24px;font-weight:600;color:var(--ink)}
-.slider-unit{font-size:14px;color:var(--ink3);margin-left:4px}
-input[type=range]{width:100%;height:6px;border-radius:3px;appearance:none;-webkit-appearance:none;background:var(--cream3);outline:none;cursor:pointer}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--ink);cursor:pointer;border:3px solid white;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--ink);cursor:pointer;border:3px solid white}
-.slider-ticks{display:flex;justify-content:space-between;margin-top:6px}
-.slider-tick{font-size:11px;color:var(--ink3)}
-.goal-card{background:white;border:1.5px solid var(--cream3);border-radius:var(--r);padding:14px;margin-bottom:8px;transition:border-color .2s}
-.goal-card.selected{border-color:var(--green);background:var(--gl)}
-.goal-card-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
-.goal-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--cream3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;transition:all .15s}
-.goal-card.selected .goal-check{background:var(--green);border-color:var(--green);color:white}
-.goal-card-title{font-size:13px;font-weight:500;flex:1}
-.goal-card-emoji{font-size:16px}
-.goal-detail{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--cream3)}
-.goal-card.selected .goal-detail{display:block}
-.goal-detail-label{font-size:12px;color:var(--ink3);margin-bottom:8px}
-.goal-amounts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-.gap{font-size:12px;padding:5px 12px;border-radius:16px;border:1px solid var(--cream3);color:var(--ink2);cursor:pointer;background:white;transition:all .15s}
-.gap:hover{border-color:var(--ink3)}
-.gap.sel{background:var(--green);border-color:var(--green);color:white}
-.goal-name-input{width:100%;font-size:13px;padding:7px 10px;border:1px solid var(--cream3);border-radius:var(--rs);background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;margin-top:6px}
-.goal-name-input:focus{outline:none;border-color:var(--green)}
-.card{background:white;border-radius:var(--rl2);border:1px solid var(--cream3);padding:20px;margin-bottom:12px}
-.status-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.status-item{border-radius:var(--rs);padding:12px;text-align:center;border:1.5px solid transparent}
-.status-item.ok{background:var(--gl);border-color:#9FE1CB}
-.status-item.warn{background:var(--al);border-color:#FAC775}
-.status-item.bad{background:var(--rl);border-color:#F5C4B3}
-.status-icon{font-size:18px;margin-bottom:4px}
-.status-item.ok .status-label,.status-item.ok .status-val{color:var(--green)}
-.status-item.warn .status-label,.status-item.warn .status-val{color:var(--amber)}
-.status-item.bad .status-label,.status-item.bad .status-val{color:var(--red)}
-.status-label{font-size:11px;font-weight:500}
-.status-val{font-size:13px;font-weight:600;margin-top:2px}
-.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.metric{background:var(--cream);border-radius:var(--rs);padding:14px}
-.metric-label{font-size:11px;color:var(--ink3);margin-bottom:4px}
-.metric-value{font-size:20px;font-weight:600;color:var(--ink)}
-.metric-sub{font-size:11px;color:var(--ink3);margin-top:2px}
-.scenario{margin-bottom:10px}
-.scenario-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
-.bar-track{height:10px;background:var(--cream2);border-radius:5px;overflow:hidden}
-.bar-fill{height:100%;border-radius:5px;transition:width 1s ease}
-.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start}
-.step-num{width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--cream);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
-.step-title{font-size:14px;font-weight:600;margin-bottom:3px}
-.step-desc{font-size:13px;color:var(--ink2);line-height:1.6}
-.alloc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.alloc-card{border-radius:var(--rs);padding:12px;border:1.5px solid}
-.alloc-horizon{font-size:11px;font-weight:500;margin-bottom:4px}
-.alloc-amount{font-size:17px;font-weight:600;margin-bottom:2px}
-.alloc-product{font-size:11px;opacity:.75;line-height:1.4}
-.alloc-return{font-size:12px;font-weight:500;margin-top:6px}
-.ratio-bar{height:32px;border-radius:var(--rs);overflow:hidden;display:flex;margin:12px 0}
-.ratio-seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;transition:width .5s ease}
-.goal-priority-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--cream);border-radius:var(--r);margin-bottom:8px;cursor:grab;transition:all .2s;border:1.5px solid transparent}
-.goal-priority-item:active{cursor:grabbing}
-.goal-priority-item.dragging{opacity:.4;border-color:var(--green)}
-.goal-priority-item.drag-over{border-color:var(--green);background:var(--gl)}
-.drag-handle{font-size:16px;color:var(--ink3);flex-shrink:0;cursor:grab}
-.goal-priority-emoji{font-size:18px;flex-shrink:0}
-.goal-priority-info{flex:1}
-.goal-priority-name{font-size:13px;font-weight:500}
-.goal-priority-meta{font-size:12px;color:var(--ink3);margin-top:2px}
-.achieve-bar-wrap{width:80px;flex-shrink:0}
-.achieve-bar-track{height:6px;background:var(--cream3);border-radius:3px;overflow:hidden}
-.achieve-bar-fill{height:100%;border-radius:3px;transition:width .8s ease}
-.priority-hint{font-size:12px;color:var(--ink3);background:var(--cream2);border-radius:var(--rs);padding:10px 12px;margin-top:10px;line-height:1.6}
-.renta-box{background:var(--gl);border:1px solid #9FE1CB;border-radius:var(--rs);padding:12px;margin-top:8px;font-size:13px;color:#085041;line-height:1.7}
-.fomo-box{font-size:12px;line-height:1.6;padding:10px 14px;border-radius:var(--rs);margin-top:12px}
-.fomo-amber{background:var(--al);color:#633806;border:1px solid #FAC775}
-.fomo-green{background:var(--gl);color:#085041;border:1px solid #9FE1CB}
-.fomo-blue{background:var(--bl);color:#0C447C;border:1px solid #AFA9EC}
-.fomo-red{background:var(--rl);color:#712B13;border:1px solid #F5C4B3}
-.cta-section{background:var(--ink);border-radius:var(--rl2);padding:28px 24px;margin-top:16px;text-align:center}
-.cta-section h3{font-family:'DM Serif Display',serif;color:var(--gold);font-size:22px;margin-bottom:8px}
-.cta-section p{color:rgba(255,255,255,.7);font-size:13px;margin-bottom:20px;line-height:1.7}
-.rpt{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
-.processing{text-align:center;padding:80px 24px}
-.processing h2{font-size:24px;margin-bottom:12px}
-.spinner{width:48px;height:48px;border:3px solid var(--cream3);border-top-color:var(--ink);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 24px}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes barFlash{0%{opacity:1}30%{opacity:.3}60%{opacity:1}100%{opacity:1}}
-.bar-flash{animation:barFlash .6s ease}
-.processing-steps{list-style:none;margin-top:24px;text-align:left;max-width:280px;margin-left:auto;margin-right:auto}
-.processing-steps li{font-size:13px;color:var(--ink3);padding:6px 0;display:flex;align-items:center;gap:8px}
-.processing-steps li.done{color:var(--green)}
-.processing-steps li .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
-canvas{display:block;width:100%!important}
-.nav-row{display:flex;gap:10px;margin-top:24px}
-.nav-row .btn{flex:1}
-.back-btn{background:none;border:none;font-size:13px;color:var(--ink3);cursor:pointer;padding:0;margin-bottom:16px;display:flex;align-items:center;gap:4px;font-family:'DM Sans',sans-serif}
-.back-btn:hover{color:var(--ink)}
-.tag-multi{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:8px;background:var(--gl);color:var(--green);margin-left:6px}
-.opt-tag{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:8px;background:var(--cream2);color:var(--ink3);margin-left:6px}
-.rate-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.rate-info-box{border-radius:var(--rs);padding:10px 12px;text-align:center}
-.rate-info-label{font-size:11px;margin-bottom:3px;opacity:.8}
-.rate-info-value{font-size:18px;font-weight:700}
-.rate-info-sub{font-size:10px;margin-top:3px;opacity:.7}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* ─── LAYOUT ───────────────────────────────────────────────────────────────── */
+#app { max-width: 680px; margin: 0 auto; padding: 16px 16px 48px; }
+
+.screen { display: none; }
+.screen.active { display: block; animation: screenIn .45s cubic-bezier(.16,1,.3,1); }
+@keyframes screenIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ─── INTRO HERO ───────────────────────────────────────────────────────────── */
+.intro-wrap {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0 64px;
+  position: relative;
+}
+
+/* Ambient glow blobs */
+.intro-wrap::before {
+  content: '';
+  position: fixed;
+  top: -120px; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(228,24,106,.18) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+.intro-wrap::after {
+  content: '';
+  position: fixed;
+  bottom: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(155,92,246,.14) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+
+.intro-inner { position: relative; z-index: 1; width: 100%; text-align: center; }
+
+/* Logo mark */
+.logo-mark {
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%);
+  border-radius: 20px;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: 32px;
+  box-shadow: 0 0 40px var(--pink-glow);
+}
+
+/* Badge above headline */
+.trust-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 100px;
+  padding: 6px 16px;
+  font-size: 12px; font-weight: 500; color: var(--ink2);
+  margin-bottom: 28px;
+  backdrop-filter: blur(10px);
+}
+.trust-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); flex-shrink: 0; }
+
+/* Hero headline */
+.hero-h1 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(32px, 6vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  color: var(--ink);
+}
+.hero-h1 .grad {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 16px; color: var(--ink2);
+  max-width: 480px; margin: 0 auto 40px;
+  line-height: 1.7;
+}
+
+/* Feature pills row */
+.feature-row {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+  margin-bottom: 44px;
+}
+.feature-pill {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 8px 16px;
+  font-size: 13px; color: var(--ink2);
+}
+.feature-pill .icon { font-size: 15px; }
+
+/* Primary CTA button */
+.btn-hero {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, var(--pink) 0%, #9B5CF6 100%);
+  color: white;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px; font-weight: 700;
+  padding: 16px 40px;
+  border-radius: 100px;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 32px var(--pink-glow);
+  transition: transform .2s, box-shadow .2s;
+  width: 100%; max-width: 380px;
+  justify-content: center;
+}
+.btn-hero:hover { transform: translateY(-2px); box-shadow: 0 8px 48px rgba(228,24,106,.35); }
+
+.disclaimer-hero {
+  margin-top: 14px;
+  font-size: 11px; color: var(--ink3); line-height: 1.6;
+  padding: 10px 16px;
+  background: var(--surface);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  max-width: 480px; margin-left: auto; margin-right: auto;
+  margin-top: 20px;
+}
+
+/* ─── QUESTIONNAIRE ────────────────────────────────────────────────────────── */
+.q-header {
+  padding: 24px 0 8px;
+  position: sticky; top: 0; z-index: 10;
+  background: linear-gradient(to bottom, var(--bg) 80%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.q-nav-top {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+}
+
+.back-btn {
+  width: 36px; height: 36px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--ink2); font-size: 16px;
+  flex-shrink: 0;
+  transition: background .15s;
+}
+.back-btn:hover { background: var(--surface2); }
+
+.q-step-info { flex: 1; }
+.q-step-label { font-size: 11px; color: var(--ink3); }
+.q-step-name  { font-size: 13px; font-weight: 600; color: var(--ink); }
+
+/* Progress bar */
+.progress-bar-wrap { height: 3px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--pink), var(--purple));
+  border-radius: 2px;
+  transition: width .5s cubic-bezier(.16,1,.3,1);
+}
+
+/* Section header */
+.section-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 14px;
+}
+
+.q-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 28px 24px;
+  margin-bottom: 16px;
+}
+
+.q-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px; font-weight: 700;
+  margin-bottom: 6px; color: var(--ink);
+}
+.q-subtitle { font-size: 14px; color: var(--ink3); margin-bottom: 24px; }
+
+.q-block { margin-bottom: 24px; }
+.q-label {
+  font-size: 13px; font-weight: 600; color: var(--ink2);
+  margin-bottom: 10px; display: block; letter-spacing: .01em;
+}
+.q-note { font-size: 12px; color: var(--ink3); margin-bottom: 10px; display: block; }
+
+/* Pills — key design element */
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 500;
+  padding: 9px 18px;
+  border-radius: 100px;
+  border: 1.5px solid var(--border2);
+  color: var(--ink2);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+}
+.pill:hover { border-color: rgba(255,255,255,.25); color: var(--ink); }
+.pill.sel {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  border-color: transparent;
+  color: white;
+  box-shadow: 0 2px 16px var(--pink-glow);
+}
+.pill.sel-multi {
+  background: var(--purple-soft);
+  border-color: var(--purple);
+  color: #C4A8FF;
+}
+
+.divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+/* Slider */
+.slider-display { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+.slider-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 800; color: var(--ink); }
+.slider-unit { font-size: 14px; color: var(--ink3); margin-left: 4px; }
+.slider-note { font-size: 11px; color: var(--pink); }
+input[type=range] {
+  width: 100%; height: 4px; border-radius: 2px; appearance: none; -webkit-appearance: none;
+  background: var(--surface2); outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  cursor: pointer; border: 3px solid var(--bg);
+  box-shadow: 0 2px 12px var(--pink-glow);
+}
+input[type=range]::-moz-range-thumb {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  cursor: pointer; border: 3px solid var(--bg);
+}
+.slider-ticks { display: flex; justify-content: space-between; margin-top: 6px; }
+.slider-tick { font-size: 10px; color: var(--ink3); }
+
+/* Nav row */
+.nav-row { display: flex; gap: 10px; margin-top: 24px; }
+.nav-row .btn { flex: 1; }
+
+.btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px; font-weight: 700;
+  padding: 14px 24px;
+  border-radius: 100px;
+  border: none; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all .2s; width: 100%;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: white;
+  box-shadow: 0 4px 24px var(--pink-glow);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 32px rgba(228,24,106,.35); }
+.btn-secondary {
+  background: var(--surface);
+  color: var(--ink2);
+  border: 1.5px solid var(--border2);
+}
+.btn-secondary:hover { background: var(--surface2); color: var(--ink); }
+.btn-green {
+  background: linear-gradient(135deg, var(--cyan), #0DB8AE);
+  color: var(--bg); font-weight: 700;
+}
+.btn-sm { padding: 9px 18px; font-size: 13px; border-radius: var(--r); }
+
+/* ─── GOAL CARDS ───────────────────────────────────────────────────────────── */
+.goal-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  transition: border-color .2s, background .2s;
+}
+.goal-card.selected {
+  background: var(--purple-soft);
+  border-color: var(--purple);
+}
+.goal-card-header { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+.goal-check {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; flex-shrink: 0; transition: all .15s;
+}
+.goal-card.selected .goal-check {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  border-color: transparent; color: white;
+}
+.goal-card-title { font-size: 13px; font-weight: 600; flex: 1; color: var(--ink); }
+.goal-card-emoji { font-size: 18px; }
+.goal-detail { display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+.goal-card.selected .goal-detail { display: block; }
+.goal-detail-label { font-size: 11px; color: var(--ink3); margin-bottom: 8px; }
+.goal-amounts { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.gap {
+  font-size: 12px; padding: 5px 12px; border-radius: 100px;
+  border: 1px solid var(--border2); color: var(--ink3);
+  cursor: pointer; background: var(--surface); transition: all .15s;
+}
+.gap:hover { border-color: var(--purple); color: var(--ink); }
+.gap.sel { background: var(--purple); border-color: transparent; color: white; }
+.goal-name-input {
+  width: 100%; font-size: 13px; padding: 8px 12px;
+  border: 1px solid var(--border2); border-radius: var(--r-sm);
+  background: var(--bg3); color: var(--ink);
+  font-family: 'Inter', sans-serif; margin-top: 6px;
+}
+.goal-name-input:focus { outline: none; border-color: var(--purple); }
+.tag-multi {
+  display: inline-block; font-size: 10px; font-weight: 500;
+  padding: 2px 8px; border-radius: 100px;
+  background: var(--purple-soft); color: #C4A8FF; margin-left: 6px;
+}
+.opt-tag {
+  display: inline-block; font-size: 10px; font-weight: 500;
+  padding: 2px 8px; border-radius: 100px;
+  background: var(--surface2); color: var(--ink3); margin-left: 6px;
+}
+
+/* ─── PROCESSING ───────────────────────────────────────────────────────────── */
+.processing-wrap {
+  min-height: 80vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+}
+.spinner-ring {
+  width: 56px; height: 56px; margin: 0 auto 28px;
+  border-radius: 50%;
+  border: 3px solid var(--surface2);
+  border-top-color: var(--pink);
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.processing-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+.processing-sub { font-size: 14px; color: var(--ink3); margin-bottom: 32px; }
+.proc-steps { list-style: none; text-align: left; max-width: 300px; }
+.proc-steps li {
+  font-size: 13px; color: var(--ink3);
+  padding: 7px 0; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.proc-steps li:last-child { border-bottom: none; }
+.proc-steps li .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--border2); flex-shrink: 0; transition: background .3s;
+}
+.proc-steps li.done { color: var(--ok); }
+.proc-steps li.done .dot { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+
+/* ─── REPORT ───────────────────────────────────────────────────────────────── */
+.report-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--ink3); cursor: pointer;
+  background: none; border: none;
+  margin-bottom: 20px; padding: 8px 0;
+  font-family: 'Inter', sans-serif;
+}
+.report-back:hover { color: var(--ink); }
+
+/* Report cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
+}
+
+/* Section title inside card */
+.rpt {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink3); margin-bottom: 16px;
+}
+
+/* Status row */
+.status-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
+.status-item {
+  border-radius: var(--r);
+  padding: 14px 12px; text-align: center;
+  border: 1.5px solid transparent;
+}
+.status-item.ok { background: var(--ok-soft); border-color: rgba(24,212,200,.25); }
+.status-item.warn { background: var(--warn-soft); border-color: rgba(245,166,35,.25); }
+.status-item.bad { background: var(--bad-soft); border-color: rgba(228,24,106,.25); }
+.status-icon { font-size: 20px; margin-bottom: 6px; }
+.status-label { font-size: 11px; font-weight: 600; }
+.status-item.ok .status-label { color: var(--ok); }
+.status-item.warn .status-label { color: var(--warn); }
+.status-item.bad .status-label { color: var(--bad); }
+.status-val { font-size: 15px; font-weight: 700; margin-top: 3px; }
+.status-item.ok .status-val { color: var(--ok); }
+.status-item.warn .status-val { color: var(--warn); }
+.status-item.bad .status-val { color: var(--bad); }
+
+/* Alert banners inside cards */
+.alert {
+  border-radius: var(--r-sm); padding: 12px 14px;
+  font-size: 13px; line-height: 1.65; margin-top: 6px;
+  border: 1px solid transparent;
+}
+.alert-ok { background: var(--ok-soft); border-color: rgba(24,212,200,.2); color: var(--ok); }
+.alert-warn { background: var(--warn-soft); border-color: rgba(245,166,35,.2); color: var(--warn); }
+.alert-bad { background: var(--bad-soft); border-color: rgba(228,24,106,.2); color: #FF7BAB; }
+
+/* Metrics */
+.metric-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
+.metric {
+  background: var(--bg3); border-radius: var(--r-sm);
+  padding: 14px 12px; border: 1px solid var(--border);
+}
+.metric-label { font-size: 10px; color: var(--ink3); margin-bottom: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; }
+.metric-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; color: var(--ink); }
+.metric-sub { font-size: 11px; color: var(--ink3); margin-top: 2px; }
+
+/* Ratio bar */
+.ratio-bar { height: 36px; border-radius: var(--r-sm); overflow: hidden; display: flex; margin: 12px 0; }
+.ratio-seg { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; transition: width .5s ease; }
+
+/* Scenario bars */
+.scenario { margin-bottom: 12px; }
+.scenario-top { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; align-items: center; }
+.bar-track { height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+
+/* Alloc grid */
+.alloc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 14px; }
+.alloc-card {
+  border-radius: var(--r); padding: 14px 12px;
+  border: 1.5px solid; position: relative; overflow: hidden;
+}
+.alloc-horizon { font-size: 10px; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .06em; }
+.alloc-amount { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 2px; }
+.alloc-product { font-size: 11px; opacity: .7; line-height: 1.4; }
+.alloc-return { font-size: 13px; font-weight: 700; margin-top: 8px; }
+
+/* FOMO block */
+.fomo-block {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.fomo-main-area {
+  background: linear-gradient(135deg, #1A0A28, #200C35);
+  border: 1px solid rgba(228,24,106,.25);
+  padding: 20px 24px;
+}
+.fomo-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--pink); margin-bottom: 8px; }
+.fomo-amount { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 34px; font-weight: 800; color: var(--gold); line-height: 1.1; margin-bottom: 6px; }
+.fomo-desc { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+.fomo-sub-area {
+  background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%);
+  padding: 12px 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.fomo-sub-text { font-size: 13px; font-weight: 600; color: white; line-height: 1.4; }
+
+/* Steps */
+.step { display: flex; gap: 16px; margin-bottom: 20px; align-items: flex-start; }
+.step-num {
+  width: 32px; height: 32px; border-radius: 10px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: white; font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 2px;
+}
+.step-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: var(--ink); }
+.step-desc { font-size: 13px; color: var(--ink2); line-height: 1.65; }
+
+/* Renta box */
+.renta-box {
+  background: var(--ok-soft);
+  border: 1px solid rgba(24,212,200,.2);
+  border-radius: var(--r-sm); padding: 16px;
+  font-size: 13px; color: var(--ok); line-height: 1.75; margin-top: 8px;
+}
+.renta-box strong { color: var(--ink); }
+
+/* Goal priority */
+.goal-priority-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg3); border-radius: var(--r);
+  margin-bottom: 8px; cursor: grab;
+  border: 1.5px solid var(--border); transition: all .2s;
+}
+.goal-priority-item:active { cursor: grabbing; }
+.goal-priority-item.dragging { opacity: .4; border-color: var(--pink); }
+.goal-priority-item.drag-over { border-color: var(--purple); background: var(--purple-soft); }
+.drag-handle { font-size: 16px; color: var(--ink3); cursor: grab; }
+.goal-priority-emoji { font-size: 20px; flex-shrink: 0; }
+.goal-priority-info { flex: 1; }
+.goal-priority-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+.goal-priority-meta { font-size: 12px; color: var(--ink3); margin-top: 2px; }
+.achieve-bar-wrap { width: 80px; flex-shrink: 0; }
+.achieve-bar-track { height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.achieve-bar-fill { height: 100%; border-radius: 3px; transition: width .8s ease; }
+.priority-hint { font-size: 12px; color: var(--ink3); background: var(--surface); border-radius: var(--r-sm); padding: 10px 14px; margin-top: 10px; line-height: 1.6; border: 1px solid var(--border); }
+
+/* Goal manager */
+.goal-mgr-card {
+  border: 1.5px solid transparent; border-radius: var(--r);
+  padding: 12px 14px; margin-bottom: 8px; transition: all .2s;
+  background: var(--bg3);
+}
+.goal-mgr-card.active { border-color: var(--purple); background: var(--purple-soft); }
+
+/* Motivation card */
+.motiv-inner {
+  border-radius: var(--r-sm); padding: 18px;
+  border: 1px solid transparent;
+}
+.motiv-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 14px; }
+.motiv-cell {
+  background: rgba(255,255,255,.05); border-radius: var(--r-sm);
+  padding: 10px; text-align: center;
+}
+.motiv-cell-label { font-size: 11px; opacity: .65; margin-bottom: 3px; }
+.motiv-cell-val { font-size: 14px; font-weight: 700; }
+
+/* Email CTA */
+.cta-card {
+  background: linear-gradient(135deg, #160C2A 0%, #1E0D35 50%, #140922 100%);
+  border: 1px solid rgba(228,24,106,.2);
+  border-radius: var(--r-xl);
+  padding: 32px 28px;
+  margin-top: 16px;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.cta-card::after {
+  content: '';
+  position: absolute; top: -80px; right: -80px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(228,24,106,.12), transparent 70%);
+  pointer-events: none;
+}
+.cta-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--pink); margin-bottom: 10px;
+}
+.cta-h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px; font-weight: 800;
+  color: var(--ink); margin-bottom: 10px;
+}
+.cta-sub { font-size: 14px; color: var(--ink2); margin-bottom: 24px; line-height: 1.65; }
+.cta-input-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.cta-email-input {
+  flex: 1; min-width: 200px;
+  padding: 14px 18px; border-radius: 100px;
+  border: 1.5px solid var(--border2);
+  background: var(--bg3); color: var(--ink);
+  font-size: 15px; font-family: 'Inter', sans-serif;
+}
+.cta-email-input:focus { outline: none; border-color: var(--pink); }
+.cta-submit {
+  padding: 14px 28px; border-radius: 100px;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: white; border: none; cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px; font-weight: 700;
+  box-shadow: 0 4px 24px var(--pink-glow);
+  transition: all .2s; white-space: nowrap;
+}
+.cta-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 32px rgba(228,24,106,.4); }
+.cta-footnote { font-size: 11px; color: var(--ink3); }
+
+/* Email below chart */
+.email-mini-wrap {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px 18px;
+  margin-top: 14px; display: none;
+}
+.email-mini-label { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+.email-mini-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.email-mini-input {
+  flex: 1; min-width: 160px; padding: 10px 16px;
+  border-radius: 100px; border: 1.5px solid var(--border2);
+  background: var(--surface); color: var(--ink);
+  font-size: 14px; font-family: 'Inter', sans-serif;
+}
+.email-mini-input:focus { outline: none; border-color: var(--pink); }
+.email-mini-btn {
+  padding: 10px 20px; border-radius: 100px;
+  background: var(--pink); color: white;
+  border: none; cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px; font-weight: 700; white-space: nowrap;
+}
+.email-mini-note { font-size: 11px; color: var(--ink3); margin-top: 6px; }
+
+/* Loan card */
+.loan-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 14px; }
+.loan-cell { border-radius: var(--r-sm); padding: 14px 12px; }
+
+/* Chart canvas */
+canvas { display: block; width: 100% !important; }
+
+/* Rate info grid */
+.rate-info-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 14px; }
+.rate-info-box { border-radius: var(--r-sm); padding: 12px; text-align: center; }
+.rate-info-label { font-size: 10px; font-weight: 600; margin-bottom: 4px; opacity: .75; text-transform: uppercase; letter-spacing: .05em; }
+.rate-info-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; }
+.rate-info-sub { font-size: 10px; margin-top: 4px; opacity: .65; }
+.rate-weighted-note { font-size: 12px; color: var(--ink3); margin-bottom: 14px; padding: 8px 14px; background: var(--bg3); border-radius: var(--r-sm); border: 1px solid var(--border); }
+
+/* Drag flash */
+@keyframes barFlash { 0%{opacity:1} 30%{opacity:.3} 60%{opacity:1} }
+.bar-flash { animation: barFlash .6s ease; }
+
+/* Responsive */
+@media (max-width: 480px) {
+  .alloc-grid { grid-template-columns: 1fr; }
+  .metric-row { grid-template-columns: repeat(2, 1fr); }
+  .motiv-grid { grid-template-columns: repeat(2, 1fr); }
+  .loan-grid { grid-template-columns: repeat(2, 1fr); }
+  .alloc-grid { grid-template-columns: repeat(3, 1fr); }
+}
 </style>
 </head>
 <body>
 <div id="app">
 
+<!-- ── INTRO ─────────────────────────────────────────────────────────────── -->
 <div id="s-intro" class="screen active">
-  <div class="intro-hero">
-    <div class="intro-logo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#d4a843" stroke-width="2" width="28" height="28"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+  <div class="intro-wrap">
+    <div class="intro-inner">
+      <div class="logo-mark">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="trust-badge">
+        <span class="dot"></span>
+        Bezplatná analýza · Výsledky okamžitě
+      </div>
+      <h1 class="hero-h1">
+        Zjisti kde jsi<br>
+        <span class="grad">a kam můžeš dojít</span>
+      </h1>
+      <p class="hero-sub">Finanční plán na míru za 3 minuty. Žádné zbytečné otázky — jen jasná čísla o tvé situaci a konkrétní kroky vpřed.</p>
+      <div class="feature-row">
+        <div class="feature-pill"><span class="icon">📊</span> Analýza situace</div>
+        <div class="feature-pill"><span class="icon">🎯</span> Metodika 40:30:20:10</div>
+        <div class="feature-pill"><span class="icon">📈</span> Projekce na 30 let</div>
+      </div>
+      <button class="btn-hero" onclick="startQuestionnaire()">Spustit analýzu →</button>
+      <p class="disclaimer-hero">⚠️ Orientační přehled — reprezentativní příklad. Nenahrazuje osobní poradenství. Konkrétní čísla řešíme individuálně.</p>
     </div>
-    <h1>Zjisti kde jsi<br>a <em>kam můžeš dojít</em></h1>
-    <p>Bezplatný finanční plán na míru. 3 minuty, žádné zbytečné otázky — jen jasný výstup o tvé situaci a konkrétní kroky vpřed.</p>
-    <div class="features">
-      <div class="feature"><div class="feature-icon">📊</div><div class="feature-title">Analýza situace</div><div class="feature-desc">Přesně zjistíš kde ztrácíš prostor</div></div>
-      <div class="feature"><div class="feature-icon">🎯</div><div class="feature-title">Plán na míru</div><div class="feature-desc">Metodika 40:30:20:10</div></div>
-      <div class="feature"><div class="feature-icon">📈</div><div class="feature-title">Projekce majetku</div><div class="feature-desc">Co to udělá za 10, 20, 30 let</div></div>
-    </div>
-    <div class="disclaimer">⚠️ Orientační plán — reprezentativní příklad. Nenahrazuje osobní poradenství.</div>
-    <button class="btn btn-primary" onclick="startQuestionnaire()">Spustit finanční analýzu →</button>
   </div>
 </div>
 
+<!-- ── QUESTIONNAIRE ──────────────────────────────────────────────────────── -->
 <div id="s-quest" class="screen">
-  <button class="back-btn" onclick="goBack()">← Zpět</button>
-  <div class="progress-wrap">
-    <div class="progress-top">
-      <span class="progress-label" id="q-section-label">Sekce 1 z 5</span>
-      <span class="progress-step" id="q-step-label">Příjmy a výdaje</span>
+  <div class="q-header">
+    <div class="q-nav-top">
+      <button class="back-btn" id="btn-back-q" onclick="prevStep()">←</button>
+      <div class="q-step-info">
+        <div class="q-step-label" id="q-section-label">Sekce 1 z 5</div>
+        <div class="q-step-name" id="q-step-label">Příjmy a výdaje</div>
+      </div>
     </div>
-    <div class="progress-bar"><div class="progress-fill" id="q-progress"></div></div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="q-progress" style="width:20%"></div>
+    </div>
   </div>
   <div id="q-content"></div>
   <div class="nav-row">
-    <button class="btn btn-secondary" id="btn-back-q" style="display:none" onclick="prevStep()">← Zpět</button>
     <button class="btn btn-primary" id="btn-next-q" onclick="nextStep()">Pokračovat →</button>
   </div>
 </div>
 
+<!-- ── PROCESSING ─────────────────────────────────────────────────────────── -->
 <div id="s-processing" class="screen">
-  <div class="processing">
-    <div class="spinner"></div>
-    <h2>Analyzuji tvoji situaci</h2>
-    <p>Připravuji tvůj osobní finanční plán</p>
-    <ul class="processing-steps" id="proc-steps">
-      <li><span class="dot"></span>Vyhodnocuji poměr aktiv a pasiv...</li>
-      <li><span class="dot"></span>Kontroluji likvidní rezervu...</li>
-      <li><span class="dot"></span>Ověřuji pojistnou ochranu...</li>
-      <li><span class="dot"></span>Sestavuji investiční plán...</li>
-      <li><span class="dot"></span>Počítám projekci majetku a cílů...</li>
+  <div class="processing-wrap">
+    <div class="spinner-ring"></div>
+    <h2 class="processing-title">Analyzuji tvoji situaci</h2>
+    <p class="processing-sub">Připravuji tvůj osobní finanční plán</p>
+    <ul class="proc-steps" id="proc-steps">
+      <li><span class="dot"></span>Vyhodnocuji poměr aktiv a pasiv…</li>
+      <li><span class="dot"></span>Kontroluji likvidní rezervu…</li>
+      <li><span class="dot"></span>Ověřuji pojistnou ochranu…</li>
+      <li><span class="dot"></span>Sestavuji investiční plán…</li>
+      <li><span class="dot"></span>Počítám projekci majetku a cílů…</li>
     </ul>
   </div>
 </div>
 
+<!-- ── REPORT ─────────────────────────────────────────────────────────────── -->
 <div id="s-report" class="screen">
-  <button class="back-btn" onclick="showScreen('s-quest')">← Upravit odpovědi</button>
+  <button class="report-back" onclick="showScreen('s-quest')">← Upravit odpovědi</button>
 
-  <!-- PŘEHLED SITUACE -->
+  <!-- Přehled situace -->
   <div class="card">
     <p class="rpt">Přehled situace</p>
     <div class="status-row" id="rep-status"></div>
     <div id="rep-pasiva-text"></div>
   </div>
 
-  <!-- KDE TEĎ JSI -->
+  <!-- Kde teď jsi -->
   <div class="card">
     <p class="rpt">Kde teď jsi</p>
     <div class="metric-row" id="rep-metrics"></div>
     <div id="rep-ratio-bar"></div>
-    <div id="rep-ratio-text" style="font-size:12px;color:var(--ink3);margin-top:6px;line-height:1.6"></div>
+    <div id="rep-ratio-text" style="font-size:12px;color:var(--ink3);margin-top:8px;line-height:1.6"></div>
   </div>
 
-  <!-- ALOKACE INVESTIC -->
+  <!-- Návrh alokace (PŘED grafem) -->
   <div class="card">
     <p class="rpt">Návrh alokace investic</p>
-    <p style="font-size:13px;color:var(--ink3);margin-bottom:14px" id="rep-alloc-sub"></p>
+    <p style="font-size:13px;color:var(--ink3);margin-bottom:16px" id="rep-alloc-sub"></p>
     <div class="alloc-grid" id="rep-alloc"></div>
-    <div style="font-size:12px;color:var(--ink3);line-height:1.6;padding:10px;background:var(--cream);border-radius:var(--rs)">Každý horizont dostane vždy alespoň 15 % z investovatelné částky. Čím dřív začneš, tím méně měsíčně potřebuješ.</div>
+    <div class="rate-info-grid">
+      <div class="rate-info-box" style="background:var(--ok-soft)">
+        <div class="rate-info-label" style="color:var(--ok)">1–5 let</div>
+        <div class="rate-info-value" style="color:var(--ok)" id="rate1-val">4 %</div>
+        <div class="rate-info-sub" style="color:var(--ok)">Dluhopisové a nem. fondy</div>
+      </div>
+      <div class="rate-info-box" style="background:var(--purple-soft)">
+        <div class="rate-info-label" style="color:#C4A8FF">5–15 let</div>
+        <div class="rate-info-value" style="color:#C4A8FF" id="rate2-val">8 %</div>
+        <div class="rate-info-sub" style="color:#C4A8FF">Akciové portfolio</div>
+      </div>
+      <div class="rate-info-box" style="background:var(--bad-soft)">
+        <div class="rate-info-label" style="color:#FF7BAB">15+ let</div>
+        <div class="rate-info-value" style="color:#FF7BAB" id="rate3-val">12 %</div>
+        <div class="rate-info-sub" style="color:#FF7BAB">Penzijní produkty</div>
+      </div>
+    </div>
+    <div class="rate-weighted-note" id="rate-weighted-display">Vážený průměr: načítám…</div>
   </div>
 
-  <!-- VÝVOJ MAJETKU -->
+  <!-- FOMO block -->
+  <div class="fomo-block">
+    <div class="fomo-main-area" id="fomo-chart-top" style="display:none">
+      <div class="fomo-eyebrow">⚠️ Cena nečinnosti</div>
+      <div class="fomo-amount" id="fomo-chart-top-text">—</div>
+      <div class="fomo-desc" id="fomo-main"></div>
+    </div>
+    <div class="fomo-sub-area" id="fomo-tile-sub">
+      <span class="fomo-sub-text" id="fomo-msg">Tohle je cena za správné rozhodnutí v pravý čas.</span>
+      <span style="font-size:22px;flex-shrink:0">💡</span>
+    </div>
+  </div>
+
+  <!-- Vývoj majetku (graf) -->
   <div class="card">
-    <p class="rpt">Vývoj majetku</p>
-    <!-- FOMO HIGHLIGHT - above chart -->
-    <div id="fomo-chart-top" style="display:none;background:var(--ink);color:white;border-radius:var(--r);padding:14px 18px;margin-bottom:16px">
-      <div style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">⚠️ Upozornění</div>
-      <div id="fomo-chart-top-text" style="font-size:16px;font-weight:600;line-height:1.4"></div>
+    <p class="rpt">Vývoj majetku za 30 let</p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;font-size:12px;color:var(--ink3)">
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:#4A4060;display:inline-block;border-radius:2px"></span>Bez akce</span>
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:var(--ok);display:inline-block;border-radius:2px"></span>Vlastní plán</span>
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:3px;background:var(--pink);display:inline-block;border-radius:2px"></span>S profesionálem</span>
     </div>
-    <!-- STATIC RATE INFO -->
-    <div class="rate-info-grid" id="rate-info-grid">
-      <div class="rate-info-box" style="background:#e8f4ee">
-        <div class="rate-info-label" style="color:#1a6b4a">Krátkodobé (1–5 let)</div>
-        <div class="rate-info-value" style="color:#1a6b4a" id="rate1-val">4 %</div>
-        <div class="rate-info-sub" style="color:#1a6b4a">Dluhopisové a nem. fondy</div>
-      </div>
-      <div class="rate-info-box" style="background:#eeedf8">
-        <div class="rate-info-label" style="color:#4a3fb5">Střednědobé (5–15 let)</div>
-        <div class="rate-info-value" style="color:#4a3fb5" id="rate2-val">8 %</div>
-        <div class="rate-info-sub" style="color:#4a3fb5">Akciové portfolio</div>
-      </div>
-      <div class="rate-info-box" style="background:#fceee9">
-        <div class="rate-info-label" style="color:#c43a1a">Dlouhodobé (15+ let)</div>
-        <div class="rate-info-value" style="color:#c43a1a" id="rate3-val">12 %</div>
-        <div class="rate-info-sub" style="color:#c43a1a">Penzijní produkty</div>
-      </div>
+    <canvas id="wealth-chart" height="220"></canvas>
+    <!-- FOMO tile inside chart card -->
+    <div style="margin-top:16px;background:var(--bg3);border-radius:var(--r);padding:14px;border:1px solid var(--border);display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center">
+      <div><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">Vlastní plán (20 let)</div><div id="fomo-plan" style="font-family:'Plus Jakarta Sans';font-size:17px;font-weight:800;color:var(--ok)">—</div></div>
+      <div style="text-align:center"><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">Rozdíl</div><div id="fomo-diff" style="font-family:'Plus Jakarta Sans';font-size:22px;font-weight:800;color:var(--gold)">—</div></div>
+      <div style="text-align:right"><div style="font-size:10px;color:var(--ink3);margin-bottom:3px">S profesionálem</div><div id="fomo-pro" style="font-family:'Plus Jakarta Sans';font-size:17px;font-weight:800;color:var(--pink)">—</div></div>
     </div>
-    <div id="rate-weighted-display" style="font-size:12px;color:var(--ink3);margin-bottom:12px;padding:8px 12px;background:var(--cream);border-radius:var(--rs)">Vážený průměr: načítám...</div>
-    <!-- LEGEND -->
-    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;font-size:12px;color:var(--ink3)">
-      <span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:3px;background:#c8c4bc;display:inline-block;border-radius:2px"></span>Bez akce</span>
-      <span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:3px;background:#2d9467;display:inline-block;border-radius:2px"></span>S vlastním plánem</span>
-      <span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:3px;background:#4a3fb5;display:inline-block;border-radius:2px"></span>S profesionálem</span>
-    </div>
-    <canvas id="wealth-chart" height="200"></canvas>
-    <!-- EMAIL BELOW CHART -->
-    <div id="email-chart-wrap" style="display:none;margin-top:14px;background:var(--cream);border-radius:var(--r);padding:14px 16px">
-      <div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:8px">📬 Pošleme ti tento plán na e-mail + 7denního průvodce k finančnímu zdraví</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <input id="cta-email-chart" type="email" placeholder="Tvůj e-mail..."
-          style="flex:1;min-width:160px;padding:10px 14px;border-radius:var(--rs);border:1.5px solid var(--cream3);font-size:14px;font-family:DM Sans,sans-serif;color:var(--ink)">
-        <button onclick="submitEmailChart()"
-          style="padding:10px 18px;background:var(--green);color:white;border:none;border-radius:var(--rs);font-size:14px;font-weight:500;cursor:pointer;font-family:DM Sans,sans-serif;white-space:nowrap">
-          Poslat →
-        </button>
+    <!-- Email below chart -->
+    <div class="email-mini-wrap" id="email-chart-wrap">
+      <div class="email-mini-label">📬 Poslat tento plán na e-mail + 7denní průvodce k finančnímu zdraví</div>
+      <div class="email-mini-row">
+        <input class="email-mini-input" id="cta-email-chart" type="email" placeholder="Tvůj e-mail…">
+        <button class="email-mini-btn" onclick="submitEmailChart()">Poslat →</button>
       </div>
-      <div id="cta-msg-chart" style="font-size:11px;color:var(--ink3);margin-top:6px">Žádný spam · kdykoli odhlásit</div>
-    </div>
-    <!-- FOMO TILE -->
-    <div id="fomo-tile" style="margin-top:16px;border-radius:var(--r);overflow:hidden">
-      <div style="background:var(--ink);padding:16px 20px">
-        <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px">Za 20 let — rozdíl mezi vlastním plánem a profesionálním přístupem</div>
-        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center">
-          <div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:3px">Vlastní plán</div><div id="fomo-plan" style="font-size:20px;font-weight:600;color:rgba(255,255,255,.85)">—</div></div>
-          <div style="text-align:center"><div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:4px">rozdíl</div><div id="fomo-diff" style="font-size:24px;font-weight:700;color:var(--gold)">—</div></div>
-          <div style="text-align:right"><div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:3px">S profesionálem</div><div id="fomo-pro" style="font-size:20px;font-weight:600;color:var(--gold)">—</div></div>
-        </div>
-      </div>
-      <div style="background:#2d9467;padding:11px 20px;display:flex;align-items:center;justify-content:space-between">
-        <span style="font-size:13px;color:white;line-height:1.5" id="fomo-msg">Tohle je cena za správné rozhodnutí v pravý čas.</span>
-        <span style="font-size:20px;margin-left:12px">💡</span>
-      </div>
+      <div class="email-mini-note" id="cta-msg-chart">Zdarma · žádný spam · kdykoli odhlásit</div>
     </div>
   </div>
 
-
-
-  <!-- DOPAD SPLÁTEK -->
+  <!-- Dopad splátek -->
   <div class="card" id="rep-loan-card" style="display:none">
-    <p class="rpt" style="color:var(--red)">Dopad splátek na tvůj majetek</p>
+    <p class="rpt" style="color:var(--bad)">Dopad splátek na tvůj majetek</p>
     <div id="rep-loan"></div>
   </div>
 
-  <!-- RENTA / DŮCHOD -->
+  <!-- Renta / důchod -->
   <div class="card" id="rep-renta-card" style="display:none">
-    <p class="rpt">Výpočet cíle: renta / důchod</p>
+    <p class="rpt">Výpočet cíle — renta / důchod</p>
     <div id="rep-renta"></div>
   </div>
 
-  <!-- CÍLE — PRIORITA -->
+  <!-- Cíle — priorita -->
   <div class="card">
     <p class="rpt">Tvoje cíle — priorita a dosažitelnost</p>
-    <p style="font-size:12px;color:var(--ink3);margin-bottom:4px">Přetáhni cíle podle priority — důležitější cíle budou financovány přednostně.</p>
-    <p style="font-size:11px;color:var(--ink3);margin-bottom:12px;line-height:1.5">💡 Cíle výše v seznamu čerpají ze společného poolu jako první — pokud je příjmů méně než cílů, ti nahoře budou splněni dřív.</p>
+    <p style="font-size:12px;color:var(--ink3);margin-bottom:4px">Přetáhni cíle podle priority — důležitější cíle jsou financovány přednostně.</p>
+    <p style="font-size:11px;color:var(--ink3);margin-bottom:14px;line-height:1.5">Každý měsíc dostává prostor jen omezený pool peněz — cíle výše čerpají jako první.</p>
     <div id="rep-goals-priority"></div>
-    <button class="btn btn-secondary btn-sm" style="margin-top:10px;width:auto;padding:8px 16px" onclick="toggleGoalManager()">+ Přidat nebo upravit cíle</button>
-    <div id="goal-manager" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--cream3)"><div id="goal-manager-inner"></div></div>
+    <button class="btn btn-secondary btn-sm" style="margin-top:12px;width:auto;padding:9px 18px" onclick="toggleGoalManager()">+ Přidat nebo upravit cíle</button>
+    <div id="goal-manager" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)"><div id="goal-manager-inner"></div></div>
   </div>
 
-  <!-- 3 KONKRÉTNÍ KROKY -->
+  <!-- 3 kroky -->
   <div class="card">
     <p class="rpt">Tvoje 3 konkrétní kroky</p>
     <div id="rep-steps"></div>
-
+    <div class="alert alert-ok" style="margin-top:14px">⏱️ Průměrný člověk čeká 2,5 roku než začne aktivně řešit finance. Každý rok čekání při 8 % p.a. a 10 000 Kč/měs. stojí <strong>~125 000 Kč</strong> ušlého výnosu.</div>
   </div>
 
-  <!-- MOTIVACE — POMĚR AKTIV -->
+  <!-- Motivace -->
   <div class="card">
-    <p class="rpt">Co to udělá kdybys zlepšil poměr aktiv</p>
+    <p class="rpt">Co by se změnilo, kdybys zlepšil poměr aktiv</p>
     <div id="rep-motivation"></div>
   </div>
 
-  <!-- CTA — EMAIL LEAD MAGNET -->
-  <div class="cta-section">
-    <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px">🎁 Zdarma · bez závazků</div>
-    <h3>Pošleme ti výsledky + 7denního průvodce k finančnímu zdraví</h3>
-    <p>Shrnutí tvého finančního plánu, konkrétní kroky a série tipů co dělat každý den — přímo do e-mailu.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">
-      <input id="cta-email" type="email" placeholder="Tvůj e-mail..."
-        style="flex:1;min-width:200px;padding:13px 16px;border-radius:var(--r);border:none;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--ink)">
-      <button onclick="submitEmail()"
-        style="padding:13px 24px;background:var(--gold);color:var(--ink);border:none;border-radius:var(--r);font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap">
-        Poslat plán →
-      </button>
+  <!-- CTA — email lead magnet -->
+  <div class="cta-card">
+    <div class="cta-eyebrow">🎁 Zdarma · bez závazků</div>
+    <h3 class="cta-h3">Pošleme ti výsledky<br>+ 7denního průvodce</h3>
+    <p class="cta-sub">Shrnutí finančního plánu a série tipů co dělat každý den — přímo do e-mailu.</p>
+    <div id="fomo-main-cta" style="background:rgba(228,24,106,.08);border:1px solid rgba(228,24,106,.2);border-radius:var(--r-sm);padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--ink2);line-height:1.6;display:none"></div>
+    <div class="cta-input-row">
+      <input class="cta-email-input" id="cta-email" type="email" placeholder="Tvůj e-mail…">
+      <button class="cta-submit" onclick="submitEmail()">Poslat plán →</button>
     </div>
-    <div id="fomo-main" style="background:rgba(255,255,255,.08);border-radius:var(--rs);padding:12px 14px;margin-bottom:16px;font-size:13px;color:rgba(255,255,255,.9);line-height:1.6;display:none"></div>
-    <div id="cta-msg" style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.6">
-      📬 Obdržíš výstup z analýzy + 7 e-mailů s kroky ke zlepšení finanční situace · Žádný spam · Kdykoli se lze odhlásit
-    </div>
+    <div class="cta-footnote" id="cta-msg">📬 Obdržíš výstup z analýzy + 7 e-mailů s kroky ke zlepšení finanční situace · Žádný spam · Kdykoli odhlásit</div>
   </div>
-</div>
-</div>
+</div><!-- /s-report -->
 
+</div><!-- /app -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
@@ -488,7 +1028,7 @@ const STEP_BADGES=[
   {text:'📋 Závazky',bg:'#fceee9',color:'#c43a1a'},
   {text:'🏦 Majetek',bg:'#e8eef8',color:'#1a4a8a'},
   {text:'📁 Produkty',bg:'#fdf3e3',color:'#c47a1a'},
-  {text:'🎯 Cíle',bg:'#eeedf8',color:'#4a3fb5'},
+  {text:'🎯 Cíle',bg:'#eeedf8',color:'var(--pink)'},
 ];
 function renderStep(){
   const idx=currentStep;
@@ -498,7 +1038,7 @@ function renderStep(){
   document.getElementById('btn-back-q').style.display=idx===0?'none':'flex';
   document.getElementById('btn-next-q').textContent=idx===4?'Vygenerovat plán →':'Pokračovat →';
   const b=STEP_BADGES[idx];
-  let html=`<div class="section-header"><span class="section-badge" style="background:${b.bg};color:${b.color}">${b.text}</span>`;
+  let html=`<div class="q-card"><span class="section-badge" style="background:rgba(255,255,255,0.06);color:${b.color};border:1px solid ${b.color}22">${b.text}</span>`;
   if(idx===0) html+=renderIncome();
   else if(idx===1) html+=renderLiabilities();
   else if(idx===2) html+=renderAssets();
@@ -839,9 +1379,9 @@ function renderReport(){
     <div class="status-item ${insStatus}"><div class="status-icon">${icons[insStatus]}</div><div class="status-label">Ochrana</div><div class="status-val">${insStatus==='ok'?'OK':insStatus==='warn'?'Částečná':'Chybí'}</div></div>`;
 
   let pt='';
-  if(r.pasivaPct>80) pt=`<div style="background:var(--rl);border:1px solid #F5C4B3;border-radius:var(--rs);padding:12px;font-size:13px;color:#712B13;line-height:1.65;margin-top:4px">Výdaje tvoří <strong>${r.pasivaPct} %</strong> příjmu — nad hranicí 80 %. Dokud je nesníříš pod 70 %, jakékoliv spoření bude jen záplata.</div>`;
-  else if(r.pasivaPct>70) pt=`<div style="background:var(--al);border:1px solid #FAC775;border-radius:var(--rs);padding:12px;font-size:13px;color:#633806;line-height:1.65;margin-top:4px">Výdaje jsou na <strong>${r.pasivaPct} %</strong> — mírně nad hranicí 70 %. Prostor existuje, ale je úzký.</div>`;
-  else pt=`<div style="background:var(--gl);border:1px solid #9FE1CB;border-radius:var(--rs);padding:12px;font-size:13px;color:#085041;line-height:1.65;margin-top:4px">Výdaje jsou na <strong>${r.pasivaPct} %</strong> — pod hranicí 70 %. Dobrý základ.</div>`;
+  if(r.pasivaPct>80) pt=`<div class="alert alert-bad">Výdaje tvoří <strong>${r.pasivaPct} %</strong> příjmu — nad hranicí 80 %. Dokud je nesníříš pod 70 %, jakékoliv spoření bude jen záplata.</div>`;
+  else if(r.pasivaPct>70) pt=`<div class="alert alert-warn">Výdaje jsou na <strong>${r.pasivaPct} %</strong> — mírně nad hranicí 70 %. Prostor existuje, ale je úzký.</div>`;
+  else pt=`<div class="alert alert-ok">Výdaje jsou na <strong>${r.pasivaPct} %</strong> — pod hranicí 70 %. Dobrý základ.</div>`;
   document.getElementById('rep-pasiva-text').innerHTML=pt;
 
   // FOMO handled by single message near CTA
@@ -850,7 +1390,7 @@ function renderReport(){
   document.getElementById('rep-metrics').innerHTML=`
     <div class="metric"><div class="metric-label">Čistý příjem</div><div class="metric-value">${fmt(r.income)}</div><div class="metric-sub">měsíčně</div></div>
     <div class="metric"><div class="metric-label">Výdaje</div><div class="metric-value">${fmt(r.expenses)}</div><div class="metric-sub">měsíčně</div></div>
-    <div class="metric"><div class="metric-label">Na investice (20 %)</div><div class="metric-value" style="color:${r.canAfford30?'var(--green)':'var(--amber)'}">${fmt(r.monthlyInvest)}</div><div class="metric-sub">cíl dle metodiky</div></div>`;
+    <div class="metric"><div class="metric-label">Na investice (20 %)</div><div class="metric-value" style="color:${r.canAfford30?'var(--ok)':'var(--warn)'}">${fmt(r.monthlyInvest)}</div><div class="metric-sub">cíl dle metodiky</div></div>`;
   if(!r.canAfford30){
     document.getElementById('rep-metrics').insertAdjacentHTML('afterend',
       `<div style="background:var(--al);border:1px solid #FAC775;border-radius:var(--rs);padding:10px 12px;font-size:12px;color:#633806;line-height:1.6;margin-bottom:12px">
@@ -862,7 +1402,7 @@ function renderReport(){
   const p=r.pasivaPct,a=r.aktivaPct;
   document.getElementById('rep-ratio-bar').innerHTML=`
     <div style="margin-top:12px;margin-bottom:4px;font-size:12px;color:var(--ink3);display:flex;justify-content:space-between"><span>Pasiva ${p} %</span><span>Aktiva ${a} %</span></div>
-    <div class="ratio-bar"><div class="ratio-seg" style="width:${p}%;background:#F5C4B3;color:#712B13">${p>20?p+'%':''}</div><div class="ratio-seg" style="width:${a}%;background:#9FE1CB;color:#085041">${a>10?a+'%':''}</div></div>`;
+    <div class="ratio-bar"><div class="ratio-seg" style="width:${p}%;background:rgba(228,24,106,.35);color:#FF7BAB">${p>20?p+'%':''}</div><div class="ratio-seg" style="width:${a}%;background:rgba(24,212,200,.25);color:var(--ok)">${a>10?a+'%':''}</div></div>`;
   const diff30=30-a;
   document.getElementById('rep-ratio-text').textContent=diff30>0?`Ideální poměr je 70:30. Rozdíl: ${diff30} % = ${fmt(r.income*diff30/100)} měsíčně.`:`Jsi na nebo nad doporučeným poměrem aktiv.`;
 
@@ -880,12 +1420,12 @@ function renderReport(){
   if(wealthChart) wealthChart.destroy();
   const labels=r.chartData.labels||['Dnes','5 let','10 let','15 let','20 let','25 let','30 let'];
   const dark=matchMedia('(prefers-color-scheme:dark)').matches;
-  const tc=dark?'#9a9890':'#8a8a82', gc=dark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';
+  const tc='#5A5070', gc='rgba(255,255,255,0.06)';
   wealthChart=new Chart(document.getElementById('wealth-chart'),{
     type:'line',data:{labels,datasets:[
-      {label:'Bez akce',data:r.chartData.none,borderColor:'#c8c4bc',borderWidth:2,pointRadius:3,tension:.4,fill:false},
-      {label:'S plánem',data:r.chartData.plan,borderColor:'#2d9467',borderWidth:2,pointRadius:3,tension:.4,fill:false},
-      {label:'S profesionálem',data:r.chartData.adv,borderColor:'#4a3fb5',borderWidth:2.5,pointRadius:3,tension:.4,fill:false},
+      {label:'Bez akce',data:r.chartData.none,borderColor:'#4A4060',borderWidth:2,pointRadius:3,tension:.4,fill:false},
+      {label:'S plánem',data:r.chartData.plan,borderColor:'#18D4C8',borderWidth:2,pointRadius:3,tension:.4,fill:false},
+      {label:'S profesionálem',data:r.chartData.adv,borderColor:'#E4186A',borderWidth:2.5,pointRadius:3,tension:.4,fill:false},
     ]},
     options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.parsed.y)}}},
       scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:11}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:11},callback:v=>fmt(v)}}}}
@@ -914,7 +1454,7 @@ function renderReport(){
   if(emailWrap) emailWrap.style.display = 'block';
 
   // 3. FOMO in CTA section
-  const fomoMain = document.getElementById('fomo-main');
+  const fomoMain = document.getElementById('fomo-main-cta');
   if(fomoMain){
     fomoMain.style.display = 'block';
     fomoMain.innerHTML = `⚠️ <strong>Každý měsíc tě stojí cca ${fmt(fomoMonthly)}</strong>, pokud nic neuděláš.${currentSavNote} Rozdíl za 20 let: bez akce ${fmt(r.w_none)} vs. s plánem ${fmt(r.w_adv)}.`;
@@ -928,9 +1468,9 @@ function renderReport(){
   // ALLOC
   document.getElementById('rep-alloc-sub').textContent=`${fmt(r.monthlyInvest)}/měs. rozděleno dle cílů — z toho vychází graf vúvoje. Sazby: dluhopisové fondy ${RATE1} % · akcie ${RATE2} % · penze ${RATE3} % p.a.`;
   document.getElementById('rep-alloc').innerHTML=[
-    {horizon:'1–5 let',amount:r.a1,product:'Dluhopisové a nemovitostní fondy',ret:RATE1+' % p.a.',bg:'#e8f4ee',border:'#9FE1CB',tc:'#1a6b4a'},
-    {horizon:'5–15 let',amount:r.a2,product:'Akciové portfolio',ret:RATE2+' % p.a.',bg:'#eeedf8',border:'#AFA9EC',tc:'#4a3fb5'},
-    {horizon:'15+ let',amount:r.a3,product:'Penzijní produkty',ret:RATE3+' % p.a.',bg:'#fceee9',border:'#F5C4B3',tc:'#c43a1a'},
+    {horizon:'1–5 let',amount:r.a1,product:'Dluhopisové a nemovitostní fondy',ret:RATE1+' % p.a.',bg:'rgba(24,212,200,.08)',border:'rgba(24,212,200,.25)',tc:'#18D4C8'},
+    {horizon:'5–15 let',amount:r.a2,product:'Akciové portfolio',ret:RATE2+' % p.a.',bg:'rgba(155,92,246,.1)',border:'rgba(155,92,246,.3)',tc:'#C4A8FF'},
+    {horizon:'15+ let',amount:r.a3,product:'Penzijní produkty',ret:RATE3+' % p.a.',bg:'rgba(228,24,106,.1)',border:'rgba(228,24,106,.3)',tc:'#FF7BAB'},
   ].map(ac=>`<div class="alloc-card" style="background:${ac.bg};border-color:${ac.border}"><div class="alloc-horizon" style="color:${ac.tc}">${ac.horizon}</div><div class="alloc-amount" style="color:${ac.tc}">${fmt(ac.amount)}/měs.</div><div class="alloc-product" style="color:${ac.tc}">${ac.product}</div><div class="alloc-return" style="color:${ac.tc}">${ac.ret}</div></div>`).join('');
 
 
@@ -945,12 +1485,12 @@ function renderReport(){
     if(r.consPayment>0) loanBreakdown+=`<div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--cream3)"><span>💳 Ostatní úvěry</span><span><strong>${fmt(r.consPayment)}/měs.</strong> · ještě ${r.consDuration} let</span></div>`;
     document.getElementById('rep-loan').innerHTML=`
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
-        <div style="background:var(--rl);border-radius:var(--rs);padding:12px"><div style="font-size:11px;color:var(--red);margin-bottom:3px">Celkové splátky</div><div style="font-size:18px;font-weight:600;color:var(--red)">${fmt(r.loanPayment)}</div><div style="font-size:11px;color:var(--red);opacity:.7">měsíčně</div></div>
-        <div style="background:var(--al);border-radius:var(--rs);padding:12px"><div style="font-size:11px;color:var(--amber);margin-bottom:3px">Nejdéle splácím</div><div style="font-size:18px;font-weight:600;color:var(--amber)">${Math.round(r.loanYears)} let</div><div style="font-size:11px;color:var(--amber);opacity:.7">zbývá</div></div>
-        <div style="background:var(--gl);border-radius:var(--rs);padding:12px"><div style="font-size:11px;color:var(--green);margin-bottom:3px">Po splacení navíc</div><div style="font-size:18px;font-weight:600;color:var(--green)">${fmt(r.loanPayment)}</div><div style="font-size:11px;color:var(--green);opacity:.7">přejde do investic</div></div>
+        <div class="loan-cell" style="background:var(--bad-soft)"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--bad);margin-bottom:3px">Celkové splátky</div><div style="font-family:'Plus Jakarta Sans';font-size:18px;font-weight:800;color:var(--bad)">${fmt(r.loanPayment)}</div><div style="font-size:11px;color:var(--bad);opacity:.7">měsíčně</div></div>
+        <div class="loan-cell" style="background:var(--warn-soft)"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--warn);margin-bottom:3px">Nejdéle splácím</div><div style="font-family:'Plus Jakarta Sans';font-size:18px;font-weight:800;color:var(--warn)">${Math.round(r.loanYears)} let</div><div style="font-size:11px;color:var(--warn);opacity:.7">zbývá</div></div>
+        <div class="loan-cell" style="background:var(--ok-soft)"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ok);margin-bottom:3px">Po splacení navíc</div><div style="font-family:'Plus Jakarta Sans';font-size:18px;font-weight:800;color:var(--ok)">${fmt(r.loanPayment)}</div><div style="font-size:11px;color:var(--ok);opacity:.7">přejde do investic</div></div>
       </div>
-      ${loanBreakdown?`<div style="background:var(--cream);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px">${loanBreakdown}</div>`:''}
-      <div style="background:var(--cream);border-radius:var(--rs);padding:12px;font-size:13px;line-height:1.7;color:var(--ink2)">
+      ${loanBreakdown?`<div style="background:var(--bg3);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px;border:1px solid var(--border)">${loanBreakdown}</div>`:''}
+      <div style="background:var(--bg3);border-radius:var(--rs);padding:12px;font-size:13px;line-height:1.7;color:var(--ink2);border:1px solid var(--border)">
         📉 Tyto peníze teď nejdou do investic. Kdyby šly, za ${Math.round(r.loanYears)} let by to bylo <strong>${fmt(lostFV)}</strong> navíc.<br>
         ✅ Po splacení všech závazků za <strong>${Math.round(r.loanYears)} let</strong> se ${fmt(r.loanPayment)}/měs. přesměruje do investic — v grafu vidíš zalomení křivky nahoru.
       </div>`;
@@ -1007,7 +1547,7 @@ function renderReport(){
   const mc=r.pasivaPct>80?'var(--rl)':r.pasivaPct>70?'var(--al)':'var(--gl)';
   const mb=r.pasivaPct>80?'#F5C4B3':r.pasivaPct>70?'#FAC775':'#9FE1CB';
   const mt=r.pasivaPct>80?'#712B13':r.pasivaPct>70?'#633806':'#085041';
-  document.getElementById('rep-motivation').innerHTML=`<div style="background:${mc};border:1px solid ${mb};border-radius:var(--rs);padding:16px;color:${mt}"><div style="font-size:13px;line-height:1.7;margin-bottom:12px">${r.pasivaPct>70?`Snížením výdajů o <strong>${dp} %</strong> (= ${fmt(md)}/měs.) bys za 20 let měl o <strong>${fmt(wd)} navíc</strong> — to může znamenat odchod do důchodu o 3–7 let dřív.`:`Každé další procento do investic přidá za 20 let přibližně <strong>${fmt(calcFV(r.income*0.01,20,r.rate))}</strong>.`}</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${[{label:'Aktuální investice',val:fmt(r.monthlyInvest)+'/měs.'},{label:'Při ideálu 20 %',val:fmt(r.income*0.20)+'/měs.'},{label:'Rozdíl za 20 let',val:'+'+fmt(wd)}].map(m=>`<div style="background:rgba(255,255,255,.5);border-radius:var(--rs);padding:10px;text-align:center"><div style="font-size:11px;margin-bottom:3px;opacity:.75">${m.label}</div><div style="font-size:14px;font-weight:600">${m.val}</div></div>`).join('')}</div></div>`;
+  document.getElementById('rep-motivation').innerHTML=`<div class="motiv-inner" style="background:${r.pasivaPct>80?'var(--bad-soft)':r.pasivaPct>70?'var(--warn-soft)':'var(--ok-soft)'};border-color:${r.pasivaPct>80?'rgba(228,24,106,.2)':r.pasivaPct>70?'rgba(245,166,35,.2)':'rgba(24,212,200,.2)'}"><div style="font-size:13px;line-height:1.7;margin-bottom:12px">${r.pasivaPct>70?`Snížením výdajů o <strong>${dp} %</strong> (= ${fmt(md)}/měs.) bys za 20 let měl o <strong>${fmt(wd)} navíc</strong> — to může znamenat odchod do důchodu o 3–7 let dřív.`:`Každé další procento do investic přidá za 20 let přibližně <strong>${fmt(calcFV(r.income*0.01,20,r.rate))}</strong>.`}</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${[{label:'Aktuální investice',val:fmt(r.monthlyInvest)+'/měs.'},{label:'Při ideálu 20 %',val:fmt(r.income*0.20)+'/měs.'},{label:'Rozdíl za 20 let',val:'+'+fmt(wd)}].map(m=>`<div class="motiv-cell"><div class="motiv-cell-label">${m.label}</div><div class="motiv-cell-val">${m.val}</div></div>`).join('')}</div></div>`;
 }
 
 // ─── FOMO TILE ────────────────────────────────────────────────────────────────
@@ -1073,7 +1613,7 @@ function renderGoalPriority(r,allDefs){
 
   let html='';
   goalData.forEach(({hz,gid,def,name,amtText,pct,pctColor,idx})=>{
-    const badge=idx===0?'<span style="font-size:10px;background:#e8f4ee;color:#1a6b4a;padding:2px 7px;border-radius:8px;font-weight:500;margin-left:6px">Priorita č.1</span>':'';
+    const badge=idx===0?'<span style="font-size:10px;background:var(--pink-soft);color:var(--pink);padding:2px 8px;border-radius:100px;font-weight:700;margin-left:6px">Priorita č.1</span>':'';
     html+=`<div class="goal-priority-item" draggable="true" data-idx="${idx}"
       ondragstart="dragStart(event,${idx})" ondragover="dragOver(event)"
       ondrop="dropGoal(event,${idx})" ondragleave="dragLeave(event)" ondragend="dragEnd(event)">
@@ -1140,7 +1680,7 @@ function renderGoalManager(){
       const isActive=A.goals[hz].includes(g.id);
       const selAmt=A.goalAmounts[g.id]||'';
       const amtOpts=isLong[hz]===true?AMOUNT_OPTS_LONG:isLong[hz]==='mid'?AMOUNT_OPTS_MED:AMOUNT_OPTS_SHORT;
-      html+=`<div style="border:1.5px solid ${isActive?'var(--green)':'var(--cream3)'};border-radius:var(--r);padding:10px 12px;margin-bottom:6px;background:${isActive?'var(--gl)':'white'}">
+      html+=`<div class="goal-mgr-card ${isActive?'active':''}" >
         <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="toggleGoalFromManager('${hz}','${g.id}')">
           <div style="width:18px;height:18px;border-radius:50%;border:1.5px solid ${isActive?'var(--green)':'var(--cream3)'};background:${isActive?'var(--green)':'transparent'};display:flex;align-items:center;justify-content:center;font-size:10px;color:white;flex-shrink:0">${isActive?'✓':''}</div>
           <span style="font-size:15px">${g.emoji}</span>
@@ -1203,5 +1743,8 @@ function submitEmail(){
   // TODO: connect to your email service (Mailchimp, ConvertKit, Brevo...)
 }
 </script>
+</body>
+</html>
+
 </body>
 </html>
