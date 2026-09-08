@@ -676,7 +676,8 @@ input[type=range]::-moz-range-thumb {
 
 /* Email below chart */
 .email-mini-wrap {
-  background: var(--bg3); border: 1px solid var(--border);
+  background: linear-gradient(135deg, rgba(228,24,106,.18) 0%, rgba(155,92,246,.18) 100%);
+  border: 1.5px solid rgba(228,24,106,.35);
   border-radius: var(--r); padding: 16px 18px;
   margin-top: 14px; display: none;
 }
@@ -900,7 +901,7 @@ canvas { display: block; width: 100% !important; }
         <div class="feature-pill"><span class="icon">📈</span> Projekce na 30 let</div>
       </div>
       <button class="btn-hero" onclick="startQuestionnaire()">Spustit analýzu →</button>
-      <p class="disclaimer-hero">⚠️ Orientační přehled — reprezentativní příklad. Nenahrazuje osobní poradenství. Konkrétní čísla řešíme individuálně.</p>
+      <p class="disclaimer-hero">⚠️ Reprezentativní příklad sloužící výhradně pro ilustraci. Není investičním poradenstvím, finanční analýzou ani nabídkou investičních nástrojů ve smyslu ZPKT. Výsledky se mohou lišit. Konkrétní plán vždy konzultujte s licencovaným poradcem.</p>
     </div>
   </div>
 </div>
@@ -1079,6 +1080,9 @@ canvas { display: block; width: 100% !important; }
 
   <!-- CTA — full width -->
   <div class="cta-card report-full-width" style="margin-top:12px">
+    <div style="font-size:11px;color:var(--ink3);line-height:1.6;padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:20px;text-align:left">
+      ⚖️ <strong style="color:var(--ink2)">Právní upozornění:</strong> Tento výstup je reprezentativním příkladem sloužícím pouze pro ilustraci. Nepředstavuje investiční poradenství, finanční analýzu ani nabídku investičních nástrojů ve smyslu zákona č. 256/2004 Sb. (ZPKT). Výsledky jsou orientační a skutečné výsledky se mohou lišit. Před každým investičním rozhodnutím se poraďte s licencovaným investičním poradcem.
+    </div>
     <div class="cta-eyebrow">🎁 Zdarma · bez závazků</div>
     <h3 class="cta-h3">Pošleme ti výsledky<br>+ 7denního průvodce</h3>
     <p class="cta-sub">Shrnutí plánu a série tipů co dělat každý den — přímo do e-mailu.</p>
@@ -1767,7 +1771,8 @@ input[type=range]::-moz-range-thumb {
 
 /* Email below chart */
 .email-mini-wrap {
-  background: var(--bg3); border: 1px solid var(--border);
+  background: linear-gradient(135deg, rgba(228,24,106,.18) 0%, rgba(155,92,246,.18) 100%);
+  border: 1.5px solid rgba(228,24,106,.35);
   border-radius: var(--r); padding: 16px 18px;
   margin-top: 14px; display: none;
 }
@@ -1991,7 +1996,7 @@ canvas { display: block; width: 100% !important; }
         <div class="feature-pill"><span class="icon">📈</span> Projekce na 30 let</div>
       </div>
       <button class="btn-hero" onclick="startQuestionnaire()">Spustit analýzu →</button>
-      <p class="disclaimer-hero">⚠️ Orientační přehled — reprezentativní příklad. Nenahrazuje osobní poradenství. Konkrétní čísla řešíme individuálně.</p>
+      <p class="disclaimer-hero">⚠️ Reprezentativní příklad sloužící výhradně pro ilustraci. Není investičním poradenstvím, finanční analýzou ani nabídkou investičních nástrojů ve smyslu ZPKT. Výsledky se mohou lišit. Konkrétní plán vždy konzultujte s licencovaným poradcem.</p>
     </div>
   </div>
 </div>
@@ -2241,6 +2246,14 @@ const CURRENT_SAVINGS_MAP = {
   'Nic nesporim':0,'Do 2 000 Kč':1500,'2 000–5 000 Kč':3500,
   '5 000–10 000 Kč':7500,'10 000–20 000 Kč':15000,'Nad 20 000 Kč':25000
 };
+const GOAL_TYPE = {
+  rezerva:'liquid', dluh:'neutral', auto:'consumption', rekonstrukce:'property',
+  nemovitost:'property', investice:'investment', byznys:'investment',
+  dite:'consumption', hypoteka:'neutral', deti:'property',
+  portfolio:'investment', dalsinemovitost:'property',
+  renta:'investment', driv:'investment', fire:'investment', statni:'neutral',
+  custom13:'consumption', custom35:'consumption', custom615:'consumption', custom15:'consumption',
+};
 const RESERVE_MAP = {'Žádnou':0,'Méně než 1 měsíc':0.5,'1–2 měsíce':1.5,'3–6 měsíců':4,'Nad 6 měsíců':7};
 
 // Fixed rates per horizon (no sliders)
@@ -2264,6 +2277,55 @@ let goalPriority = [];
 let currentStep = 0;
 let wealthChart = null;
 let dragSrc = null;
+let touchDragSrc = null;
+let touchClone = null;
+let touchOffX = 0, touchOffY = 0;
+
+function handleTouchStart(e) {
+  const item = e.currentTarget;
+  touchDragSrc = parseInt(item.dataset.idx);
+  const rect = item.getBoundingClientRect();
+  touchOffX = e.touches[0].clientX - rect.left;
+  touchOffY = e.touches[0].clientY - rect.top;
+  touchClone = item.cloneNode(true);
+  touchClone.style.cssText = `position:fixed;z-index:9999;pointer-events:none;width:${item.offsetWidth}px;opacity:.9;border:2px solid var(--pink);border-radius:14px;box-shadow:0 8px 32px rgba(228,24,106,.3);`;
+  document.body.appendChild(touchClone);
+  item.style.opacity = '0.4';
+  e.preventDefault();
+}
+function handleTouchMove(e) {
+  if(!touchClone) return;
+  const t = e.touches[0];
+  touchClone.style.left = (t.clientX - touchOffX) + 'px';
+  touchClone.style.top  = (t.clientY - touchOffY) + 'px';
+  touchClone.style.display = 'none';
+  const el = document.elementFromPoint(t.clientX, t.clientY);
+  touchClone.style.display = '';
+  document.querySelectorAll('.goal-priority-item').forEach(i=>i.classList.remove('drag-over'));
+  const tgt = el?.closest('[data-idx]');
+  if(tgt && parseInt(tgt.dataset.idx) !== touchDragSrc) tgt.classList.add('drag-over');
+  e.preventDefault();
+}
+function handleTouchEnd(e) {
+  if(!touchClone) return;
+  const t = e.changedTouches[0];
+  touchClone.style.display = 'none';
+  const el = document.elementFromPoint(t.clientX, t.clientY);
+  touchClone.style.display = '';
+  document.querySelectorAll('.goal-priority-item').forEach(i=>{i.classList.remove('drag-over');i.style.opacity='';});
+  touchClone.remove(); touchClone = null;
+  const tgt = el?.closest('[data-idx]');
+  if(tgt) {
+    const ti = parseInt(tgt.dataset.idx);
+    if(touchDragSrc !== null && touchDragSrc !== ti) {
+      const moved = goalPriority.splice(touchDragSrc,1)[0];
+      goalPriority.splice(ti,0,moved);
+      refreshPriority();
+      setTimeout(()=>{document.querySelectorAll('.achieve-bar-fill').forEach(el=>{el.classList.remove('bar-flash');void el.offsetWidth;el.classList.add('bar-flash');});},50);
+    }
+  }
+  touchDragSrc = null;
+}
 
 // ─── NAVIGATION ───────────────────────────────────────────────────────────────
 function showScreen(id){
@@ -2608,18 +2670,42 @@ function computeReport(){
     ['1-3','3-5','6-15','15+'].forEach(hz=>A.goals[hz].forEach(gid=>goalPriority.push({hz,gid})));
   }
 
+  // Goal wealth adjustment — consumption goals remove wealth, property goals grow at 4%
+  function calcGoalAdj(baseYears, r) {
+    let adj = 0;
+    goalPriority.forEach(({hz,gid}) => {
+      const amtKey = A.goalAmounts[gid];
+      if(!amtKey) return;
+      const amount = AMOUNT_NUM[amtKey] || 0;
+      const goalYear = HORIZON_YEARS[hz] || 2;
+      if(goalYear > baseYears) return;
+      const yearsAfter = baseYears - goalYear;
+      const type = GOAL_TYPE[gid] || 'consumption';
+      if(type === 'consumption') {
+        adj -= amount * Math.pow(1 + r, yearsAfter);
+      } else if(type === 'property') {
+        adj += amount * (Math.pow(1.04, yearsAfter) - Math.pow(1 + r, yearsAfter));
+      }
+    });
+    return adj;
+  }
+  const noneAdj=y=>Math.round(calcGoalAdj(y,rateNone));
+  const planAdj=y=>Math.round(calcGoalAdj(y,rate));
+  const advAdj=y=>Math.round(calcGoalAdj(y,rateAdv));
+
   return{income,expenses,pasivaPct,aktivaPct,reserveMonths,targetReserve,currentReserve,
     hasLife,hasProperty,monthlyInvest,monthlyProtection,canAfford30,shortfall,
     a1,a2,a3,w1,w2,w3,existingInvest,
     loanPayment,loanYears,freedMonthly,mortPayment,mortDuration,consPayment,consDuration,
     currentAge,retireAgeVal,yearsToRetire,rentaTargetMonthly,rentaCapitalNeeded,
     weightedRate,rate,
-    actualCurrentSavings,w_none:none(20),w_plan:plan(20),w_adv:adv(20),
+    actualCurrentSavings,w_none:none(20)+noneAdj(20),w_plan:plan(20)+planAdj(20),w_adv:adv(20)+advAdj(20),   
+
     chartData:(()=>{
       const baseYears=[0,5,10,15,20,25,30];
       const chartYears=(loanYears>0&&loanYears<30&&!baseYears.includes(Math.round(loanYears)))?[...baseYears,Math.round(loanYears)].sort((a,b)=>a-b):baseYears;
       const chartLabels=chartYears.map(y=>y===0?'Dnes':y+' let');
-      return{none:chartYears.map(none),plan:chartYears.map(plan),adv:chartYears.map(adv),labels:chartLabels};
+      return{none:chartYears.map(y=>none(y)+noneAdj(y)),plan:chartYears.map(y=>plan(y)+planAdj(y)),adv:chartYears.map(y=>adv(y)+advAdj(y)),labels:chartLabels};
     })()};
 }
 
@@ -2698,7 +2784,7 @@ function renderReport(){
       {label:'S plánem',data:r.chartData.plan,borderColor:'#18D4C8',borderWidth:2,pointRadius:3,tension:.4,fill:false},
       {label:'S profesionálem',data:r.chartData.adv,borderColor:'#E4186A',borderWidth:2.5,pointRadius:3,tension:.4,fill:false},
     ]},
-    options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.parsed.y)}}},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(19,15,36,.95)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,titleColor:'#B8B0D4',bodyColor:'#F0EDF8',padding:12,callbacks:{label:c=>' '+fmt(c.parsed.y)}}}},
       scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:11}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:11},callback:v=>fmt(v)}}}}
   });
 
@@ -2908,6 +2994,12 @@ function renderGoalPriority(r,allDefs){
   const anyOverloaded=poolRemaining<=0&&goalData.some(g=>g.pct!==null&&g.pct<100);
   if(anyOverloaded) html+=`<div class="priority-hint">💡 Máš více cílů než dostupných prostředků. Přetáhni důležitější cíl nahoru — ten dostane prostředky jako první.</div>`;
   wrap.innerHTML=html;
+  // Add touch event listeners for mobile drag & drop
+  wrap.querySelectorAll('.goal-priority-item').forEach(item=>{
+    item.addEventListener('touchstart', handleTouchStart, {passive:false});
+    item.addEventListener('touchmove',  handleTouchMove,  {passive:false});
+    item.addEventListener('touchend',   handleTouchEnd,   {passive:false});
+  });
 }
 
 // ─── DRAG & DROP ──────────────────────────────────────────────────────────────
@@ -2988,6 +3080,17 @@ function refreshPriority(){
 }
 
 // ─── EMAIL CTA ────────────────────────────────────────────────────────────────
+function submitEmailSteps(){
+  const email=document.getElementById('cta-email-steps').value.trim();
+  const msg=document.getElementById('cta-msg-steps');
+  if(!email||!email.includes('@')){msg.textContent='⚠️ Zadej platný e-mail.';msg.style.color='var(--bad)';return;}
+  msg.innerHTML='✅ Přihlášeno! Tipy dorazí každý den po dobu 7 dní.';msg.style.color='var(--ok)';
+  document.getElementById('cta-email-steps').disabled=true;
+  document.querySelector('[onclick="submitEmailSteps()"]').disabled=true;
+  document.querySelector('[onclick="submitEmailSteps()"]').textContent='Přihlášeno ✓';
+  console.log('Email (steps):',email);
+}
+
 function submitEmailFomo(){
   const email=document.getElementById('cta-email-fomo').value.trim();
   const msg=document.getElementById('cta-msg-fomo');
